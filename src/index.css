@@ -7,12 +7,13 @@
   --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
   --font-mono: "JetBrains Mono", ui-monospace, SFMono-Regular, monospace;
   --color-accent: #52C5F3;
+  --color-secondary: #EC3292;
   --color-primary: #e11d48;
 }
 
 @layer base {
   body {
-    @apply bg-gray-50 dark:bg-[#0e1016] text-gray-900 dark:text-white font-sans antialiased;
+    @apply bg-gray-50 dark:bg-[#161616] text-gray-900 dark:text-white font-sans antialiased;
   }
 
   .custom-scrollbar::-webkit-scrollbar {

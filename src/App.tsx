@@ -20,6 +20,19 @@ import { ChannelManagement } from './pages/ChannelManagement';
 import { AlgorithmContext } from './pages/AlgorithmContext';
 import { PackageManagement } from './pages/PackageManagement';
 import { Roles } from './pages/Roles';
+import { Users } from './pages/Users';
+import { RoleModules } from './pages/RoleModules';
+import { UserSettings } from './pages/UserSettings';
+import { Configuration } from './pages/Configuration';
+import { DataCollection } from './pages/DataCollection';
+import { DataSet } from './pages/DataSet';
+import { ImageAnnotation } from './pages/ImageAnnotation';
+import { ModelTraining } from './pages/ModelTraining';
+import { AIModels } from './pages/AIModels';
+import { BuildingBlocks } from './pages/BuildingBlocks';
+import { NoCodeEditor } from './pages/NoCodeEditor';
+import { Applications } from './pages/Applications';
+import { Notifications } from './pages/Notifications';
 
 const AppLayout = ({ children }: { children: React.ReactNode }) => {
   const [isSidebarCollapsed, setIsSidebarCollapsed] = React.useState(false);
@@ -42,16 +55,29 @@ export default function App() {
         <Routes>
           <Route path="/signin" element={<SignIn />} />
           <Route path="/signup" element={<SignUp />} />
+          <Route path="/notifications" element={<AppLayout><Notifications /></AppLayout>} />
           <Route path="/dashboard" element={<AppLayout><Dashboard /></AppLayout>} />
           <Route path="/system-admin/dashboard" element={<AppLayout><SystemAdminDashboard /></AppLayout>} />
           <Route path="/system-admin/system-monitoring" element={<AppLayout><SystemMonitoring /></AppLayout>} />
           <Route path="/system-admin/workstation-management" element={<AppLayout><WorkstationManagement /></AppLayout>} />
           <Route path="/system-admin/camera-management" element={<AppLayout><CameraManagement /></AppLayout>} />
           <Route path="/system-admin/model-management" element={<AppLayout><ModelManagement /></AppLayout>} />
+          <Route path="/train/data-collection" element={<AppLayout><DataCollection /></AppLayout>} />
+          <Route path="/train/data-set" element={<AppLayout><DataSet /></AppLayout>} />
+          <Route path="/train/image-annotation" element={<AppLayout><ImageAnnotation /></AppLayout>} />
+          <Route path="/train/model-training" element={<AppLayout><ModelTraining /></AppLayout>} />
+          <Route path="/train/ai-models" element={<AppLayout><AIModels /></AppLayout>} />
+          <Route path="/develop/building-blocks" element={<AppLayout><BuildingBlocks /></AppLayout>} />
+          <Route path="/develop/no-code-editor" element={<AppLayout><NoCodeEditor /></AppLayout>} />
+          <Route path="/develop/applications" element={<AppLayout><Applications /></AppLayout>} />
           <Route path="/system-admin/channel-management/*" element={<AppLayout><ChannelManagement /></AppLayout>} />
           <Route path="/system-admin/algorithm-context" element={<AppLayout><AlgorithmContext /></AppLayout>} />
           <Route path="/system-admin/package-management" element={<AppLayout><PackageManagement /></AppLayout>} />
           <Route path="/system-admin/roles" element={<AppLayout><Roles /></AppLayout>} />
+          <Route path="/system-admin/users" element={<AppLayout><Users /></AppLayout>} />
+          <Route path="/system-admin/role-modules" element={<AppLayout><RoleModules /></AppLayout>} />
+          <Route path="/user-settings" element={<AppLayout><UserSettings /></AppLayout>} />
+          <Route path="/system-admin/configuration" element={<AppLayout><Configuration /></AppLayout>} />
           <Route path="*" element={<Navigate to="/dashboard" replace />} />
         </Routes>
       </BrowserRouter>

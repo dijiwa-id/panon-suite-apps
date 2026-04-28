@@ -29,7 +29,7 @@ export const Header = () => {
            </button>
            <button className="text-gray-400 hover:text-gray-900 dark:hover:text-gray-200 transition-all relative">
              <Monitor size={18} />
-             <span className="absolute top-0 right-0 w-2 h-2 bg-primary rounded-full border border-white dark:border-[#18181b]"></span>
+             <span className="absolute top-0 right-0 w-2 h-2 bg-secondary rounded-full border border-white dark:border-[#18181b]"></span>
            </button>
            <button className="text-gray-400 hover:text-gray-900 dark:hover:text-gray-200 transition-all">
              <ChevronDown size={16} />

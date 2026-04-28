@@ -25,7 +25,7 @@ const iconMap: Record<string, React.ReactNode> = {
   Dashboard: <LayoutDashboard size={18} />,
   Notification: <Bell size={18} />,
   "Data Collection": <Database size={18} />,
-  "Data Aset": <Layers size={18} />,
+  "Data Set": <Layers size={18} />,
   "Image Annotation": <Edit3 size={18} />,
   "Model Training": <Cpu size={18} />,
   "AI Models": <Box size={18} />,
@@ -62,9 +62,10 @@ interface NavItemType {
   label: string;
   path: string;
   subItems?: SubItem[];
+  isDivider?: boolean;
 }
 
-const NavItem = ({ icon, label, path, badge, isCollapsed, subItems, isOpen: isSubOpen, onToggle }: NavItemProps & { subItems?: SubItem[]; isOpen?: boolean; onToggle?: () => void }) => {
+const NavItem: React.FC<NavItemProps & { subItems?: SubItem[]; isOpen?: boolean; onToggle?: () => void }> = ({ icon, label, path, badge, isCollapsed, subItems, isOpen: isSubOpen, onToggle }) => {
   const location = useLocation();
   const active = location.pathname === path || (subItems && subItems.some(si => location.pathname === si.path));
   const hasSubItems = subItems && subItems.length > 0;
@@ -121,12 +122,12 @@ const NavItem = ({ icon, label, path, badge, isCollapsed, subItems, isOpen: isSu
              <ChevronDown size={14} className={cn("transition-transform", isSubOpen ? "rotate-180" : "")} />
           )}
           {badge && !isCollapsed && (
-            <span className="bg-accent/10 text-accent text-[9px] font-black px-2 py-0.5 rounded-md border border-accent/20">
+            <span className="bg-secondary/10 text-secondary text-[9px] font-black px-2 py-0.5 rounded-md border border-secondary/20">
               {badge}
             </span>
           )}
           {badge && isCollapsed && (
-            <span className="absolute top-2 right-4 w-2 h-2 rounded-full bg-accent"></span>
+            <span className="absolute top-2 right-4 w-2 h-2 rounded-full bg-secondary shadow-[0_0_8px_rgba(236,50,146,0.5)]"></span>
           )}
         </div>
       </Link>
@@ -177,10 +178,10 @@ export const Sidebar = ({
       </div>
 
       <div className="flex-1 overflow-y-auto custom-scrollbar pt-6">
-        {/* Profile Card */}
-        <div
+        <Link
+          to="/user-settings"
           className={cn(
-            "px-4 mb-10 transition-all",
+            "px-4 mb-10 transition-all block",
             isCollapsed && "px-2 mb-6",
           )}
         >
@@ -218,7 +219,7 @@ export const Sidebar = ({
               <ChevronDown size={14} className="text-gray-500 shrink-0" />
             )}
           </div>
-        </div>
+        </Link>
 
         {/* Main Nav */}
         <div className="space-y-1 mb-10">
@@ -245,7 +246,7 @@ export const Sidebar = ({
             title="TRAIN"
             items={[
               { label: "Data Collection", path: "/train/data-collection" },
-              { label: "Data Aset", path: "/train/data-aset" },
+              { label: "Data Set", path: "/train/data-set" },
               { label: "Image Annotation", path: "/train/image-annotation" },
               { label: "Model Training", path: "/train/model-training" },
               { label: "AI Models", path: "/train/ai-models" },
@@ -283,6 +284,14 @@ export const Sidebar = ({
               },
               { label: "Model Management", path: "/system-admin/model-management" },
               {
+                label: "Algorithm Package",
+                path: "#",
+                subItems: [
+                  { label: "Algorithm Context", path: "/system-admin/algorithm-context" },
+                  { label: "Package Management", path: "/system-admin/package-management" },
+                ],
+              },
+              {
                 label: "User Management",
                 path: "#",
                 subItems: [
@@ -291,14 +300,7 @@ export const Sidebar = ({
                   { label: "Role Modules", path: "/system-admin/role-modules" },
                 ],
               },
-              {
-                label: "Algorithm Package",
-                path: "#",
-                subItems: [
-                  { label: "Algorithm Context", path: "/system-admin/algorithm-context" },
-                  { label: "Package Management", path: "/system-admin/package-management" },
-                ],
-              },
+              { label: "divider", path: "", isDivider: true },
               { label: "Configuration", path: "/system-admin/configuration" },
             ]}
           />
@@ -394,7 +396,9 @@ const NavSection = ({
         className="overflow-hidden"
       >
         <div className="space-y-1 mt-1">
-          {items.map((item) => (
+          {items.map((item, index) => item.isDivider ? (
+            <div key={`divider-${index}`} className={cn("my-3 border-t border-gray-200 dark:border-[#2a2a2a]", isCollapsed ? "mx-4" : "mx-6")} />
+          ) : (
             <NavItem
               key={item.label}
               icon={item.icon || item.label}
