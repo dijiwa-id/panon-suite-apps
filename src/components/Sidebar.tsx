@@ -1,0 +1,413 @@
+import React from "react";
+import { Link, useLocation } from "react-router-dom";
+import {
+  LayoutDashboard,
+  Bell,
+  Database,
+  Layers,
+  Edit3,
+  Cpu,
+  Box,
+  Layout,
+  Code,
+  Grid,
+  ChevronDown,
+  ChevronRight,
+  LogOut,
+  ChevronLeft,
+  Aperture,
+  Users,
+} from "lucide-react";
+import { cn } from "../lib/utils";
+import { motion } from "motion/react";
+
+const iconMap: Record<string, React.ReactNode> = {
+  Dashboard: <LayoutDashboard size={18} />,
+  Notification: <Bell size={18} />,
+  "Data Collection": <Database size={18} />,
+  "Data Aset": <Layers size={18} />,
+  "Image Annotation": <Edit3 size={18} />,
+  "Model Training": <Cpu size={18} />,
+  "AI Models": <Box size={18} />,
+  "Building Blocks": <Layout size={18} />,
+  "No Code Editor": <Code size={18} />,
+  Applications: <Grid size={18} />,
+  "System Monitoring": <Cpu size={18} />,
+  "Workstation Management": <Box size={18} />,
+  "Camera Management": <Aperture size={18} />,
+  "Channel Management": <Layers size={18} />,
+  "Model Management": <Cpu size={18} />,
+  "Algorithm Package": <Code size={18} />,
+  "User Management": <Users size={18} />,
+  "Roles": <Layers size={18} />,
+  "Users": <Box size={18} />,
+  "Role Modules": <Layers size={18} />,
+  "Configuration": <Layout size={18} />,
+};
+
+interface NavItemProps {
+  icon: string;
+  label: string;
+  path: string;
+  badge?: number;
+  isCollapsed?: boolean;
+}
+
+interface SubItem {
+  label: string;
+  path: string;
+}
+
+interface NavItemType {
+  label: string;
+  path: string;
+  subItems?: SubItem[];
+}
+
+const NavItem = ({ icon, label, path, badge, isCollapsed, subItems, isOpen: isSubOpen, onToggle }: NavItemProps & { subItems?: SubItem[]; isOpen?: boolean; onToggle?: () => void }) => {
+  const location = useLocation();
+  const active = location.pathname === path || (subItems && subItems.some(si => location.pathname === si.path));
+  const hasSubItems = subItems && subItems.length > 0;
+
+  return (
+    <div>
+      <Link to={hasSubItems ? "#" : path} className="block" onClick={hasSubItems ? onToggle : undefined}>
+        <div
+          className={cn(
+            "flex items-center py-2 cursor-pointer transition-all duration-300 group relative",
+            isCollapsed
+              ? "justify-center px-0 mx-4 rounded-xl"
+              : "justify-between px-6",
+            !isCollapsed && active
+              ? "text-accent bg-accent/5 border-l-2 border-accent"
+              : "",
+            !isCollapsed && !active
+              ? "text-gray-500 hover:text-gray-900 dark:hover:text-white hover:bg-gray-100/50 dark:hover:bg-white/[0.02] border-l-2 border-transparent"
+              : "",
+            isCollapsed && active
+              ? "bg-accent/10 text-accent border border-accent/20"
+              : "",
+            isCollapsed && !active
+              ? "text-gray-500 hover:text-gray-900 dark:hover:text-white hover:bg-gray-100 dark:hover:bg-white/[0.02] border border-transparent"
+              : "",
+          )}
+          title={isCollapsed ? label : undefined}
+        >
+          <div
+            className={cn(
+              "flex items-center",
+              isCollapsed ? "justify-center" : "gap-3.5",
+            )}
+          >
+            <span
+              className={cn(
+                "transition-colors duration-300",
+                !isCollapsed && active
+                  ? "text-accent"
+                  : isCollapsed && active
+                    ? "text-accent"
+                    : "text-gray-600 group-hover:text-accent",
+              )}
+            >
+              {iconMap[icon] || <Box size={18} />}
+            </span>
+            {!isCollapsed && (
+              <span className="text-[13px] font-medium tracking-wide capitalize">
+                {label}
+              </span>
+            )}
+          </div>
+          {hasSubItems && !isCollapsed && (
+             <ChevronDown size={14} className={cn("transition-transform", isSubOpen ? "rotate-180" : "")} />
+          )}
+          {badge && !isCollapsed && (
+            <span className="bg-accent/10 text-accent text-[9px] font-black px-2 py-0.5 rounded-md border border-accent/20">
+              {badge}
+            </span>
+          )}
+          {badge && isCollapsed && (
+            <span className="absolute top-2 right-4 w-2 h-2 rounded-full bg-accent"></span>
+          )}
+        </div>
+      </Link>
+      {hasSubItems && !isCollapsed && isSubOpen && (
+        <div className="pl-12 space-y-1 mt-1">
+          {subItems!.map(sub => (
+              <Link key={sub.path} to={sub.path} className={cn("block text-[12px] py-1 hover:text-accent", location.pathname === sub.path ? "text-accent font-bold" : "text-gray-500")}>
+                {sub.label}
+              </Link>
+          ))}
+        </div>
+      )}
+    </div>
+  );
+};
+
+export const Sidebar = ({
+  isCollapsed,
+  toggleSidebar,
+}: {
+  isCollapsed: boolean;
+  toggleSidebar: () => void;
+}) => {
+  return (
+    <aside
+      className={cn(
+        "flex flex-col h-screen border-r border-gray-200 dark:border-[#262626] bg-white dark:bg-[#151515] transition-all duration-300 shrink-0",
+        isCollapsed ? "w-20" : "w-64",
+      )}
+    >
+      <div className="px-6 h-[60px] flex items-center">
+        <h1
+          className={cn(
+            "text-xl font-bold flex items-center gap-2 group w-full",
+            isCollapsed ? "justify-center" : "justify-start"
+          )}
+        >
+          <div className="w-8 h-8 bg-accent/20 rounded-lg flex items-center justify-center shrink-0 border border-accent/30 shadow-[0_0_15px_rgba(0,209,255,0.2)]">
+            <Aperture className="text-accent" size={18} strokeWidth={2.5} />
+          </div>
+          {!isCollapsed && (
+            <div className="flex items-center tracking-tight">
+              <span className="text-gray-900 dark:text-white text-lg">panon</span>
+              <span className="text-gray-500 font-medium ml-1 text-lg">suite</span>
+            </div>
+          )}
+        </h1>
+      </div>
+
+      <div className="flex-1 overflow-y-auto custom-scrollbar pt-6">
+        {/* Profile Card */}
+        <div
+          className={cn(
+            "px-4 mb-10 transition-all",
+            isCollapsed && "px-2 mb-6",
+          )}
+        >
+          <div
+            className={cn(
+              "flex items-center gap-3 rounded-xl cursor-pointer transition-all group/profile",
+              isCollapsed
+                ? "flex-col justify-center"
+                : "p-3 bg-gray-100 dark:bg-[#1e1e1e] border border-gray-200 dark:border-[#2a2a2a] hover:border-accent/40 shadow-lg",
+            )}
+          >
+            <div
+              className={cn(
+                "rounded-lg bg-accent/20 flex items-center justify-center p-2 overflow-hidden ring-1 ring-accent/30 group-hover/profile:scale-105 transition-transform",
+                isCollapsed ? "w-12 h-12" : "w-10 h-10 shrink-0",
+              )}
+            >
+              <img
+                src="https://api.dicebear.com/7.x/avataaars/svg?seed=Lucky"
+                alt="avatar"
+                className="w-full h-full object-cover"
+              />
+            </div>
+            {!isCollapsed && (
+              <div className="flex-1 overflow-hidden">
+                <p className="text-[14px] font-bold text-gray-900 dark:text-white truncate">
+                  panon PT.
+                </p>
+                <p className="text-[11px] text-gray-500 font-medium truncate">
+                  M Iqbal
+                </p>
+              </div>
+            )}
+            {!isCollapsed && (
+              <ChevronDown size={14} className="text-gray-500 shrink-0" />
+            )}
+          </div>
+        </div>
+
+        {/* Main Nav */}
+        <div className="space-y-1 mb-10">
+          <NavItem
+            icon="Dashboard"
+            label="Dashboard"
+            path="/dashboard"
+            isCollapsed={isCollapsed}
+          />
+          <NavItem
+            icon="Notification"
+            label="Notification"
+            path="/notifications"
+            badge={99}
+            isCollapsed={isCollapsed}
+          />
+        </div>
+
+
+        {/* Dynamic Groups */}
+        <div className="space-y-6 pb-20">
+          <NavSection
+            isCollapsed={isCollapsed}
+            title="TRAIN"
+            items={[
+              { label: "Data Collection", path: "/train/data-collection" },
+              { label: "Data Aset", path: "/train/data-aset" },
+              { label: "Image Annotation", path: "/train/image-annotation" },
+              { label: "Model Training", path: "/train/model-training" },
+              { label: "AI Models", path: "/train/ai-models" },
+            ]}
+          />
+
+          <NavSection
+            isCollapsed={isCollapsed}
+            title="DEVELOP"
+            items={[
+              { label: "Building Blocks", path: "/develop/building-blocks" },
+              { label: "No Code Editor", path: "/develop/no-code-editor" },
+              { label: "Applications", path: "/develop/applications" },
+            ]}
+          />
+
+          <NavSection isCollapsed={isCollapsed} title="DEPLOY" items={[]} />
+          <NavSection
+            isCollapsed={isCollapsed}
+            title="SYSTEM ADMIN"
+            items={[
+              { label: "Dashboard", path: "/system-admin/dashboard" },
+              { label: "System Monitoring", path: "/system-admin/system-monitoring" },
+              { label: "Workstation Management", path: "/system-admin/workstation-management" },
+              { label: "Camera Management", path: "/system-admin/camera-management" },
+              {
+                label: "Channel Management",
+                path: "/system-admin/channel-management",
+                subItems: [
+                  { label: "Channel 1", path: "/system-admin/channel-management/channel-1" },
+                  { label: "Channel 2", path: "/system-admin/channel-management/channel-2" },
+                  { label: "Channel 3", path: "/system-admin/channel-management/channel-3" },
+                  { label: "Channel 4", path: "/system-admin/channel-management/channel-4" },
+                ],
+              },
+              { label: "Model Management", path: "/system-admin/model-management" },
+              {
+                label: "User Management",
+                path: "#",
+                subItems: [
+                  { label: "Roles", path: "/system-admin/roles" },
+                  { label: "Users", path: "/system-admin/users" },
+                  { label: "Role Modules", path: "/system-admin/role-modules" },
+                ],
+              },
+              {
+                label: "Algorithm Package",
+                path: "#",
+                subItems: [
+                  { label: "Algorithm Context", path: "/system-admin/algorithm-context" },
+                  { label: "Package Management", path: "/system-admin/package-management" },
+                ],
+              },
+              { label: "Configuration", path: "/system-admin/configuration" },
+            ]}
+          />
+        </div>
+      </div>
+
+      <div className="p-4 border-t border-gray-200 dark:border-[#2a2a2a] space-y-4">
+        {!isCollapsed && (
+          <div className="flex items-center gap-3 px-4 py-3 bg-gray-100 dark:bg-[#1e1e1e]/50 rounded-xl border border-gray-200 dark:border-[#2a2a2a] cursor-pointer group hover:bg-gray-200 dark:hover:bg-[#1e1e1e] transition-colors">
+            <div className="w-10 h-10 rounded-full border-2 border-primary flex items-center justify-center text-primary font-black text-sm shrink-0">
+              4
+            </div>
+            <div className="shrink-0">
+              <p className="text-[11px] font-bold text-gray-900 dark:text-white group-hover:text-primary transition-colors tracking-tight">
+                Setup Panon Suite
+              </p>
+              <p className="text-[11px] text-gray-500 mt-1">4 Remaining Task</p>
+            </div>
+          </div>
+        )}
+        <div
+          onClick={toggleSidebar}
+          className={cn(
+            "flex items-center text-gray-500 hover:text-gray-900 dark:hover:text-white transition-colors cursor-pointer group rounded-lg hover:bg-white/5",
+            isCollapsed
+              ? "justify-center p-2 mx-1"
+              : "justify-between px-4 py-2",
+          )}
+        >
+          <div className="flex items-center gap-3">
+            <ChevronLeft
+              size={16}
+              className={cn(
+                "transition-transform",
+                isCollapsed
+                  ? "rotate-180 group-hover:translate-x-1"
+                  : "group-hover:-translate-x-1",
+              )}
+            />
+            {!isCollapsed && (
+              <span className="text-sm font-medium tracking-wide">
+                Collapse
+              </span>
+            )}
+          </div>
+        </div>
+      </div>
+    </aside>
+  );
+};
+
+const NavSection = ({
+  isCollapsed,
+  title,
+  items,
+}: {
+  isCollapsed: boolean;
+  title: string;
+  items: (NavItemType & { icon?: string })[];
+}) => {
+  const [isOpen, setIsOpen] = React.useState(true);
+  const [openSubMenus, setOpenSubMenus] = React.useState<Record<string, boolean>>({});
+
+  const toggleSubMenu = (label: string) => {
+    setOpenSubMenus(prev => ({ ...prev, [label]: !prev[label] }));
+  };
+
+  return (
+    <div className="space-y-1">
+      <div
+        onClick={() => setIsOpen(!isOpen)}
+        className={cn(
+          "px-6 flex items-center justify-between text-[10px] font-black tracking-widest text-gray-500 dark:text-gray-600 cursor-pointer group hover:text-gray-800 dark:hover:text-gray-400",
+          isCollapsed && "justify-center px-0",
+        )}
+      >
+        {!isCollapsed && <span>{title}</span>}
+        {!isCollapsed && (
+          <motion.div
+            animate={{ rotate: isOpen ? 0 : -90 }}
+            transition={{ duration: 0.2 }}
+          >
+            <ChevronDown size={12} />
+          </motion.div>
+        )}
+        {isCollapsed && (
+          <div className="w-6 h-0.5 bg-gray-300 dark:bg-gray-700/50 rounded-full" />
+        )}
+      </div>
+      <motion.div
+        initial={false}
+        animate={{ height: isOpen ? "auto" : 0, opacity: isOpen ? 1 : 0 }}
+        className="overflow-hidden"
+      >
+        <div className="space-y-1 mt-1">
+          {items.map((item) => (
+            <NavItem
+              key={item.label}
+              icon={item.icon || item.label}
+              label={item.label}
+              path={item.path}
+              subItems={item.subItems}
+              isOpen={openSubMenus[item.label]}
+              onToggle={() => toggleSubMenu(item.label)}
+              isCollapsed={isCollapsed}
+            />
+          ))}
+        </div>
+      </motion.div>
+    </div>
+  );
+};

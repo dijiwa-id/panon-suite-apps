@@ -1,0 +1,47 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap');
+@import "tailwindcss";
+
+@custom-variant dark (&:where(.dark, .dark *));
+
+@theme {
+  --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, SFMono-Regular, monospace;
+  --color-accent: #52C5F3;
+  --color-primary: #e11d48;
+}
+
+@layer base {
+  body {
+    @apply bg-gray-50 dark:bg-[#0e1016] text-gray-900 dark:text-white font-sans antialiased;
+  }
+
+  .custom-scrollbar::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+  }
+
+  .custom-scrollbar::-webkit-scrollbar-track {
+    @apply bg-transparent;
+  }
+
+  .custom-scrollbar::-webkit-scrollbar-thumb {
+    @apply bg-gray-300 dark:bg-[#1f1f1f] rounded-full hover:bg-gray-400 dark:hover:bg-[#2a2a2a] transition-colors;
+  }
+}
+
+/* Aesthetic Card & Component Enhancements */
+.card-glass {
+  @apply bg-white dark:bg-[#1e1e1e] border border-gray-200 dark:border-white/[0.05] shadow-lg dark:shadow-[0_8px_32px_rgba(0,0,0,0.3)] transition-all duration-300 rounded-xl;
+}
+
+.btn-primary {
+  @apply bg-accent text-white font-black uppercase tracking-[0.15em] text-[10px] px-6 py-2.5 rounded-xl hover:scale-[1.02] active:scale-[0.98] transition-all shadow-md dark:shadow-[0_0_20px_rgba(82,197,243,0.2)];
+}
+
+.btn-secondary {
+  @apply bg-gray-100 dark:bg-[#2a2a2a] text-gray-700 dark:text-gray-300 font-medium capitalize text-xs px-5 py-2.5 rounded-full border border-gray-300 dark:border-white/[0.05] hover:bg-gray-200 dark:hover:bg-[#333] hover:text-gray-900 dark:hover:text-white transition-all;
+}
+
+.input-field {
+  @apply bg-gray-100 dark:bg-[#202020] border border-gray-300 dark:border-white/[0.05] rounded-full py-2.5 px-4 text-xs text-gray-900 dark:text-gray-200 placeholder:text-gray-500 outline-none focus:ring-1 focus:ring-accent/30 focus:border-accent/30 transition-all shadow-inner;
+}
