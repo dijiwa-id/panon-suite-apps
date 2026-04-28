@@ -1,5 +1,6 @@
 import React from "react";
 import { Link, useLocation } from "react-router-dom";
+import { Logo } from './Logo';
 import {
   LayoutDashboard,
   Bell,
@@ -159,22 +160,17 @@ export const Sidebar = ({
       )}
     >
       <div className="px-6 h-[60px] flex items-center">
-        <h1
+        <Link to="/dashboard"
           className={cn(
-            "text-xl font-bold flex items-center gap-2 group w-full",
+            "flex items-center gap-2 group w-full",
             isCollapsed ? "justify-center" : "justify-start"
           )}
         >
-          <div className="w-8 h-8 bg-accent/20 rounded-lg flex items-center justify-center shrink-0 border border-accent/30 shadow-[0_0_15px_rgba(0,209,255,0.2)]">
-            <Aperture className="text-accent" size={18} strokeWidth={2.5} />
-          </div>
+          <Logo className={cn("h-8", isCollapsed ? "w-8" : "w-8")} />
           {!isCollapsed && (
-            <div className="flex items-center tracking-tight">
-              <span className="text-gray-900 dark:text-white text-lg">panon</span>
-              <span className="text-gray-500 font-medium ml-1 text-lg">suite</span>
-            </div>
+            <span className="font-bold text-lg tracking-tight text-white">panonsuite</span>
           )}
-        </h1>
+        </Link>
       </div>
 
       <div className="flex-1 overflow-y-auto custom-scrollbar pt-6">
