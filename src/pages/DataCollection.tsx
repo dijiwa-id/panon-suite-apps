@@ -127,7 +127,7 @@ export const DataCollection = () => {
           { label: 'Active Tasks', value: '8', icon: <Play className="text-accent" size={20} /> },
           { label: 'Pending Annotation', value: '45.2K', icon: <Filter className="text-orange-400" size={20} /> },
         ].map((stat, idx) => (
-          <div key={idx} className="bg-white dark:bg-[#1e1e1e] p-5 rounded-2xl border border-gray-200 dark:border-[#2a2a2a] shadow-sm flex items-center justify-between">
+          <div key={idx} className="bg-white dark:bg-[#1e1e1e] p-4 rounded-xl border border-gray-200 dark:border-[#2a2a2a] shadow-sm flex items-center justify-between">
             <div>
               <div className="text-xs font-semibold text-gray-500 mb-1">{stat.label}</div>
               <div className="text-2xl font-bold text-white tracking-tight">{stat.value}</div>
@@ -139,13 +139,13 @@ export const DataCollection = () => {
         ))}
       </div>
 
-      <div className="bg-white dark:bg-[#1e1e1e] rounded-2xl border border-gray-200 dark:border-[#2a2a2a] overflow-hidden shadow-sm">
+      <div className="bg-white dark:bg-[#1e1e1e] rounded-xl border border-gray-200 dark:border-[#2a2a2a] overflow-hidden shadow-sm">
         <div className="p-5 border-b border-[#2a2a2a] flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 bg-[#1a1a1a]">
           <h2 className="text-sm font-bold text-white">Active Datasets</h2>
           <div className="flex gap-3 w-full sm:w-auto">
              <div className="bg-[#151515] px-4 py-2 rounded-xl border border-[#2a2a2a] flex items-center gap-2 flex-1 sm:flex-none">
                 <Search className="text-gray-400" size={16} />
-                <input type="text" placeholder="Search datasets..." className="bg-transparent outline-none text-xs font-medium text-gray-200 w-full sm:w-48" />
+                <input type="text" placeholder="Search datasets..." className="bg-transparent outline-none text-xs font-medium text-gray-200 w-full sm:w-48 focus:border-accent rounded-lg border border-[#2a2a2a] px-2 py-1" />
              </div>
              <button className="bg-[#151515] p-3 rounded-xl border border-[#2a2a2a] text-gray-400 hover:text-white transition-colors flex items-center justify-center">
                 <Filter size={16} />

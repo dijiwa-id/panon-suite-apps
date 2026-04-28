@@ -288,16 +288,15 @@ export const Sidebar = ({
                 ],
               },
               {
-                label: "User Management",
+                label: "Configuration",
                 path: "#",
                 subItems: [
+                  { label: "General", path: "/system-admin/configuration" },
                   { label: "Roles", path: "/system-admin/roles" },
                   { label: "Users", path: "/system-admin/users" },
                   { label: "Role Modules", path: "/system-admin/role-modules" },
                 ],
               },
-              { label: "divider", path: "", isDivider: true },
-              { label: "Configuration", path: "/system-admin/configuration" },
             ]}
           />
         </div>

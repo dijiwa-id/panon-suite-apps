@@ -112,7 +112,7 @@ export const WorkstationManagement = () => {
         </div>
       </div>
 
-      <div className="bg-[#1e1e1e] rounded-2xl border border-[#2a2a2a] overflow-hidden shadow-sm">
+      <div className="bg-[#1e1e1e] rounded-xl border border-[#2a2a2a] overflow-hidden shadow-sm">
         <div className="p-5 border-b border-[#2a2a2a] flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 bg-[#1a1a1a]">
           <h2 className="text-sm font-bold text-white flex items-center gap-2">
             <Server size={16} className="text-gray-500" /> Cluster Nodes

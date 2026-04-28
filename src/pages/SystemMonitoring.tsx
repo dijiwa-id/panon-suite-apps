@@ -89,7 +89,7 @@ export const SystemMonitoring = () => {
       {/* Charts */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 mb-4">
         {hardwareData.map((chart) => (
-          <div key={chart.name} className="bg-[#1e1e1e] p-5 rounded-2xl border border-[#2a2a2a] shadow-sm">
+          <div key={chart.name} className="bg-[#1e1e1e] p-4 rounded-xl border border-[#2a2a2a] shadow-sm">
             <div className="flex items-center gap-2 mb-4">
                <Activity size={16} className="text-gray-500" />
                <h3 className="text-sm font-bold text-white">{chart.name}</h3>
@@ -136,7 +136,7 @@ export const SystemMonitoring = () => {
             { label: 'API Gateway', value: <span className="text-green-400 font-semibold text-xs">Running</span> },
           ]}
         ].map(table => (
-          <div key={table.title} className="bg-[#1e1e1e] rounded-2xl border border-[#2a2a2a] overflow-hidden shadow-sm">
+          <div key={table.title} className="bg-[#1e1e1e] rounded-xl border border-[#2a2a2a] overflow-hidden shadow-sm">
              <div className="p-5 border-b border-[#2a2a2a] bg-[#1a1a1a] flex items-center gap-2">
                {table.icon}
                <h3 className="text-sm font-bold text-white">{table.title}</h3>

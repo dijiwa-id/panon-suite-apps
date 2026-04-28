@@ -87,7 +87,7 @@ export const DataSet = () => {
           { label: 'Annotated', value: formatNumber(totalAnnotated), icon: <CheckCircle2 size={20} className="text-green-500" /> },
           { label: 'Storage Used', value: totalStorageStr, icon: <Clock size={20} className="text-purple-400" /> },
         ].map((stat, idx) => (
-          <div key={idx} className="bg-[#1e1e1e] p-5 rounded-2xl border border-[#2a2a2a] shadow-sm flex items-center justify-between">
+          <div key={idx} className="bg-[#1e1e1e] p-4 rounded-xl border border-[#2a2a2a] shadow-sm flex items-center justify-between">
             <div>
               <p className="text-[10px] text-gray-500 font-bold uppercase tracking-widest mb-1">{stat.label}</p>
               <h3 className="text-2xl font-black text-white tracking-tight">{stat.value}</h3>
@@ -99,7 +99,7 @@ export const DataSet = () => {
         ))}
       </div>
 
-      <div className="bg-[#1e1e1e] rounded-2xl border border-[#2a2a2a] overflow-hidden shadow-sm">
+      <div className="bg-[#1e1e1e] rounded-xl border border-[#2a2a2a] overflow-hidden shadow-sm">
         <div className="p-5 border-b border-[#2a2a2a] flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 bg-[#1a1a1a]">
           <h2 className="text-sm font-bold text-white flex items-center gap-2">
             Dataset Overview
@@ -187,7 +187,7 @@ export const DataSet = () => {
             className="absolute inset-0 bg-black/60 backdrop-blur-sm"
             onClick={() => setIsModalOpen(false)}
           ></div>
-          <div className="relative w-full max-w-lg bg-[#1e1e1e] border border-[#2a2a2a] rounded-2xl shadow-2xl overflow-hidden flex flex-col">
+          <div className="relative w-full max-w-lg bg-[#1e1e1e] border border-[#2a2a2a] rounded-xl shadow-2xl overflow-hidden flex flex-col">
             <div className="flex items-center justify-between p-5 border-b border-[#2a2a2a] bg-[#1a1a1a]">
               <h2 className="text-sm font-bold text-white flex items-center gap-2">
                 <div className="w-2 h-2 rounded-full bg-accent shadow-[0_0_8px_rgba(82,197,243,0.8)]"></div>

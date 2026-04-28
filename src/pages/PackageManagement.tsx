@@ -42,7 +42,7 @@ const AddPackageModal = ({ isOpen, onClose }: { isOpen: boolean; onClose: () => 
           <button onClick={onClose} className="text-gray-500 hover:text-white font-bold text-xs uppercase tracking-widest transition-colors">
             Cancel
           </button>
-          <button onClick={onClose} className="bg-[#1c1c1c] border border-gray-700 h-[29px] text-white rounded-full text-xs font-bold uppercase tracking-wide px-6 hover:bg-[#2a2a2a] transition-colors leading-[12px]">
+          <button onClick={() => { console.log('Submitting package...'); onClose(); }} className="bg-[#1c1c1c] border border-gray-700 h-[29px] text-white rounded-full text-xs font-bold uppercase tracking-wide px-6 hover:bg-[#2a2a2a] transition-colors leading-[12px]">
             Submit
           </button>
         </div>

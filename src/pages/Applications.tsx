@@ -43,13 +43,13 @@ export const Applications = () => {
         </div>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
         {[
           { label: 'Running Apps', value: '2', icon: <Play size={20} className="text-green-500 fill-green-500/20" /> },
           { label: 'Total Inferences/hr', value: '45.2K', icon: <Activity size={20} className="text-accent" /> },
           { label: 'System Load', value: '34%', icon: <Server size={20} className="text-secondary" /> },
         ].map((stat, idx) => (
-          <div key={idx} className="bg-[#1e1e1e] p-5 rounded-2xl border border-[#2a2a2a] shadow-sm flex items-center justify-between">
+          <div key={idx} className="bg-[#1e1e1e] p-4 rounded-xl border border-[#2a2a2a] shadow-sm flex items-center justify-between">
             <div>
               <p className="text-[10px] text-gray-500 font-bold uppercase tracking-widest mb-1">{stat.label}</p>
               <h3 className="text-2xl font-black text-white tracking-tight">{stat.value}</h3>
@@ -61,9 +61,9 @@ export const Applications = () => {
         ))}
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
           {apps.map((app) => (
-              <div key={app.id} className="bg-[#1e1e1e] border border-[#2a2a2a] rounded-2xl p-6 flex flex-col hover:border-accent/30 transition-colors group">
+              <div key={app.id} className="bg-[#1e1e1e] border border-[#2a2a2a] rounded-xl p-6 flex flex-col hover:border-accent/30 transition-colors group">
                   <div className="flex justify-between items-start mb-4">
                       <div>
                           <div className="flex items-center gap-2 mb-2">

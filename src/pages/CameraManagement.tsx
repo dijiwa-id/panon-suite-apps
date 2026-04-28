@@ -101,7 +101,7 @@ const AddCameraModal = ({ isOpen, onClose }: { isOpen: boolean; onClose: () => v
                 <div className="flex flex-col justify-center">
                     <h3 className="text-sm font-bold text-white mb-2">Connection Test</h3>
                     <p className="text-xs text-gray-400 leading-relaxed mb-4">Click below to test the connection stream before saving. Make sure your RTSP URL is accessible from the server.</p>
-                    <button className="self-start bg-[#161616] border border-[#2a2a2a] hover:bg-[#2a2a2a] text-gray-300 h-[32px] px-5 rounded-full text-xs font-bold transition-colors">
+                    <button onClick={() => console.log('Testing connection...')} className="self-start bg-[#161616] border border-[#2a2a2a] hover:bg-[#2a2a2a] text-gray-300 h-[32px] px-5 rounded-full text-xs font-bold transition-colors">
                         Test Connection
                     </button>
                 </div>
@@ -112,7 +112,7 @@ const AddCameraModal = ({ isOpen, onClose }: { isOpen: boolean; onClose: () => v
           <button onClick={onClose} className="text-gray-400 hover:text-white font-semibold text-xs px-4 transition-colors">
             Cancel
           </button>
-          <button onClick={onClose} className="bg-accent hover:bg-accent/90 text-black h-[36px] rounded-full text-xs font-bold px-8 transition-colors shadow-[0_0_15px_rgba(82,197,243,0.3)]">
+          <button onClick={() => { console.log('Registering camera...'); onClose(); }} className="bg-accent hover:bg-accent/90 text-black h-[36px] rounded-full text-xs font-bold px-8 transition-colors shadow-[0_0_15px_rgba(82,197,243,0.3)]">
             Register Camera
           </button>
         </div>
@@ -143,7 +143,7 @@ export const CameraManagement = () => {
 
       <AddCameraModal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} />
 
-      <div className="bg-[#1e1e1e] rounded-2xl border border-[#2a2a2a] overflow-hidden shadow-sm">
+      <div className="bg-[#1e1e1e] rounded-xl border border-[#2a2a2a] overflow-hidden shadow-sm">
         <div className="p-5 border-b border-[#2a2a2a] flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 bg-[#1a1a1a]">
           <h2 className="text-sm font-bold text-white flex items-center gap-2">
             <Camera size={16} className="text-gray-500" /> Camera Inventory

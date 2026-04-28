@@ -70,6 +70,7 @@ export const ImageAnnotation = () => {
   const [zoom, setZoom] = useState(100);
   const [isAddingClass, setIsAddingClass] = useState(false);
   const [newClassName, setNewClassName] = useState('');
+  const [annotationToDelete, setAnnotationToDelete] = useState<string | null>(null);
 
   const containerRef = useRef<HTMLDivElement>(null);
 
@@ -86,6 +87,14 @@ export const ImageAnnotation = () => {
       setActiveClass(newClass.id);
       setNewClassName('');
       setIsAddingClass(false);
+    }
+  };
+
+  const confirmDelete = () => {
+    if (annotationToDelete) {
+      setAnnotations(annotations.filter(a => a.id !== annotationToDelete));
+      if (selectedAnnotationId === annotationToDelete) setSelectedAnnotationId(null);
+      setAnnotationToDelete(null);
     }
   };
 
@@ -144,11 +153,7 @@ export const ImageAnnotation = () => {
     }
   };
 
-  const deleteAnnotation = (id: string, e?: React.MouseEvent) => {
-    if (e) e.stopPropagation();
-    setAnnotations(annotations.filter(a => a.id !== id));
-    if (selectedAnnotationId === id) setSelectedAnnotationId(null);
-  };
+
 
   const getClassDetails = (classId: string) => {
     return classes.find(c => c.id === classId) || classes[0];
@@ -385,7 +390,7 @@ export const ImageAnnotation = () => {
                           setActiveTool('select');
                        }}
                        className={cn(
-                           "bg-[#1a1a1a] p-3 rounded-lg border transition-colors group cursor-pointer",
+                           "bg-[#1a1a1a] p-3 rounded-xl border transition-colors group cursor-pointer",
                            isSelected ? "border-white" : "border-[#2a2a2a] hover:border-gray-500"
                        )}
                      >
@@ -395,7 +400,7 @@ export const ImageAnnotation = () => {
                                 <span className={cn("text-sm font-semibold selection:bg-accent/30", isSelected ? "text-white" : "text-gray-300")}>{itemClass.name} {index + 1}</span>
                              </div>
                              <button 
-                               onClick={(e) => deleteAnnotation(annotation.id, e)}
+                               onClick={(e) => { e.stopPropagation(); setAnnotationToDelete(annotation.id); }}
                                className={cn("text-gray-600 hover:text-red-500 transition-opacity", isSelected ? "opacity-100" : "opacity-0 group-hover:opacity-100")}
                              >
                                 <Trash2 size={14}/>
@@ -409,6 +414,20 @@ export const ImageAnnotation = () => {
                      <div className="text-center py-6 border border-[#2a2a2a] border-dashed rounded-xl">
                          <div className="text-xs text-gray-500 font-medium">No instances added yet.</div>
                      </div>
+                 )}
+                 
+                 {/* Delete Confirmation Modal */}
+                 {annotationToDelete && (
+                   <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm p-4">
+                     <div className="bg-[#1e1e1e] border border-[#2a2a2a] rounded-xl shadow-2xl p-6 w-full max-w-sm">
+                       <h2 className="text-lg font-bold text-white mb-2">Delete Annotation</h2>
+                       <p className="text-sm text-gray-400 mb-6">Are you sure you want to delete this annotation? This action cannot be undone.</p>
+                       <div className="flex gap-3 justify-end">
+                         <button onClick={() => setAnnotationToDelete(null)} className="px-4 py-2 rounded-lg text-sm font-bold text-gray-300 hover:bg-[#2a2a2a] transition-colors">Cancel</button>
+                         <button onClick={confirmDelete} className="px-4 py-2 rounded-lg text-sm font-bold bg-red-600 text-white hover:bg-red-700 transition-colors">Delete</button>
+                       </div>
+                     </div>
+                   </div>
                  )}
              </div>
           </div>

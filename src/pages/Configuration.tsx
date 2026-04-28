@@ -21,9 +21,9 @@ export const Configuration = () => {
             </button>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           {/* AI Model Config */}
-          <div className="bg-[#1e1e1e] rounded-2xl border border-[#2a2a2a] p-6 space-y-4">
+          <div className="bg-[#1e1e1e] rounded-xl border border-[#2a2a2a] p-6 space-y-4">
             <div className="flex items-center gap-3 text-white font-bold mb-4">
               <Cpu size={20} className="text-accent" /> AI Model Engine
             </div>
@@ -43,7 +43,7 @@ export const Configuration = () => {
           </div>
 
           {/* Processing Config */}
-          <div className="bg-[#1e1e1e] rounded-2xl border border-[#2a2a2a] p-6 space-y-4">
+          <div className="bg-[#1e1e1e] rounded-xl border border-[#2a2a2a] p-6 space-y-4">
             <div className="flex items-center gap-3 text-white font-bold mb-4">
               <Layers size={20} className="text-accent" /> Processing Engine
             </div>
@@ -60,7 +60,7 @@ export const Configuration = () => {
           </div>
 
           {/* Integration Config */}
-          <div className="bg-[#1e1e1e] rounded-2xl border border-[#2a2a2a] p-6 space-y-4 col-span-1 md:col-span-2">
+          <div className="bg-[#1e1e1e] rounded-xl border border-[#2a2a2a] p-6 space-y-4 col-span-1 md:col-span-2">
             <div className="flex items-center gap-3 text-white font-bold mb-4">
               <Wifi size={20} className="text-accent" /> Stream & Integration
             </div>

@@ -10,6 +10,8 @@ const models = [
 ];
 
 export const ModelManagement = () => {
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
   return (
     <main className="flex-1 overflow-y-auto bg-[#161616] p-6 lg:p-8 text-gray-200 transition-colors">
       <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-6 gap-4">
@@ -18,11 +20,30 @@ export const ModelManagement = () => {
           <p className="text-gray-400 text-xs font-medium">Upload, manage, and verify AI models for edge inferences.</p>
         </div>
         <div className="flex gap-3 w-full md:w-auto">
-          <button className="flex-1 md:flex-none flex justify-center items-center gap-2 bg-accent hover:bg-accent/90 text-black h-[36px] rounded-full text-xs font-bold px-6 transition-colors shadow-[0_0_15px_rgba(82,197,243,0.3)] leading-[12px]">
+          <button onClick={() => setIsModalOpen(true)} className="flex-1 md:flex-none flex justify-center items-center gap-2 bg-accent hover:bg-accent/90 text-black h-[36px] rounded-full text-xs font-bold px-6 transition-colors shadow-[0_0_15px_rgba(82,197,243,0.3)] leading-[12px]">
             <Upload size={14} /> Upload Custom Model (.onnx)
           </button>
         </div>
       </div>
+
+      {isModalOpen && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm p-4">
+          <div className="bg-[#1e1e1e] border border-[#2a2a2a] rounded-xl shadow-2xl p-6 w-full max-w-lg">
+            <h2 className="text-lg font-bold text-white mb-2">Upload Custom Model</h2>
+            <p className="text-sm text-gray-400 mb-6">Import your pre-compiled .onnx model file for edge deployment.</p>
+            
+            <div className="border border-dashed border-[#2a2a2a] rounded-xl p-8 flex flex-col items-center justify-center gap-3 cursor-pointer hover:border-accent transition-colors">
+                <Upload size={24} className="text-gray-600" />
+                <p className="text-sm font-medium text-gray-400">Drag & drop .onnx file or click to select</p>
+            </div>
+            
+            <div className="flex gap-3 justify-end mt-6">
+                <button onClick={() => setIsModalOpen(false)} className="px-4 py-2 rounded-lg text-sm font-bold text-gray-300 hover:bg-[#2a2a2a] transition-colors">Cancel</button>
+                <button onClick={() => { console.log('Uploading model...'); setIsModalOpen(false); }} className="px-4 py-2 rounded-lg text-sm font-bold bg-accent text-black hover:bg-accent/90 transition-colors">Upload</button>
+            </div>
+          </div>
+        </div>
+      )}
 
       <div className="bg-[#1e1e1e] rounded-2xl border border-[#2a2a2a] overflow-hidden shadow-sm">
         <div className="p-5 border-b border-[#2a2a2a] flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 bg-[#1a1a1a]">

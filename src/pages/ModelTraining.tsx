@@ -28,7 +28,7 @@ export const ModelTraining = () => {
 
       {/* Active Training Dashboard */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8">
-        <div className="col-span-1 lg:col-span-2 bg-[#1e1e1e] rounded-2xl border border-[#2a2a2a] p-6 shadow-sm overflow-hidden flex flex-col">
+        <div className="col-span-1 lg:col-span-2 bg-[#1e1e1e] rounded-xl border border-[#2a2a2a] p-6 shadow-sm overflow-hidden flex flex-col">
             <div className="flex justify-between items-start mb-6">
                  <div>
                      <div className="flex items-center gap-2 mb-1">
@@ -79,7 +79,7 @@ export const ModelTraining = () => {
             </div>
         </div>
 
-        <div className="col-span-1 bg-[#1e1e1e] rounded-2xl border border-[#2a2a2a] p-6 shadow-sm flex flex-col">
+        <div className="col-span-1 bg-[#1e1e1e] rounded-xl border border-[#2a2a2a] p-6 shadow-sm flex flex-col">
             <h3 className="text-sm font-bold text-white mb-6 flex items-center gap-2">
                 <Cpu size={16} className="text-gray-500" /> Hardware Allocation
             </h3>
@@ -122,7 +122,7 @@ export const ModelTraining = () => {
         </div>
       </div>
 
-      <div className="bg-[#1e1e1e] rounded-2xl border border-[#2a2a2a] overflow-hidden shadow-sm">
+      <div className="bg-[#1e1e1e] rounded-xl border border-[#2a2a2a] overflow-hidden shadow-sm">
         <div className="p-5 border-b border-[#2a2a2a] flex items-center gap-2 bg-[#1a1a1a]">
           <History size={16} className="text-gray-500" />
           <h2 className="text-sm font-bold text-white">Recent Training Jobs</h2>

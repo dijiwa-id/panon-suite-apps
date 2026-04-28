@@ -8,6 +8,7 @@ export const ChannelManagement = () => {
     const channelName = channelId ? `Channel ${channelId.replace('channel-', '')}` : 'Channel 01';
     
     const [isPlaying, setIsPlaying] = useState(false);
+    const [confidence, setConfidence] = useState(75);
 
     return (
         <main className="flex-1 overflow-y-auto bg-[#161616] p-6 text-gray-200 transition-colors">
@@ -21,10 +22,10 @@ export const ChannelManagement = () => {
                     <p className="text-gray-400 text-xs font-medium">Manage pipeline, ROIs, and model settings for this video stream.</p>
                 </div>
                 <div className="flex items-center gap-3 w-full lg:w-auto">
-                    <button className="flex-1 lg:flex-none flex justify-center items-center gap-2 bg-[#1c1c1c] border border-gray-700 h-[32px] text-white rounded-full text-xs font-bold px-5 hover:bg-[#2a2a2a] transition-colors leading-[12px]">
+                    <button onClick={() => console.log('Restarting stream...')} className="flex-1 lg:flex-none flex justify-center items-center gap-2 bg-[#1c1c1c] border border-gray-700 h-[32px] text-white rounded-full text-xs font-bold px-5 hover:bg-[#2a2a2a] transition-colors leading-[12px]">
                         <RefreshCw size={14} /> Restart Stream
                     </button>
-                    <button className="flex-1 lg:flex-none flex justify-center items-center gap-2 bg-accent hover:bg-accent/90 text-black h-[32px] rounded-full text-xs font-bold px-5 transition-colors shadow-[0_0_15px_rgba(82,197,243,0.3)] leading-[12px]">
+                    <button onClick={() => console.log('Saving changes...')} className="flex-1 lg:flex-none flex justify-center items-center gap-2 bg-accent hover:bg-accent/90 text-black h-[32px] rounded-full text-xs font-bold px-5 transition-colors shadow-[0_0_15px_rgba(82,197,243,0.3)] leading-[12px]">
                         <Save size={14} /> Save Changes
                     </button>
                 </div>
@@ -35,7 +36,7 @@ export const ChannelManagement = () => {
                 {/* Left Column - Configuration */}
                 <div className="lg:col-span-4 space-y-5">
                     {/* Basic Settings */}
-                    <div className="bg-[#1e1e1e] border border-[#2a2a2a] rounded-2xl shadow-sm overflow-hidden">
+                    <div className="bg-[#1e1e1e] border border-[#2a2a2a] rounded-xl shadow-sm overflow-hidden">
                         <div className="flex items-center gap-2 p-4 border-b border-[#2a2a2a] bg-[#1a1a1a]">
                             <Settings size={16} className="text-gray-500" />
                             <h2 className="text-sm font-bold text-white">Stream Source</h2>
@@ -63,7 +64,7 @@ export const ChannelManagement = () => {
                     </div>
 
                     {/* Analytics Settings */}
-                    <div className="bg-[#1e1e1e] border border-[#2a2a2a] rounded-2xl shadow-sm overflow-hidden">
+                    <div className="bg-[#1e1e1e] border border-[#2a2a2a] rounded-xl shadow-sm overflow-hidden">
                         <div className="flex items-center gap-2 p-4 border-b border-[#2a2a2a] bg-[#1a1a1a]">
                             <Activity size={16} className="text-gray-500" />
                             <h2 className="text-sm font-bold text-white">Analytics Engine</h2>
@@ -120,8 +121,8 @@ export const ChannelManagement = () => {
                             <div className="pt-2 border-t border-[#2a2a2a]">
                                 <label className="block text-xs font-semibold text-gray-400 mb-2">Confidence Threshold</label>
                                 <div className="flex items-center gap-4">
-                                    <input type="range" min="0" max="100" defaultValue="75" className="flex-1 h-1 bg-[#2a2a2a] rounded-lg appearance-none cursor-pointer accent-accent" />
-                                    <span className="text-xs font-mono font-bold text-accent w-8 text-right">75%</span>
+                                    <input type="range" min="0" max="100" value={confidence} onChange={(e) => setConfidence(parseInt(e.target.value))} className="flex-1 h-1 bg-[#2a2a2a] rounded-lg appearance-none cursor-pointer accent-accent" />
+                                    <span className="text-xs font-mono font-bold text-accent w-8 text-right">{confidence}%</span>
                                 </div>
                             </div>
                         </div>
@@ -131,7 +132,7 @@ export const ChannelManagement = () => {
                 {/* Right Column - Preview & Regions */}
                 <div className="lg:col-span-8 flex flex-col gap-5">
                     {/* Live Preview */}
-                    <div className="bg-[#1e1e1e] border border-[#2a2a2a] rounded-2xl shadow-sm overflow-hidden flex flex-col">
+                    <div className="bg-[#1e1e1e] border border-[#2a2a2a] rounded-xl shadow-sm overflow-hidden flex flex-col">
                         <div className="flex items-center justify-between p-4 border-b border-[#2a2a2a] bg-[#1a1a1a]">
                             <div className="flex items-center gap-2">
                                 <Eye size={16} className="text-gray-500" />
@@ -193,7 +194,7 @@ export const ChannelManagement = () => {
                     </div>
                     
                     {/* Insights & Logs */}
-                    <div className="bg-[#1e1e1e] border border-[#2a2a2a] rounded-2xl shadow-sm overflow-hidden flex-1 flex flex-col">
+                    <div className="bg-[#1e1e1e] border border-[#2a2a2a] rounded-xl shadow-sm overflow-hidden flex-1 flex flex-col">
                         <div className="flex items-center gap-2 p-4 border-b border-[#2a2a2a] bg-[#1a1a1a]">
                             <AlertTriangle size={16} className="text-gray-500" />
                             <h2 className="text-sm font-bold text-white">Real-Time Detections</h2>

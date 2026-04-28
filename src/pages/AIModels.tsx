@@ -19,7 +19,7 @@ export const AIModels = () => {
         </div>
       </div>
 
-      <div className="bg-[#1e1e1e] rounded-2xl border border-[#2a2a2a] overflow-hidden shadow-sm">
+      <div className="bg-[#1e1e1e] rounded-xl border border-[#2a2a2a] overflow-hidden shadow-sm">
         <div className="p-5 border-b border-[#2a2a2a] flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 bg-[#1a1a1a]">
           <h2 className="text-sm font-bold text-white flex items-center gap-2">
             <Box size={16} className="text-gray-500" /> Trained Artifacts
@@ -80,10 +80,10 @@ export const AIModels = () => {
                     </div>
                   </td>
                   <td className="px-5 py-4 flex justify-end gap-2">
-                      <button className="p-1.5 bg-[#151515] border border-[#2a2a2a] hover:bg-[#2a2a2a] rounded-lg text-gray-400 transition-colors" title="View details">
+                      <button onClick={() => console.log('Viewing details for', model.id)} className="p-1.5 bg-[#151515] border border-[#2a2a2a] hover:bg-[#2a2a2a] rounded-lg text-gray-400 transition-colors" title="View details">
                           <Info size={14} />
                       </button>
-                      <button className="p-1.5 bg-[#151515] border border-[#2a2a2a] hover:text-white hover:bg-[#2a2a2a] rounded-lg text-gray-400 transition-colors" title="Export ONNX">
+                      <button onClick={() => console.log('Exporting ONNX for', model.id)} className="p-1.5 bg-[#151515] border border-[#2a2a2a] hover:text-white hover:bg-[#2a2a2a] rounded-lg text-gray-400 transition-colors" title="Export ONNX">
                           <Download size={14} />
                       </button>
                   </td>

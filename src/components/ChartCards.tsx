@@ -23,7 +23,7 @@ export const AccuracyLineChart = () => {
   ]);
 
   return (
-    <div className="card-glass p-6 h-full flex flex-col shadow-sm border border-gray-200 dark:border-[#1f232d] bg-white dark:bg-[#1e1e1e] rounded-xl">
+    <div className="card-glass p-6 h-full flex flex-col shadow-sm border border-gray-200 dark:border-[#1f232d] bg-white dark:bg-gradient-to-br dark:from-[#1e1e1e] dark:to-[#1a262d] rounded-xl">
       <div className="flex items-center justify-between mb-6 shrink-0">
         <h3 className="text-[10px] font-bold text-gray-900 dark:text-white uppercase tracking-widest leading-none">Accuracy Report</h3>
         <span className="text-[8px] font-bold uppercase tracking-widest text-gray-500 bg-gray-100 dark:bg-[#252525] px-2 py-1 rounded">Week</span>
@@ -34,11 +34,11 @@ export const AccuracyLineChart = () => {
           <AreaChart data={data} margin={{ top: 10, right: 0, left: -20, bottom: 0 }}>
             <defs>
               <linearGradient id="colorValue" x1="0" y1="0" x2="0" y2="1">
-                <stop offset="5%" stopColor="#52C5F3" stopOpacity={0.2}/>
+                <stop offset="5%" stopColor="#52C5F3" stopOpacity={0.15}/>
                 <stop offset="95%" stopColor="#52C5F3" stopOpacity={0.0}/>
               </linearGradient>
             </defs>
-            <CartesianGrid vertical={false} stroke="currentColor" strokeDasharray="4 4" className="text-gray-200 dark:text-white opacity-40 dark:opacity-[0.03]" />
+            <CartesianGrid vertical={false} stroke="currentColor" strokeDasharray="4 4" className="text-gray-200 dark:text-white opacity-[0.03]" />
             <XAxis 
                dataKey="name" 
                axisLine={false} 
@@ -53,13 +53,13 @@ export const AccuracyLineChart = () => {
                tickFormatter={(val) => val === 0 ? '0' : `${val / 1000}K`}
             />
             {/* The dotted baseline */}
-            <ReferenceLine y={3560} stroke="#52C5F3" strokeDasharray="3 3" opacity={0.6} />
+            <ReferenceLine y={3560} stroke="#52C5F3" strokeDasharray="3 3" opacity={0.4} />
             <Tooltip 
                cursor={false}
                content={({ active, payload }) => {
                  if (active && payload && payload.length) {
                    return (
-                     <div className="bg-[#52C5F3] text-white text-[10px] px-2.5 py-1 rounded shadow-md font-bold">
+                     <div className="bg-[#1f1f1f] border border-[#2a2a2a] text-white text-[10px] px-2.5 py-1 rounded shadow-md font-bold">
                        ${payload[0].value}
                      </div>
                    );
@@ -71,7 +71,7 @@ export const AccuracyLineChart = () => {
               type="monotone" 
               dataKey="value" 
               stroke="#52C5F3" 
-              strokeWidth={2}
+              strokeWidth={1.5}
               fillOpacity={1} 
               fill="url(#colorValue)" 
               animationDuration={2000}
@@ -85,7 +85,7 @@ export const AccuracyLineChart = () => {
 
 export const AccuracyCircularCard = () => {
   return (
-    <div className="card-glass p-6 h-full flex flex-col justify-between shadow-sm border border-gray-200 dark:border-[#1f232d] bg-white dark:bg-[#1e1e1e] rounded-xl">
+    <div className="card-glass p-6 h-full flex flex-col justify-between shadow-sm border border-gray-200 dark:border-[#1f232d] bg-white dark:bg-gradient-to-br dark:from-[#1e1e1e] dark:to-[#1a262d] rounded-xl">
       <div className="flex items-center justify-between shrink-0 mb-6">
         <h3 className="text-[10px] font-bold text-gray-900 dark:text-white uppercase tracking-widest leading-none">Accuracy Status</h3>
         <span className="text-[8px] font-bold uppercase tracking-widest text-gray-500 bg-gray-100 dark:bg-[#252525] px-2 py-1 rounded">Week</span>

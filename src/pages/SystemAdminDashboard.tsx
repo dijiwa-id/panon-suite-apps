@@ -36,7 +36,7 @@ export const SystemAdminDashboard = () => {
           { label: 'Avg Latency', value: '45ms', icon: <Activity size={20} className="text-green-400" /> },
           { label: 'System Alerts', value: '3', icon: <AlertTriangle size={20} className="text-secondary" /> },
         ].map((stat, idx) => (
-          <div key={idx} className="bg-[#1e1e1e] p-5 rounded-2xl border border-[#2a2a2a] shadow-sm flex items-center justify-between">
+          <div key={idx} className="bg-[#1e1e1e] p-4 rounded-xl border border-[#2a2a2a] shadow-sm flex items-center justify-between">
             <div>
               <div className="text-xs font-semibold text-gray-500 mb-1">{stat.label}</div>
               <div className="text-2xl font-bold text-white tracking-tight">{stat.value}</div>
@@ -91,7 +91,7 @@ export const SystemAdminDashboard = () => {
       </div>
 
       {/* Table */}
-      <div className="bg-[#1e1e1e] rounded-2xl border border-[#2a2a2a] overflow-hidden shadow-sm">
+      <div className="bg-[#1e1e1e] rounded-xl border border-[#2a2a2a] overflow-hidden shadow-sm">
         <div className="p-5 border-b border-[#2a2a2a] bg-[#1a1a1a]">
           <h2 className="text-sm font-bold text-white">Recent Alerts</h2>
         </div>
