@@ -11,7 +11,7 @@ export const ChannelManagement = () => {
     const [confidence, setConfidence] = useState(75);
 
     return (
-        <main className="flex-1 overflow-y-auto bg-gray-50 dark:bg-[#161616] p-6 text-gray-800 dark:text-gray-200 transition-colors">
+        <main className="flex-1 overflow-y-auto bg-gray-50 dark:bg-[#161616] p-6 text-gray-800 dark:text-gray-200 transition-colors custom-scrollbar">
             
             <div className="flex flex-col lg:flex-row justify-between items-start lg:items-center mb-4 gap-4">
                 <div>

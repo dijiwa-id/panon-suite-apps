@@ -4,7 +4,7 @@ export const ImageAnnotationDetail = () => {
   return (
     <div className="card-glass p-0 col-span-3 h-full flex flex-col min-h-[300px] overflow-hidden relative shadow-sm border border-gray-200 dark:border-[#222] bg-white dark:bg-[#1e1e1e]">
       <div className="p-4 bg-white/5 border-b border-[#222]/40 shrink-0 backdrop-blur-md absolute top-0 z-10 w-full flex justify-between items-center">
-        <h3 className="text-[10px] font-bold text-gray-900 dark:text-white leading-none">Live Camera Feed</h3>
+        <h3 className="text-sm font-bold text-gray-900 dark:text-white tracking-tight leading-none">Live Camera Feed</h3>
         <span className="bg-secondary/20 text-secondary border border-secondary/30 px-2 py-0.5 rounded text-[8px] font-bold animate-pulse">Live</span>
       </div>
 

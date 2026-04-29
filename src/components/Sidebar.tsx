@@ -18,6 +18,9 @@ import {
   ChevronLeft,
   Aperture,
   Users,
+  Camera,
+  List,
+  FileText
 } from "lucide-react";
 import { cn } from "../lib/utils";
 import { motion } from "motion/react";
@@ -44,6 +47,9 @@ const iconMap: Record<string, React.ReactNode> = {
   "Users": <Box size={18} />,
   "Role Modules": <Layers size={18} />,
   "Configuration": <Layout size={18} />,
+  "Live Feed Camera": <Camera size={18} />,
+  "Detection Log": <List size={18} />,
+  "Report": <FileText size={18} />,
 };
 
 interface NavItemProps {
@@ -114,7 +120,7 @@ const NavItem: React.FC<NavItemProps & { subItems?: SubItem[]; isOpen?: boolean;
               {iconMap[icon] || <Box size={18} />}
             </span>
             {!isCollapsed && (
-              <span className="text-[13px] font-medium tracking-wide capitalize">
+              <span className="text-xs font-normal tracking-wide capitalize">
                 {label}
               </span>
             )}
@@ -168,7 +174,7 @@ export const Sidebar = ({
         >
           <Logo className={cn("h-8", isCollapsed ? "w-8" : "w-8")} />
           {!isCollapsed && (
-            <span className="font-bold text-lg tracking-tight text-gray-900 dark:text-white">panonsuite</span>
+            <span className="text-lg tracking-tight text-gray-900 dark:text-white"><span className="font-bold">panon</span><span className="font-normal">suite</span></span>
           )}
         </Link>
       </div>
@@ -185,8 +191,8 @@ export const Sidebar = ({
             className={cn(
               "flex items-center gap-3 rounded-[11px] cursor-pointer transition-all group/profile",
               isCollapsed
-                ? "flex-col justify-center py-2 hover:bg-gray-100 dark:hover:bg-[#1e1e1e]"
-                : "p-2 hover:bg-gray-100 dark:hover:bg-[#1e1e1e] border border-transparent hover:border-gray-200 dark:hover:border-[#222]"
+                ? "flex-col justify-center py-2 hover:bg-gray-100 dark:hover:bg-[#1e1e1e] border border-gray-200 dark:border-[#222]"
+                : "p-2 hover:bg-gray-100 dark:hover:bg-[#1e1e1e] border border-gray-200 dark:border-[#222]"
             )}
           >
             <div
@@ -195,18 +201,18 @@ export const Sidebar = ({
                 isCollapsed ? "w-10 h-10" : "w-9 h-9 shrink-0"
               )}
             >
-              <img
-                src="https://api.dicebear.com/7.x/avataaars/svg?seed=Lucky"
-                alt="avatar"
-                className="w-full h-full object-cover rounded shadow-sm"
-              />
+                <img
+                  src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?auto=format&fit=crop&w=200&h=200"
+                  alt="avatar"
+                  className="w-full h-full object-cover rounded shadow-sm"
+                />
             </div>
             {!isCollapsed && (
               <div className="flex-1 overflow-hidden">
                 <p className="text-[13px] font-black tracking-tight text-gray-900 dark:text-white truncate leading-none mb-1">
                   panon PT.
                 </p>
-                <p className="text-[10px] tracking-wider font-bold text-gray-500 uppercase truncate leading-none">
+                <p className="text-[10px] tracking-wider font-bold text-gray-500 capitalize truncate leading-none">
                   M Iqbal
                 </p>
               </div>

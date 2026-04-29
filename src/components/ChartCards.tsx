@@ -41,9 +41,9 @@ export const AccuracyLineChart = () => {
   };
 
   return (
-    <div className="card-glass p-6 h-full flex flex-col shadow-sm border border-gray-100 dark:border-[#222] bg-white dark:bg-[#1e1e1e] rounded-[11px]">
+    <div className="card-glass p-5 h-full flex flex-col shadow-sm border border-gray-100 dark:border-[#222] bg-white dark:bg-[#1e1e1e] rounded-[11px] group">
       <div className="flex items-center justify-between mb-4 shrink-0">
-        <h3 className="text-lg font-black text-gray-900 dark:text-white tracking-tight leading-none">Accuracy Report</h3>
+        <h3 className="text-sm font-bold text-gray-900 dark:text-white tracking-tight">Accuracy Report</h3>
         <span className="text-[11px] font-medium tracking-tight text-gray-500 bg-[#161616] hover:bg-[#1a1a1a] cursor-pointer px-3 py-1.5 rounded-lg border border-[#222]">Week</span>
       </div>
       
@@ -95,9 +95,9 @@ export const AccuracyLineChart = () => {
 
 export const AccuracyCircularCard = () => {
   return (
-    <div className="card-glass p-6 h-full flex flex-col justify-between shadow-sm border border-gray-100 dark:border-[#222] bg-white dark:bg-[#1e1e1e] rounded-[11px]">
+    <div className="card-glass p-5 h-full flex flex-col justify-between shadow-sm border border-gray-100 dark:border-[#222] bg-white dark:bg-[#1e1e1e] rounded-[11px] group">
       <div className="flex items-center justify-between shrink-0 mb-4">
-        <h3 className="text-lg font-black text-gray-900 dark:text-white tracking-tight leading-none">Accuracy Status</h3>
+        <h3 className="text-sm font-bold text-gray-900 dark:text-white tracking-tight">Accuracy Status</h3>
         <span className="text-[11px] font-medium tracking-tight text-gray-500 bg-[#161616] hover:bg-[#1a1a1a] cursor-pointer px-3 py-1.5 rounded-lg border border-[#222]">Week</span>
       </div>
       

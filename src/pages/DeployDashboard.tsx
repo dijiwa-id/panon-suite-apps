@@ -46,12 +46,12 @@ const heatmapData = [
 const timePeriods = ['00-04', '04-08', '08-12', '12-16', '16-20', '20-24'];
 
 const realtimeAlerts = [
-  { id: 1, camera: 'RASTEK - APD', status: 'CRITICAL', time: 'Just now', img: 'https://images.unsplash.com/photo-1504328345606-18bbc8c9d7d1?auto=format&fit=crop&q=80&w=150&h=100' },
-  { id: 2, camera: 'RASTEK - APD', status: 'CRITICAL', time: '2026-04-29 15:24:11', img: 'https://images.unsplash.com/photo-1587620962725-abab7fe55159?auto=format&fit=crop&q=80&w=150&h=100' },
-  { id: 3, camera: 'RASTEK - APD', status: 'CRITICAL', time: '2026-04-29 15:24:09', img: 'https://images.unsplash.com/photo-1504328345606-18bbc8c9d7d1?auto=format&fit=crop&q=80&w=150&h=100' },
-  { id: 4, camera: 'RASTEK - APD', status: 'CRITICAL', time: '2026-04-29 15:22:57', img: 'https://images.unsplash.com/photo-1587620962725-abab7fe55159?auto=format&fit=crop&q=80&w=150&h=100' },
-  { id: 5, camera: 'RASTEK - APD', status: 'CRITICAL', time: '2026-04-29 15:22:43', img: 'https://images.unsplash.com/photo-1504328345606-18bbc8c9d7d1?auto=format&fit=crop&q=80&w=150&h=100' },
-  { id: 6, camera: 'RASTEK - APD', status: 'CRITICAL', time: '2026-04-29 15:22:39', img: 'https://images.unsplash.com/photo-1587620962725-abab7fe55159?auto=format&fit=crop&q=80&w=150&h=100' },
+  { id: 1, camera: 'Rastek - APD', status: 'Critical', time: 'Just now', img: 'https://images.unsplash.com/photo-1504328345606-18bbc8c9d7d1?auto=format&fit=crop&q=80&w=150&h=100' },
+  { id: 2, camera: 'Rastek - APD', status: 'Critical', time: '2026-04-29 15:24:11', img: 'https://images.unsplash.com/photo-1587620962725-abab7fe55159?auto=format&fit=crop&q=80&w=150&h=100' },
+  { id: 3, camera: 'Rastek - APD', status: 'Critical', time: '2026-04-29 15:24:09', img: 'https://images.unsplash.com/photo-1504328345606-18bbc8c9d7d1?auto=format&fit=crop&q=80&w=150&h=100' },
+  { id: 4, camera: 'Rastek - APD', status: 'Critical', time: '2026-04-29 15:22:57', img: 'https://images.unsplash.com/photo-1587620962725-abab7fe55159?auto=format&fit=crop&q=80&w=150&h=100' },
+  { id: 5, camera: 'Rastek - APD', status: 'Critical', time: '2026-04-29 15:22:43', img: 'https://images.unsplash.com/photo-1504328345606-18bbc8c9d7d1?auto=format&fit=crop&q=80&w=150&h=100' },
+  { id: 6, camera: 'Rastek - APD', status: 'Critical', time: '2026-04-29 15:22:39', img: 'https://images.unsplash.com/photo-1587620962725-abab7fe55159?auto=format&fit=crop&q=80&w=150&h=100' },
 ];
 
 export const DeployDashboard = () => {
@@ -86,62 +86,45 @@ export const DeployDashboard = () => {
     <main className="flex-1 overflow-y-auto bg-gray-50 dark:bg-[#161616] p-6 lg:p-8 text-gray-800 dark:text-gray-200 transition-colors custom-scrollbar">
       <div className="max-w-[1600px] mx-auto">
         {/* Page Header */}
-        <div className="flex flex-col md:flex-row md:items-end justify-between mb-4 gap-4">
+        <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-4 gap-4">
           <div className="flex-1">
-            <h2 className="text-[16px] font-bold text-gray-900 dark:text-white mb-5 tracking-tight">Deploy Dashboard</h2>
-            <div className="flex gap-4 border-b border-gray-200 dark:border-[#222] pb-0">
-              {[
-                { label: 'Overview', path: '/deploy/dashboard' },
-                { label: 'Live Feed', path: '/deploy/live-feed-camera' },
-                { label: 'Detection Log', path: '/deploy/detection-log' },
-                { label: 'Report', path: '/deploy/report' }
-              ].map(tab => (
-                <Link
-                  key={tab.path}
-                  to={tab.path}
-                  className={cn(
-                    "text-[11px] tracking-tight font-bold transition-colors pb-2.5 relative flex flex-col items-center group",
-                    location.pathname === tab.path ? "text-accent" : "text-gray-500 hover:text-gray-900 dark:hover:text-white"
-                  )}
-                >
-                  {tab.label}
-                  {location.pathname === tab.path && <span className="absolute bottom-[-1px] w-full h-[1px] bg-accent transition-transform"></span>}
-                </Link>
-              ))}
-            </div>
+            <h1 className="text-sm font-bold tracking-tight text-gray-900 dark:text-white mb-1">Deployment Overview</h1>
+            <p className="text-gray-600 dark:text-gray-400 text-xs font-medium">Monitor real-time system performance and compliance tracking.</p>
           </div>
         </div>
 
-        <div className="grid grid-cols-1 xl:grid-cols-4 gap-4 max-w-full">
+        <div className="grid grid-cols-1 xl:grid-cols-4 gap-6 max-w-full">
           {/* Main Content Area (3 cols) */}
-          <div className="xl:col-span-3 flex flex-col gap-4">
+          <div className="xl:col-span-3 flex flex-col gap-6">
           
           {/* Top Stat Row */}
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
             
             {/* PPE Compliance */}
-            <div className="card-glass bg-white dark:bg-[#1e1e1e] border border-gray-100 dark:border-[#222] rounded-[11px] p-5 shadow-sm flex flex-col justify-center relative overflow-hidden group">
-              <div className="flex justify-between items-center mb-4 relative z-10">
-                <h3 className="text-sm font-bold text-gray-900 dark:text-white tracking-tight">PPE Compliance</h3>
-                <ShieldAlert size={14} className="text-gray-400" />
+            <div className="bg-white dark:bg-[#1e1e1e] border border-gray-100 dark:border-[#222] rounded-[11px] p-6 shadow-sm flex flex-col relative overflow-hidden group hover:border-[#52C5F3]/50 transition-colors">
+              <div className="flex items-center justify-between mb-4 shrink-0 relative z-10 w-full text-gray-400 dark:text-gray-500">
+                <span className="text-[10px] font-black tracking-widest capitalize">PPE Compliance</span>
+                <ShieldAlert size={14} />
               </div>
-              <div className="relative w-full h-12 flex items-end justify-center mb-2 z-10">
-                 <svg viewBox="0 0 100 50" className="w-[120px] h-[60px] overflow-visible absolute bottom-0">
-                    <path d="M 10 50 A 40 40 0 0 1 90 50" fill="none" stroke={isDark ? "#2a2a2a" : "#f3f4f6"} strokeWidth="6" strokeLinecap="round" />
-                    <path d="M 10 50 A 40 40 0 0 1 12 40" fill="none" stroke="#52C5F3" strokeWidth="6" strokeLinecap="round" className="drop-shadow-md" />
-                 </svg>
-                 <div className="text-3xl font-black text-[#52C5F3] leading-none mb-1 tracking-tight">0.2%</div>
-              </div>
-              <div className="text-[10px] font-bold text-red-500 flex items-center justify-center gap-1 z-10">
-                 ▲ 2.1% <span className="text-gray-400 font-medium tracking-wide">vs last period</span>
+              <div className="flex flex-col justify-center flex-1 w-full relative z-10">
+                <div className="relative w-full h-12 flex items-end justify-center mb-2">
+                   <svg viewBox="0 0 100 50" className="w-[120px] h-[60px] overflow-visible absolute bottom-0">
+                      <path d="M 10 50 A 40 40 0 0 1 90 50" fill="none" stroke={isDark ? "#2a2a2a" : "#f3f4f6"} strokeWidth="6" strokeLinecap="round" />
+                      <path d="M 10 50 A 40 40 0 0 1 12 40" fill="none" stroke="#52C5F3" strokeWidth="6" strokeLinecap="round" className="drop-shadow-md" />
+                   </svg>
+                   <div className="text-[20px] font-black text-[#52C5F3] leading-[0px] h-0 flex items-center tracking-tight mb-2">0.2%</div>
+                </div>
+                <div className="text-[10px] font-bold text-red-500 flex items-center justify-center gap-1">
+                   ▲ 2.1% <span className="text-gray-400 font-medium tracking-wide">vs last period</span>
+                </div>
               </div>
             </div>
 
             {/* Active Violations */}
-            <div className="card-glass bg-white dark:bg-[#1e1e1e] border border-gray-100 dark:border-[#222] rounded-[11px] p-5 shadow-sm flex flex-col group">
-              <div className="flex justify-between items-center mb-3">
-                <h3 className="text-sm font-bold text-gray-900 dark:text-white tracking-tight">Active Violations</h3>
-                <AlertTriangle size={14} className="text-gray-400" />
+            <div className="bg-white dark:bg-[#1e1e1e] border border-gray-100 dark:border-[#222] rounded-[11px] p-6 shadow-sm flex flex-col group hover:border-orange-500/50 transition-colors">
+              <div className="flex items-center justify-between mb-4 shrink-0 w-full text-gray-400 dark:text-gray-500">
+                <span className="text-[10px] font-black tracking-widest capitalize">Active Violations</span>
+                <AlertTriangle size={14} />
               </div>
               <div className="flex items-center justify-between gap-4 flex-1">
                  <div className="relative w-16 h-16 shrink-0 drop-shadow-sm">
@@ -157,19 +140,19 @@ export const DeployDashboard = () => {
                  </div>
                  <div className="grid grid-cols-2 gap-2 flex-1">
                     <div className="text-center rounded pt-1.5 pb-2 bg-gray-50/50 dark:bg-[#252525]/50 border border-gray-100 dark:border-[#2a2a2a] hover:bg-red-50 dark:hover:bg-red-900/10 hover:border-red-100 dark:hover:border-red-900/30 transition-colors cursor-pointer">
-                       <div className="text-[9px] font-black text-red-500 tracking-widest mb-0.5">CRIT</div>
+                       <div className="text-[9px] font-black text-red-500 tracking-widest mb-0.5">Crit</div>
                        <div className="text-[13px] font-black text-gray-900 dark:text-white leading-none">14</div>
                     </div>
                     <div className="text-center rounded pt-1.5 pb-2 bg-gray-50/50 dark:bg-[#252525]/50 border border-gray-100 dark:border-[#2a2a2a] hover:bg-orange-50 dark:hover:bg-orange-900/10 hover:border-orange-100 dark:hover:border-orange-900/30 transition-colors cursor-pointer">
-                       <div className="text-[9px] font-black text-orange-500 tracking-widest mb-0.5">HIGH</div>
+                       <div className="text-[9px] font-black text-orange-500 tracking-widest mb-0.5">High</div>
                        <div className="text-[13px] font-black text-gray-900 dark:text-white leading-none">52</div>
                     </div>
                     <div className="text-center rounded pt-1.5 pb-2 bg-gray-50/50 dark:bg-[#252525]/50 border border-gray-100 dark:border-[#2a2a2a] hover:bg-blue-50 dark:hover:bg-blue-900/10 hover:border-blue-100 dark:hover:border-blue-900/30 transition-colors cursor-pointer">
-                       <div className="text-[9px] font-black text-blue-500 tracking-widest mb-0.5">MED</div>
+                       <div className="text-[9px] font-black text-blue-500 tracking-widest mb-0.5">Med</div>
                        <div className="text-[13px] font-black text-gray-900 dark:text-white leading-none">118</div>
                     </div>
                     <div className="text-center rounded pt-1.5 pb-2 bg-gray-50/50 dark:bg-[#252525]/50 border border-gray-100 dark:border-[#2a2a2a] hover:bg-green-50 dark:hover:bg-green-900/10 hover:border-green-100 dark:hover:border-green-900/30 transition-colors cursor-pointer">
-                       <div className="text-[9px] font-black text-green-500 tracking-widest mb-0.5">LOW</div>
+                       <div className="text-[9px] font-black text-green-500 tracking-widest mb-0.5">Low</div>
                        <div className="text-[13px] font-black text-gray-900 dark:text-white leading-none">125</div>
                     </div>
                  </div>
@@ -177,61 +160,62 @@ export const DeployDashboard = () => {
             </div>
 
             {/* CCTV Status */}
-            <div className="card-glass bg-white dark:bg-[#1e1e1e] border border-gray-100 dark:border-[#222] rounded-[11px] p-5 shadow-sm flex flex-col justify-center group">
-              <div className="flex justify-between items-center mb-4">
-                <h3 className="text-sm font-bold text-gray-900 dark:text-white tracking-tight">CCTV Status</h3>
-                <Camera size={14} className="text-gray-400" />
+            <div className="bg-white dark:bg-[#1e1e1e] border border-gray-100 dark:border-[#222] rounded-[11px] p-6 shadow-sm flex flex-col group hover:border-[#10b981]/50 transition-colors">
+              <div className="flex items-center justify-between mb-4 shrink-0 w-full text-gray-400 dark:text-gray-500">
+                <span className="text-[10px] font-black tracking-widest capitalize">CCTV Status</span>
+                <Camera size={14} />
               </div>
-              <div className="flex justify-around w-full mt-1">
+              <div className="flex items-center justify-around w-full mt-1 flex-1">
                  <div className="text-center">
                     <div className="text-2xl font-black text-gray-900 dark:text-white leading-none mb-1 tracking-tight">8</div>
-                    <div className="text-[9px] font-bold text-gray-400 tracking-widest">ONLINE</div>
+                    <div className="text-[9px] font-bold text-gray-400 tracking-widest">Online</div>
                  </div>
                  <div className="text-center opacity-40">
                     <div className="text-2xl font-black text-gray-900 dark:text-white leading-none mb-1 tracking-tight">0</div>
-                    <div className="text-[9px] font-bold text-gray-400 tracking-widest">OFFLINE</div>
+                    <div className="text-[9px] font-bold text-gray-400 tracking-widest">Offline</div>
                  </div>
                  <div className="text-center">
                     <div className="text-2xl font-black text-[#52C5F3] leading-none mb-1 tracking-tight drop-shadow-sm">8</div>
-                    <div className="text-[9px] font-bold text-[#52C5F3] tracking-widest opacity-80">AI ACTIVE</div>
+                    <div className="text-[9px] font-bold text-[#52C5F3] tracking-widest opacity-80">AI Active</div>
                  </div>
               </div>
             </div>
 
             {/* System Health */}
-            <div className="card-glass bg-white dark:bg-[#1e1e1e] border border-gray-100 dark:border-[#222] rounded-[11px] p-5 shadow-sm flex flex-col justify-center relative overflow-hidden group">
-              <div className="flex justify-between items-center mb-4 relative z-10">
-                <h3 className="text-sm font-bold text-gray-900 dark:text-white tracking-tight">System Health</h3>
-                <Activity size={14} className="text-gray-400" />
+            <div className="bg-white dark:bg-[#1e1e1e] border border-gray-100 dark:border-[#222] rounded-[11px] p-6 shadow-sm flex flex-col relative overflow-hidden group hover:border-[#8b5cf6]/50 transition-colors">
+              <div className="flex items-center justify-between mb-4 shrink-0 relative z-10 w-full text-gray-400 dark:text-gray-500">
+                <span className="text-[10px] font-black tracking-widest capitalize">System Health</span>
+                <Activity size={14} />
               </div>
-              <div className="relative w-full h-12 flex items-end justify-center mb-2 z-10">
-                 <svg viewBox="0 0 100 50" className="w-[120px] h-[60px] overflow-visible absolute bottom-0">
-                    <path d="M 10 50 A 40 40 0 0 1 90 50" fill="none" stroke={isDark ? "#2a2a2a" : "#f3f4f6"} strokeWidth="6" strokeLinecap="round" />
-                    <path d="M 10 50 A 40 40 0 0 1 70 20" fill="none" stroke="#52C5F3" strokeWidth="6" strokeLinecap="round" className="drop-shadow-md" />
-                 </svg>
-                 <div className="absolute bottom-1 flex flex-col items-center">
-                    <span className="text-[22px] font-black text-[#52C5F3] leading-none mb-1 tracking-tight">70%</span>
-                 </div>
-              </div>
-              <div className="text-[10px] font-bold text-gray-500 tracking-wider z-10 text-center flex items-center justify-center gap-2">
-                 <span>CPU: <span className="text-gray-700 dark:text-gray-300">65%</span></span>
-                 <span className="w-1 h-1 rounded-full bg-gray-300 dark:bg-gray-700"></span>
-                 <span>RAM: <span className="text-gray-700 dark:text-gray-300">86%</span></span>
+              <div className="flex flex-col justify-center flex-1 w-full relative z-10">
+                <div className="relative w-full h-12 flex items-end justify-center mb-2">
+                   <svg viewBox="0 0 100 50" className="w-[120px] h-[60px] overflow-visible absolute bottom-0">
+                      <path d="M 10 50 A 40 40 0 0 1 90 50" fill="none" stroke={isDark ? "#2a2a2a" : "#f3f4f6"} strokeWidth="6" strokeLinecap="round" />
+                      <path d="M 10 50 A 40 40 0 0 1 70 20" fill="none" stroke="#52C5F3" strokeWidth="6" strokeLinecap="round" className="drop-shadow-md" />
+                   </svg>
+                   <div className="text-[20px] font-black text-[#52C5F3] leading-[0px] h-0 flex items-center tracking-tight mb-2">70%</div>
+                </div>
+                <div className="text-[10px] font-bold text-gray-500 tracking-wider text-center flex items-center justify-center gap-2">
+                   <span>CPU: <span className="text-gray-700 dark:text-gray-300">65%</span></span>
+                   <span className="w-1 h-1 rounded-full bg-gray-300 dark:bg-gray-700"></span>
+                   <span>RAM: <span className="text-gray-700 dark:text-gray-300">86%</span></span>
+                </div>
               </div>
             </div>
 
           </div>
 
           {/* Row 2: Trends and Types */}
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
             
             {/* Violations Trends */}
-            <div className="lg:col-span-1 xl:col-span-1 2xl:col-span-1 card-glass bg-white dark:bg-[#1e1e1e] border border-gray-100 dark:border-[#222] rounded-[11px] p-5 shadow-sm flex flex-col group">
-               <div className="flex items-center gap-2 mb-4 shrink-0">
-                 <div className="p-1.5 rounded-md bg-gray-100 dark:bg-[#252525] group-hover:bg-[#52C5F3]/10 transition-colors">
-                   <Activity size={14} className="text-gray-500 group-hover:text-[#52C5F3] transition-colors" />
+            <div className="lg:col-span-1 xl:col-span-1 2xl:col-span-1 bg-white dark:bg-[#1e1e1e] border border-gray-100 dark:border-[#222] rounded-[11px] p-6 shadow-sm flex flex-col group">
+               <div className="flex items-center justify-between mb-6 shrink-0 w-full text-gray-400 dark:text-gray-500">
+                 <div>
+                   <span className="text-[10px] font-black tracking-widest capitalize text-gray-900 dark:text-white">Violations Trends</span>
+                   <span className="text-[10px] capitalize font-bold ml-2">(24h)</span>
                  </div>
-                 <h2 className="text-sm font-bold tracking-tight text-gray-900 dark:text-white">Violations Trends <span className="text-gray-400 font-medium ml-1">(24h)</span></h2>
+                 <Activity size={14} />
                </div>
                <div className="h-40 w-full flex-1 min-w-0">
                  <ResponsiveContainer width="100%" height="100%">
@@ -263,12 +247,10 @@ export const DeployDashboard = () => {
             </div>
 
             {/* Violations Types */}
-            <div className="card-glass bg-white dark:bg-[#1e1e1e] border border-gray-100 dark:border-[#222] rounded-[11px] p-5 shadow-sm flex flex-col items-center group">
-               <div className="flex items-center gap-2 mb-4 shrink-0 self-start">
-                 <div className="p-1.5 rounded-md bg-gray-100 dark:bg-[#252525] group-hover:bg-purple-500/10 transition-colors">
-                   <LayoutGrid size={14} className="text-gray-500 group-hover:text-purple-500 transition-colors" />
-                 </div>
-                 <h2 className="text-sm font-bold tracking-tight text-gray-900 dark:text-white">Violations Types</h2>
+            <div className="bg-white dark:bg-[#1e1e1e] border border-gray-100 dark:border-[#222] rounded-[11px] p-6 shadow-sm flex flex-col items-center group">
+               <div className="flex items-center justify-between mb-6 shrink-0 w-full text-gray-400 dark:text-gray-500">
+                 <span className="text-[10px] font-black tracking-widest capitalize text-gray-900 dark:text-white">Violations Types</span>
+                 <LayoutGrid size={14} />
                </div>
                <div className="flex-1 w-full flex items-center justify-center min-h-[160px] drop-shadow-sm">
                  <ResponsiveContainer width="100%" height="100%">
@@ -293,16 +275,14 @@ export const DeployDashboard = () => {
             </div>
 
             {/* Top 3 Violations & Locations */}
-            <div className="card-glass bg-white dark:bg-[#1e1e1e] border border-gray-100 dark:border-[#222] rounded-[11px] p-5 shadow-sm flex flex-col group">
-               <div className="flex items-center gap-2 mb-4 shrink-0">
-                 <div className="p-1.5 rounded-md bg-gray-100 dark:bg-[#252525] group-hover:bg-[#EC3292]/10 transition-colors">
-                   <AlertTriangle size={14} className="text-gray-500 group-hover:text-[#EC3292] transition-colors" />
-                 </div>
-                 <h2 className="text-sm font-bold tracking-tight text-gray-900 dark:text-white">Top 3 Violations</h2>
+            <div className="bg-white dark:bg-[#1e1e1e] border border-gray-100 dark:border-[#222] rounded-[11px] p-6 shadow-sm flex flex-col group">
+               <div className="flex items-center justify-between mb-6 shrink-0 w-full text-gray-400 dark:text-gray-500">
+                 <span className="text-[10px] font-black tracking-widest capitalize text-gray-900 dark:text-white">Top 3 Violations</span>
+                 <AlertTriangle size={14} />
                </div>
                <div className="flex justify-between items-end mb-3 border-b border-gray-100 dark:border-[#2a2a2a] pb-2">
-                 <div className="text-[9px] font-black text-gray-400 tracking-widest uppercase">Location/Type</div>
-                 <div className="text-[9px] font-black text-gray-400 tracking-widest uppercase">Count</div>
+                 <div className="text-[9px] font-black text-gray-400 tracking-widest capitalize">Location/Type</div>
+                 <div className="text-[9px] font-black text-gray-400 tracking-widest capitalize">Count</div>
                </div>
                <div className="space-y-3">
                   {violationTypes.map((type, index) => (
@@ -322,20 +302,25 @@ export const DeployDashboard = () => {
           </div>
 
           {/* Row 3: Area Distribution and Heatmap */}
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
             {/* Area Violations */}
-             <div className="card-glass bg-white dark:bg-[#1e1e1e] border border-gray-100 dark:border-[#222] rounded-[11px] p-5 shadow-sm flex flex-col group">
+             <div className="bg-white dark:bg-[#1e1e1e] border border-gray-100 dark:border-[#222] rounded-[11px] p-6 shadow-sm flex flex-col group">
                <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6 gap-3">
-                  <div className="flex items-center gap-2 shrink-0">
-                    <div className="p-1.5 rounded-md bg-gray-100 dark:bg-[#252525] group-hover:bg-[#10b981]/10 transition-colors">
+                  <div className="flex items-center justify-between shrink-0 w-full sm:w-auto flex-1 text-gray-400 dark:text-gray-500">
+                    <div>
+                      <span className="text-[10px] font-black tracking-widest capitalize text-gray-900 dark:text-white">Area Violations Dist.</span>
+                      <span className="text-[10px] capitalize font-bold ml-2">(Per Zone)</span>
+                    </div>
+                  </div>
+                  <div className="flex items-center gap-3 w-full sm:w-auto justify-between sm:justify-end">
+                    <div className="flex items-center gap-3 bg-gray-50 dark:bg-[#252525] px-2 py-1 rounded-md">
+                       <div className="flex items-center gap-1.5"><div className="w-2 h-2 bg-[#52C5F3] rounded-[2px] shadow-sm"></div><span className="text-[9px] font-bold text-gray-600 dark:text-gray-400 tracking-wide capitalize">Helmet</span></div>
+                       <div className="flex items-center gap-1.5"><div className="w-2 h-2 bg-[#EC3292] rounded-[2px] shadow-sm"></div><span className="text-[9px] font-bold text-gray-600 dark:text-gray-400 tracking-wide capitalize">Vest</span></div>
+                       <div className="flex items-center gap-1.5"><div className="w-2 h-2 bg-[#8b5cf6] rounded-[2px] shadow-sm"></div><span className="text-[9px] font-bold text-gray-600 dark:text-gray-400 tracking-wide capitalize">Boots</span></div>
+                    </div>
+                    <div className="p-1.5 rounded-md bg-gray-100 dark:bg-[#252525] group-hover:bg-[#10b981]/10 transition-colors hidden sm:block">
                       <Activity size={14} className="text-gray-500 group-hover:text-[#10b981] transition-colors" />
                     </div>
-                    <h2 className="text-sm font-bold tracking-tight text-gray-900 dark:text-white">Area Violations Dist. <span className="text-gray-400 font-medium ml-1">(Per Zone)</span></h2>
-                  </div>
-                  <div className="flex items-center gap-3 bg-gray-50 dark:bg-[#252525] px-2 py-1 rounded-md">
-                     <div className="flex items-center gap-1.5"><div className="w-2 h-2 bg-[#52C5F3] rounded-[2px] shadow-sm"></div><span className="text-[9px] font-bold text-gray-600 dark:text-gray-400 tracking-wide uppercase">Helmet</span></div>
-                     <div className="flex items-center gap-1.5"><div className="w-2 h-2 bg-[#EC3292] rounded-[2px] shadow-sm"></div><span className="text-[9px] font-bold text-gray-600 dark:text-gray-400 tracking-wide uppercase">Vest</span></div>
-                     <div className="flex items-center gap-1.5"><div className="w-2 h-2 bg-[#8b5cf6] rounded-[2px] shadow-sm"></div><span className="text-[9px] font-bold text-gray-600 dark:text-gray-400 tracking-wide uppercase">Boots</span></div>
                   </div>
                </div>
                <div className="h-48 w-full">
@@ -354,14 +339,13 @@ export const DeployDashboard = () => {
              </div>
 
              {/* Heatmap */}
-             <div className="card-glass bg-white dark:bg-[#1e1e1e] border border-gray-100 dark:border-[#222] rounded-[11px] p-5 shadow-sm flex flex-col group">
-               <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6 gap-3">
-                 <div className="flex items-center gap-2 shrink-0">
-                   <div className="p-1.5 rounded-md bg-gray-100 dark:bg-[#252525] group-hover:bg-yellow-500/10 transition-colors">
-                     <Clock size={14} className="text-gray-500 group-hover:text-yellow-500 transition-colors" />
-                   </div>
-                   <h2 className="text-sm font-bold tracking-tight text-gray-900 dark:text-white">Heatmap <span className="text-gray-400 font-medium ml-1">Zone × Time</span></h2>
+             <div className="bg-white dark:bg-[#1e1e1e] border border-gray-100 dark:border-[#222] rounded-[11px] p-6 shadow-sm flex flex-col group">
+               <div className="flex items-center justify-between mb-6 shrink-0 w-full text-gray-400 dark:text-gray-500">
+                 <div>
+                   <span className="text-[10px] font-black tracking-widest capitalize text-gray-900 dark:text-white">Heatmap</span>
+                   <span className="text-[10px] capitalize font-bold ml-2">Zone × Time</span>
                  </div>
+                 <Clock size={14} />
                </div>
                <div className="flex-1 w-full flex flex-col min-w-0">
                   <div className="grid grid-cols-7 gap-1 mb-2">
@@ -391,17 +375,15 @@ export const DeployDashboard = () => {
         </div>
 
         {/* Sidebar Space (1 col) */}
-        <div className="xl:col-span-1 flex flex-col gap-4">
+        <div className="xl:col-span-1 flex flex-col gap-6">
            {/* Active Cam */}
-           <div className="card-glass bg-white dark:bg-[#1e1e1e] border border-gray-100 dark:border-[#222] rounded-[11px] p-5 shadow-sm group">
-              <div className="flex items-center justify-between mb-3">
-                 <div className="flex items-center gap-2 shrink-0">
-                    <div className="p-1.5 rounded-md bg-gray-100 dark:bg-[#252525] group-hover:bg-[#52C5F3]/10 transition-colors">
-                      <Camera size={14} className="text-gray-500 group-hover:text-[#52C5F3] transition-colors" />
-                    </div>
-                    <h2 className="text-sm font-bold tracking-tight text-gray-900 dark:text-white">Active Cam</h2>
+           <div className="bg-white dark:bg-[#1e1e1e] border border-gray-100 dark:border-[#222] rounded-[11px] p-6 shadow-sm group">
+              <div className="flex items-center justify-between mb-6 shrink-0 w-full text-gray-400 dark:text-gray-500">
+                 <span className="text-[10px] font-black tracking-widest capitalize text-gray-900 dark:text-white">Active Cam</span>
+                 <div className="flex items-center gap-2">
+                    <div className="w-2 h-2 rounded-full bg-[#10b981] animate-pulse"></div>
+                    <Camera size={14} />
                  </div>
-                 <div className="w-2 h-2 rounded-full bg-green-500 animate-pulse"></div>
               </div>
               <div className="flex items-end gap-2">
                 <span className="text-4xl font-black text-gray-900 dark:text-white tracking-tighter leading-none">8</span>
@@ -413,15 +395,15 @@ export const DeployDashboard = () => {
            </div>
 
            {/* Realtime Alert */}
-           <div className="card-glass bg-[#fffcfc] dark:bg-[#1a1313] border border-red-200 dark:border-red-900/30 rounded-[11px] shadow-sm flex flex-col flex-1 pb-4 overflow-hidden relative">
+           <div className="bg-white dark:bg-[#1e1e1e] border border-red-200 dark:border-red-900/30 rounded-xl shadow-sm flex flex-col flex-1 pb-4 overflow-hidden relative">
               <div className="absolute top-0 right-0 w-32 h-32 bg-red-500/5 dark:bg-red-500/10 rounded-bl-full blur-2xl pointer-events-none"></div>
               
               <div className="p-5 border-b border-red-100 dark:border-red-900/20 flex items-center justify-between bg-red-50/50 dark:bg-red-900/10 z-10 relative">
+                 <span className="text-[10px] font-black tracking-widest capitalize text-red-600 dark:text-red-500">Realtime Alert</span>
                  <div className="flex items-center gap-2">
+                    <div className="text-[9px] font-black tracking-widest bg-red-100 text-red-600 dark:bg-red-500/20 dark:text-red-400 px-1.5 py-0.5 rounded">Live</div>
                     <AlertTriangle size={14} className="text-red-500 animate-pulse" />
-                    <h2 className="text-sm font-bold tracking-tight text-red-600 dark:text-red-500">Realtime Alert</h2>
                  </div>
-                 <div className="text-[9px] font-black bg-red-100 text-red-600 dark:bg-red-500/20 dark:text-red-400 px-1.5 py-0.5 rounded">LIVE</div>
               </div>
               
               <div className="p-4 flex-1 overflow-y-auto space-y-3 max-h-[500px] custom-scrollbar z-10 relative">
@@ -436,7 +418,7 @@ export const DeployDashboard = () => {
                           <div className="flex items-center gap-2 mt-0.5">
                              <div className="flex items-center gap-1 bg-red-50 dark:bg-red-500/10 px-1.5 rounded-sm border border-red-100 dark:border-red-500/20">
                                 <div className="w-1.5 h-1.5 rounded-full bg-red-500"></div>
-                                <span className="text-[9px] font-black text-red-600 dark:text-red-400 leading-[14px]">CRIT</span>
+                                <span className="text-[9px] font-black text-red-600 dark:text-red-400 leading-[14px]">Crit</span>
                              </div>
                              <span className="text-[9px] font-bold text-gray-500 truncate">{alert.time}</span>
                           </div>
