@@ -7,10 +7,70 @@ import {
   CartesianGrid,
   Area,
   AreaChart,
+  Line,
+  LineChart,
   ReferenceLine
 } from 'recharts';
 import { cn } from '../lib/utils';
 import { useTheme } from '../context/ThemeContext';
+
+export const PerformanceLineChart = () => {
+  const { theme } = useTheme();
+  const isDark = theme === 'dark';
+
+  const [data] = useState([
+    { name: '0h', value: 45 },
+    { name: '1h', value: 52 },
+    { name: '2h', value: 48 },
+    { name: '3h', value: 65 },
+    { name: '4h', value: 78 },
+    { name: '5h', value: 72 },
+    { name: '6h', value: 85 },
+  ]);
+
+  return (
+    <div className="card-glass p-5 h-full flex flex-col shadow-sm border border-gray-100 dark:border-[#222] bg-white dark:bg-[#1e1e1e] rounded-[11px] group">
+      <div className="flex flex-col mb-4 shrink-0">
+        <h3 className="text-xs font-bold text-gray-900 dark:text-white tracking-tight">Performance Trend</h3>
+        <p className="text-[11px] text-gray-400">System performance overview</p>
+      </div>
+      
+      <div className="flex-1 w-full min-h-[140px] pb-1">
+        <ResponsiveContainer width="100%" height="100%">
+          <LineChart data={data} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
+            <CartesianGrid strokeDasharray="3 3" stroke={isDark ? '#2a2a2a' : '#e5e7eb'} vertical={false} />
+            <XAxis 
+               dataKey="name" 
+               axisLine={false} 
+               tickLine={false} 
+               tick={{fontSize: 10, fill: '#888', fontWeight: 600}} 
+               dy={10}
+            />
+            <YAxis 
+               axisLine={false} 
+               tickLine={false} 
+               tick={{fontSize: 10, fill: '#888', fontWeight: 600}}
+               domain={[0, 100]}
+            />
+            <Tooltip 
+               cursor={{ stroke: isDark ? '#333' : '#e5e7eb', strokeWidth: 1, strokeDasharray: '3 3' }}
+               contentStyle={{backgroundColor: '#1e1e1e', borderColor: '#222', borderRadius: '8px', fontSize: '10px', color: 'white'}}
+            />
+            <Line 
+              type="monotone" 
+              dataKey="value" 
+              stroke="#52C5F3" 
+              strokeWidth={2}
+              dot={{r: 4, strokeWidth: 2, fill: '#1e1e1e'}}
+              activeDot={{r: 6}}
+              animationDuration={1000}
+            />
+          </LineChart>
+        </ResponsiveContainer>
+      </div>
+    </div>
+  );
+};
 
 export const AccuracyLineChart = () => {
   const { theme } = useTheme();

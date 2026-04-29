@@ -1,6 +1,6 @@
 
 import React, { useState } from 'react';
-import { Search, Plus, Check, X, Camera, MapPin, Hash, Link as LinkIcon, Settings, Activity } from 'lucide-react';
+import { Search, Plus, Check, X, Camera, MapPin, Hash, Link as LinkIcon, Settings, Activity, ChevronDown } from 'lucide-react';
 import { cn } from '../lib/utils';
 
 const cameras = [
@@ -127,27 +127,37 @@ const AddCameraModal = ({ isOpen, onClose }: { isOpen: boolean; onClose: () => v
                     <div className="grid grid-cols-2 gap-4">
                         <div>
                             <label className="block text-[10px] font-black text-gray-500 mb-2 flex items-center gap-2 uppercase tracking-widest"><Activity size={12}/> Target FPS</label>
-                            <select 
-                                value={formData.fps}
-                                onChange={(e) => setFormData({...formData, fps: e.target.value})}
-                                className="w-full bg-gray-50 dark:bg-[#161616] border border-gray-200 dark:border-[#222] rounded-lg px-4 py-2.5 text-xs font-bold text-gray-700 dark:text-gray-300 outline-none focus:border-accent/50 focus:ring-1 focus:ring-accent/50 transition-all cursor-pointer appearance-none"
-                            >
-                                <option>15 FPS</option>
-                                <option>30 FPS</option>
-                                <option>60 FPS</option>
-                            </select>
+                            <div className="relative">
+                                <div className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 pointer-events-none">
+                                    <ChevronDown size={14} />
+                                </div>
+                                <select 
+                                    value={formData.fps}
+                                    onChange={(e) => setFormData({...formData, fps: e.target.value})}
+                                    className="w-full bg-gray-100 dark:bg-[#151515] border border-gray-200 dark:border-[#222] rounded-xl pl-4 pr-9 h-[37px] text-[12px] font-bold text-gray-700 dark:text-gray-300 outline-none focus:border-accent/50 focus:ring-1 focus:ring-accent/50 transition-all cursor-pointer appearance-none"
+                                >
+                                    <option>15 FPS</option>
+                                    <option>30 FPS</option>
+                                    <option>60 FPS</option>
+                                </select>
+                            </div>
                         </div>
                         <div>
                             <label className="block text-[10px] font-black text-gray-500 mb-2 flex items-center gap-2 uppercase tracking-widest"><Settings size={12}/> Resolution</label>
-                            <select 
-                                value={formData.resolution}
-                                onChange={(e) => setFormData({...formData, resolution: e.target.value})}
-                                className="w-full bg-gray-50 dark:bg-[#161616] border border-gray-200 dark:border-[#222] rounded-lg px-4 py-2.5 text-xs font-bold text-gray-700 dark:text-gray-300 outline-none focus:border-accent/50 focus:ring-1 focus:ring-accent/50 transition-all cursor-pointer appearance-none"
-                            >
-                                <option>720p</option>
-                                <option>1080p</option>
-                                <option>4K</option>
-                            </select>
+                            <div className="relative">
+                                <div className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 pointer-events-none">
+                                    <ChevronDown size={14} />
+                                </div>
+                                <select 
+                                    value={formData.resolution}
+                                    onChange={(e) => setFormData({...formData, resolution: e.target.value})}
+                                    className="w-full bg-gray-100 dark:bg-[#151515] border border-gray-200 dark:border-[#222] rounded-xl pl-4 pr-9 h-[37px] text-[12px] font-bold text-gray-700 dark:text-gray-300 outline-none focus:border-accent/50 focus:ring-1 focus:ring-accent/50 transition-all cursor-pointer appearance-none"
+                                >
+                                    <option>720p</option>
+                                    <option>1080p</option>
+                                    <option>4K</option>
+                                </select>
+                            </div>
                         </div>
                     </div>
                     <div className="pt-2">
@@ -206,7 +216,7 @@ export const CameraManagement = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   return (
-    <main className="flex-1 overflow-y-auto bg-gray-50 dark:bg-[#161616] p-6 lg:p-8 text-gray-800 dark:text-gray-200 transition-colors custom-scrollbar">
+    <main className="flex-1 overflow-y-auto bg-transparent p-6 lg:p-8 text-gray-800 dark:text-gray-200 transition-colors custom-scrollbar">
       <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-4 gap-4">
         <div>
           <h1 className="text-sm font-bold tracking-tight text-gray-900 dark:text-white mb-1">Camera Management</h1>
@@ -232,7 +242,7 @@ export const CameraManagement = () => {
           <div className="flex gap-3 w-full sm:w-auto">
              <div className="bg-gray-100 dark:bg-[#151515] px-4 py-2 rounded-xl border border-gray-200 dark:border-[#222] flex items-center gap-2 flex-1 sm:flex-none focus-within:border-accent/50 focus-within:ring-1 focus-within:ring-accent/50 transition-all">
                 <Search className="text-gray-600 dark:text-gray-400" size={16} />
-                <input type="text" placeholder="Search by name, ID..." className="bg-transparent outline-none text-xs font-medium text-gray-800 dark:text-gray-200 w-full sm:w-48 placeholder-gray-600" />
+                <input type="text" placeholder="Search by name, ID..." className="bg-transparent outline-none text-xs font-medium text-gray-800 dark:text-gray-200 w-full sm:w-64 placeholder-gray-600" />
              </div>
           </div>
         </div>

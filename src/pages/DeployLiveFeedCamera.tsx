@@ -85,7 +85,7 @@ export const DeployLiveFeedCamera = () => {
   const [activeZone, setActiveZone] = useState('All');
 
   return (
-    <main className="flex-1 overflow-y-auto bg-gray-50 dark:bg-[#161616] p-6 lg:p-8 text-gray-800 dark:text-gray-200 transition-colors custom-scrollbar">
+    <main className="flex-1 overflow-y-auto bg-transparent p-6 lg:p-8 text-gray-800 dark:text-gray-200 transition-colors custom-scrollbar">
       <div className="max-w-[1600px] mx-auto">
         {/* Page Header */}
         <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-4 gap-4">
@@ -101,15 +101,13 @@ export const DeployLiveFeedCamera = () => {
            {/* Toolbar */}
            <div className="flex flex-col sm:flex-row items-center justify-between gap-4 bg-white dark:bg-[#1e1e1e] border border-gray-200 dark:border-[#222] p-5 rounded-xl shadow-sm shrink-0">
              <div className="flex items-center gap-3 w-full sm:w-auto">
-               <div className="relative w-full sm:w-64">
-                 <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                   <Search size={14} className="text-gray-400" />
-                 </div>
-                 <input 
-                   type="text" 
-                   placeholder="Search camera..." 
-                   className="w-full bg-gray-50 dark:bg-[#161616] border border-gray-200 dark:border-[#2a2a2a] text-gray-900 dark:text-white text-xs rounded-lg pl-9 pr-3 py-2 sm:py-2 focus:outline-none focus:ring-1 focus:ring-[#52C5F3] transition-colors"
-                 />
+               <div className="bg-gray-100 dark:bg-[#151515] px-4 py-2 rounded-xl border border-gray-200 dark:border-[#222] flex items-center gap-2 w-full sm:w-64 focus-within:border-accent/50 focus-within:ring-1 focus-within:ring-accent/50 transition-all">
+                  <Search size={16} className="text-gray-600 dark:text-gray-400 shrink-0" />
+                  <input 
+                    type="text" 
+                    placeholder="Search camera..." 
+                    className="bg-transparent outline-none text-xs font-medium text-gray-800 dark:text-gray-200 w-full placeholder-gray-600"
+                  />
                </div>
                <div className="hidden sm:flex items-center bg-gray-50 dark:bg-[#161616] border border-gray-200 dark:border-[#2a2a2a] rounded-lg p-1">
                   <button 

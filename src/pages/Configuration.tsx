@@ -62,15 +62,24 @@ export const Configuration = () => {
   const tabs = ['Email', 'Whatsapp', 'Webhook', 'MQTT'];
 
   const inputClass = "w-full bg-gray-50 dark:bg-[#161616] border border-gray-200 dark:border-[#222] rounded-lg px-4 py-2 text-xs text-gray-900 dark:text-white focus:border-accent/50 focus:ring-1 focus:ring-accent/50 outline-none transition-all";
-  const selectClass = "w-full bg-gray-50 dark:bg-[#161616] border border-gray-200 dark:border-[#222] rounded-lg px-4 py-2 text-xs text-gray-900 dark:text-white focus:border-accent/50 focus:ring-1 focus:ring-accent/50 outline-none transition-all appearance-none";
-  const labelClass = "block text-[11px] font-bold text-gray-700 dark:text-gray-300 mb-1.5 uppercase tracking-wider";
+  const selectClass = "w-full bg-gray-100 dark:bg-[#151515] border border-gray-200 dark:border-[#222] rounded-xl pl-4 pr-9 h-[37px] text-[12px] text-gray-900 dark:text-white outline-none focus:border-accent/50 focus:ring-1 focus:ring-accent/50 transition-all appearance-none cursor-pointer";
+  const labelClass = "block text-[11px] font-bold text-gray-700 dark:text-gray-300 mb-1.5 capitalize tracking-wider";
+
+  const SelectWrapper = ({ children }: { children: React.ReactNode }) => (
+    <div className="relative">
+      <div className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 pointer-events-none">
+        <ChevronDown size={14} />
+      </div>
+      {children}
+    </div>
+  );
 
   return (
-    <main className="flex-1 overflow-y-auto bg-gray-50 dark:bg-[#161616] p-6 md:p-8 text-gray-800 dark:text-gray-200 custom-scrollbar">
+    <main className="flex-1 overflow-y-auto bg-transparent p-6 md:p-8 text-gray-800 dark:text-gray-200 custom-scrollbar">
       <div className="max-w-4xl mx-auto space-y-6">
         <div>
           <h1 className="text-sm font-black text-gray-900 dark:text-white tracking-tight mb-1">System Configuration</h1>
-          <p className="text-[10px] font-medium text-gray-500 uppercase tracking-widest font-black">Manage global parameters, external integrations, and alerting rules.</p>
+          <p className="text-[10px] font-medium text-gray-500 capitalize tracking-widest font-black">Manage global parameters, external integrations, and alerting rules.</p>
         </div>
 
         <div className="space-y-4">
@@ -100,18 +109,20 @@ export const Configuration = () => {
                   </div>
                   <div>
                     <label className={labelClass}>Timezone</label>
-                    <select value={systemParams.timezone} onChange={(e) => setSystemParams({...systemParams, timezone: e.target.value})} className={selectClass}>
-                      <option value="UTC">UTC</option>
-                      <option value="America/New_York">Eastern Time (ET)</option>
-                      <option value="Europe/London">London (GMT)</option>
-                      <option value="Asia/Tokyo">Tokyo (JST)</option>
-                      <option value="Asia/Jakarta">Jakarta (WIB)</option>
-                    </select>
+                    <SelectWrapper>
+                      <select value={systemParams.timezone} onChange={(e) => setSystemParams({...systemParams, timezone: e.target.value})} className={selectClass}>
+                        <option value="UTC">UTC</option>
+                        <option value="America/New_York">Eastern Time (ET)</option>
+                        <option value="Europe/London">London (GMT)</option>
+                        <option value="Asia/Tokyo">Tokyo (JST)</option>
+                        <option value="Asia/Jakarta">Jakarta (WIB)</option>
+                      </select>
+                    </SelectWrapper>
                   </div>
                   <div>
                     <label className={labelClass}>Data Retention (Days)</label>
                     <input type="number" value={systemParams.retentionDays} onChange={(e) => setSystemParams({...systemParams, retentionDays: e.target.value})} className={inputClass} />
-                    <p className="text-[10px] text-gray-500 mt-1 font-medium uppercase tracking-widest font-black">Metadata older than this period will be physically deleted.</p>
+                    <p className="text-[10px] text-gray-500 mt-1 font-medium capitalize tracking-widest font-black">Metadata older than this period will be physically deleted.</p>
                   </div>
                   <div>
                     <label className={labelClass}>Global Confidence Threshold (%)</label>
@@ -126,7 +137,7 @@ export const Configuration = () => {
                      </span>
                      <div>
                        <label htmlFor="autoArchive" className="text-xs font-bold text-gray-900 dark:text-white cursor-pointer">Enable Auto-Archive to Cold Storage</label>
-                       <p className="text-[10px] text-gray-500 font-medium uppercase tracking-widest font-black">Automatically move older video snippets to cheaper storage tiers.</p>
+                       <p className="text-[10px] text-gray-500 font-medium capitalize tracking-widest font-black">Automatically move older video snippets to cheaper storage tiers.</p>
                      </div>
                   </div>
                 </div>
@@ -168,11 +179,13 @@ export const Configuration = () => {
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div>
                       <label className={labelClass}>VMS Provider</label>
-                      <select value={integrationSettings.vmsType} onChange={(e) => setIntegrationSettings({...integrationSettings, vmsType: e.target.value})} className={selectClass}>
-                        <option value="Milestone">Milestone XProtect</option>
-                        <option value="Genetec">Genetec Security Center</option>
-                        <option value="None">None (Standalone)</option>
-                      </select>
+                      <SelectWrapper>
+                        <select value={integrationSettings.vmsType} onChange={(e) => setIntegrationSettings({...integrationSettings, vmsType: e.target.value})} className={selectClass}>
+                          <option value="Milestone">Milestone XProtect</option>
+                          <option value="Genetec">Genetec Security Center</option>
+                          <option value="None">None (Standalone)</option>
+                        </select>
+                      </SelectWrapper>
                     </div>
                     <div>
                       <label className={labelClass}>Endpoint Host / IP</label>
@@ -260,18 +273,22 @@ export const Configuration = () => {
                        <div className="space-y-4">
                           <div>
                             <label className={labelClass}>Delivery Method</label>
-                            <select value={emailConfig.deliveryMethod} onChange={(e) => setEmailConfig({...emailConfig, deliveryMethod: e.target.value})} className={selectClass}>
-                              <option>SMTP</option>
-                              <option>API</option>
-                            </select>
+                            <SelectWrapper>
+                              <select value={emailConfig.deliveryMethod} onChange={(e) => setEmailConfig({...emailConfig, deliveryMethod: e.target.value})} className={selectClass}>
+                                <option>SMTP</option>
+                                <option>API</option>
+                              </select>
+                            </SelectWrapper>
                           </div>
                           <div>
                             <label className={labelClass}>SMTP Authentication</label>
-                            <select value={emailConfig.smtpAuth} onChange={(e) => setEmailConfig({...emailConfig, smtpAuth: e.target.value})} className={selectClass}>
-                              <option>Login</option>
-                              <option>Plain</option>
-                              <option>None</option>
-                            </select>
+                            <SelectWrapper>
+                              <select value={emailConfig.smtpAuth} onChange={(e) => setEmailConfig({...emailConfig, smtpAuth: e.target.value})} className={selectClass}>
+                                <option>Login</option>
+                                <option>Plain</option>
+                                <option>None</option>
+                              </select>
+                            </SelectWrapper>
                           </div>
                           <div className="pt-2 space-y-3">
                             <label className="flex items-center gap-2 text-xs font-bold text-gray-900 dark:text-white cursor-pointer">
@@ -329,7 +346,7 @@ export const Configuration = () => {
                            <Bell className="text-gray-400" size={20} />
                          </div>
                          <h4 className="text-sm font-bold text-gray-900 dark:text-white mb-1">{activeTab} Integration</h4>
-                         <p className="text-[10px] font-medium text-gray-500 uppercase tracking-widest font-black">Coming soon in the next system update.</p>
+                         <p className="text-[10px] font-medium text-gray-500 capitalize tracking-widest font-black">Coming soon in the next system update.</p>
                       </div>
                    )}
                  </div>

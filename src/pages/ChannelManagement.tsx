@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { cn } from '../lib/utils';
-import { Play, Settings, Save, RefreshCw, Maximize, Video, Activity, Info, StopCircle, Eye, AlertTriangle } from 'lucide-react';
+import { Play, Settings, Save, RefreshCw, Maximize, Video, Activity, Info, StopCircle, Eye, AlertTriangle, ChevronDown } from 'lucide-react';
 import { useParams } from 'react-router-dom';
 
 export const ChannelManagement = () => {
@@ -11,7 +11,7 @@ export const ChannelManagement = () => {
     const [confidence, setConfidence] = useState(75);
 
     return (
-        <main className="flex-1 overflow-y-auto bg-gray-50 dark:bg-[#161616] p-6 text-gray-800 dark:text-gray-200 transition-colors custom-scrollbar">
+        <main className="flex-1 overflow-y-auto bg-transparent p-6 text-gray-800 dark:text-gray-200 transition-colors custom-scrollbar">
             
             <div className="flex flex-col lg:flex-row justify-between items-start lg:items-center mb-4 gap-4">
                 <div>
@@ -44,11 +44,16 @@ export const ChannelManagement = () => {
                         <div className="p-5 space-y-4">
                             <div>
                                 <label className="block text-xs font-semibold text-gray-600 dark:text-gray-400 mb-2">Source Camera</label>
-                                <select className="w-full bg-gray-50 dark:bg-[#161616] border border-gray-200 dark:border-[#222] rounded-xl px-4 py-2.5 text-sm font-medium text-gray-800 dark:text-gray-200 outline-none focus:border-accent/50 focus:ring-1 focus:ring-accent/50 transition-all cursor-pointer">
-                                    <option>CAM-001 (Main Gate)</option>
-                                    <option>CAM-002 (Lobby)</option>
-                                    <option>Custom RTSP URL</option>
-                                </select>
+                                <div className="relative">
+                                    <div className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 pointer-events-none">
+                                        <ChevronDown size={14} />
+                                    </div>
+                                    <select className="w-full bg-gray-100 dark:bg-[#151515] border border-gray-200 dark:border-[#222] rounded-xl pl-4 pr-9 h-[37px] text-[12px] font-medium text-gray-800 dark:text-gray-200 outline-none focus:border-accent/50 focus:ring-1 focus:ring-accent/50 transition-all cursor-pointer appearance-none">
+                                        <option>CAM-001 (Main Gate)</option>
+                                        <option>CAM-002 (Lobby)</option>
+                                        <option>Custom RTSP URL</option>
+                                    </select>
+                                </div>
                             </div>
                             <div>
                                 <label className="block text-xs font-semibold text-gray-600 dark:text-gray-400 mb-2">Camera URL</label>
@@ -72,11 +77,16 @@ export const ChannelManagement = () => {
                         <div className="p-5 space-y-5">
                             <div>
                                 <label className="block text-xs font-semibold text-gray-600 dark:text-gray-400 mb-2">Algorithm Package</label>
-                                <select className="w-full bg-gray-50 dark:bg-[#161616] border border-gray-200 dark:border-[#222] rounded-xl px-4 py-2.5 text-sm font-medium text-gray-800 dark:text-gray-200 outline-none focus:border-accent/50 focus:ring-1 focus:ring-accent/50 transition-all cursor-pointer">
-                                    <option>Security & Intrusion</option>
-                                    <option>Workplace Safety (PPE)</option>
-                                    <option>Traffic Monitoring</option>
-                                </select>
+                                <div className="relative">
+                                    <div className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 pointer-events-none">
+                                        <ChevronDown size={14} />
+                                    </div>
+                                    <select className="w-full bg-gray-100 dark:bg-[#151515] border border-gray-200 dark:border-[#222] rounded-xl pl-4 pr-9 h-[37px] text-[12px] font-medium text-gray-800 dark:text-gray-200 outline-none focus:border-accent/50 focus:ring-1 focus:ring-accent/50 transition-all cursor-pointer appearance-none">
+                                        <option>Security & Intrusion</option>
+                                        <option>Workplace Safety (PPE)</option>
+                                        <option>Traffic Monitoring</option>
+                                    </select>
+                                </div>
                             </div>
                             
                             <div className="pt-2 border-t border-gray-200 dark:border-[#222]">

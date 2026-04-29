@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Search, Plus, HardDrive, Filter, Clock, CheckCircle2, X } from 'lucide-react';
+import { Search, Plus, HardDrive, Filter, Clock, CheckCircle2, X, ChevronDown } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { cn } from '../lib/utils';
 
@@ -61,7 +61,7 @@ export const DataSet = () => {
   };
 
   return (
-    <main className="flex-1 overflow-y-auto bg-gray-50 dark:bg-[#161616] p-6 lg:p-8 text-gray-800 dark:text-gray-200 transition-colors relative custom-scrollbar">
+    <main className="flex-1 overflow-y-auto bg-transparent p-6 lg:p-8 text-gray-800 dark:text-gray-200 transition-colors relative custom-scrollbar">
       <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-4 gap-4">
         <div>
           <h1 className="text-sm font-bold tracking-tight text-gray-900 dark:text-white mb-1">Data Sets</h1>
@@ -214,17 +214,22 @@ export const DataSet = () => {
                </div>
                <div>
                   <label className="block text-xs font-semibold text-gray-700 dark:text-gray-300 mb-1.5">Task Type</label>
-                  <select 
-                      value={newDataset.type}
-                      onChange={(e) => setNewDataset({ ...newDataset, type: e.target.value })}
-                      className="w-full bg-gray-100 dark:bg-[#151515] border border-gray-200 dark:border-[#222] rounded-xl px-4 py-2.5 text-xs text-gray-900 dark:text-white focus:border-accent/50 focus:ring-1 focus:ring-accent/50 outline-none transition-all font-medium appearance-none"
-                  >
-                      <option value="Object Detection">Object Detection</option>
-                      <option value="Face Recognition">Face Recognition</option>
-                      <option value="Optical Character Recognition">Optical Character Recognition</option>
-                      <option value="Image Classification">Image Classification</option>
-                      <option value="Instance Segmentation">Instance Segmentation</option>
-                  </select>
+                  <div className="relative">
+                      <div className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 pointer-events-none">
+                          <ChevronDown size={14} />
+                      </div>
+                      <select 
+                          value={newDataset.type}
+                          onChange={(e) => setNewDataset({ ...newDataset, type: e.target.value })}
+                          className="w-full bg-gray-100 dark:bg-[#151515] border border-gray-200 dark:border-[#222] rounded-xl pl-4 pr-9 h-[37px] text-[12px] text-gray-900 dark:text-white focus:border-accent/50 focus:ring-1 focus:ring-accent/50 outline-none transition-all font-medium appearance-none cursor-pointer"
+                      >
+                          <option value="Object Detection">Object Detection</option>
+                          <option value="Face Recognition">Face Recognition</option>
+                          <option value="Optical Character Recognition">Optical Character Recognition</option>
+                          <option value="Image Classification">Image Classification</option>
+                          <option value="Instance Segmentation">Instance Segmentation</option>
+                      </select>
+                  </div>
                </div>
                <div>
                   <label className="block text-xs font-semibold text-gray-700 dark:text-gray-300 mb-1.5">Description (Optional)</label>

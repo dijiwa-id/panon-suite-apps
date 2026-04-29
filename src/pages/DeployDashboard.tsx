@@ -1,8 +1,7 @@
 import React from 'react';
-import { AreaChart, Area, BarChart, Bar, PieChart, Pie, Cell, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
+import { AreaChart, Area, BarChart, Bar, PieChart, Pie, Cell, Tooltip, ResponsiveContainer, CartesianGrid, XAxis, YAxis } from 'recharts';
 import { AlertTriangle, Camera, CheckCircle2, ShieldAlert, Activity, LayoutGrid, Clock } from 'lucide-react';
 import { useTheme } from '../context/ThemeContext';
-import { Link, useLocation } from 'react-router-dom';
 import { cn } from '../lib/utils';
 
 const colorMap = {
@@ -57,18 +56,23 @@ const realtimeAlerts = [
 export const DeployDashboard = () => {
   const { theme } = useTheme();
   const isDark = theme === 'dark';
-  const location = useLocation();
 
   const CustomTooltip = ({ active, payload, label }: any) => {
     if (active && payload && payload.length) {
       return (
-        <div className="bg-[#1e1e1e] border border-[#222] text-white text-[10px] px-2.5 py-1.5 rounded shadow-md font-bold">
-          {label && <div className="text-gray-400 mb-0.5">{label}</div>}
-          {payload.map((entry: any, index: number) => (
-            <div key={index} style={{ color: entry.color || entry.payload?.fill || '#fff' }}>
-              {entry.name}: {entry.value}
-            </div>
-          ))}
+        <div className="bg-white/90 dark:bg-[#161616]/90 backdrop-blur-sm border border-gray-100 dark:border-[#2a2a2a] text-gray-900 dark:text-white text-[10px] px-3 py-2 rounded-lg shadow-xl font-bold translate-y-[-10px]">
+          {label && <div className="text-gray-500 tracking-wide mb-1.5 pb-1 border-b border-gray-100 dark:border-[#2a2a2a]">{label}</div>}
+          <div className="space-y-1">
+            {payload.map((entry: any, index: number) => (
+              <div key={index} className="flex items-center justify-between gap-4">
+                <div className="flex items-center gap-1.5">
+                  <div className="w-1.5 h-1.5 rounded-full" style={{ backgroundColor: entry.color || entry.payload?.fill || '#52C5F3' }}></div>
+                  <span className="text-gray-600 dark:text-gray-400 font-medium capitalize">{entry.name}</span>
+                </div>
+                <span className="font-black" style={{ color: entry.color || entry.payload?.fill || '#fff' }}>{entry.value}</span>
+              </div>
+            ))}
+          </div>
         </div>
       );
     }
@@ -76,29 +80,28 @@ export const DeployDashboard = () => {
   };
 
   const getHeatmapColor = (val: number) => {
-    if (val === 0) return isDark ? '#2e8b57' : '#86efac'; // Green
-    if (val < 100) return isDark ? '#bfa430' : '#fde047'; // Yellow
-    if (val < 1000) return isDark ? '#c26227' : '#fdba74'; // Orange
-    return isDark ? '#b91c1c' : '#ef4444'; // Red
+    if (val === 0) return isDark ? '#1a1a1a' : '#f8fafc'; 
+    if (val < 50) return isDark ? 'rgba(82, 197, 243, 0.15)' : 'rgba(82, 197, 243, 0.2)';
+    if (val < 200) return isDark ? 'rgba(82, 197, 243, 0.4)' : 'rgba(82, 197, 243, 0.5)';
+    if (val < 1000) return isDark ? 'rgba(82, 197, 243, 0.7)' : 'rgba(82, 197, 243, 0.8)';
+    return '#52C5F3'; 
   };
 
   return (
-    <main className="flex-1 overflow-y-auto bg-gray-50 dark:bg-[#161616] p-6 lg:p-8 text-gray-800 dark:text-gray-200 transition-colors custom-scrollbar">
+    <main className="flex-1 overflow-y-auto bg-transparent p-6 lg:p-8 text-gray-800 dark:text-gray-200 transition-colors custom-scrollbar">
       <div className="max-w-[1600px] mx-auto">
         {/* Page Header */}
-        <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-4 gap-4">
-          <div className="flex-1">
-            <h1 className="text-sm font-bold tracking-tight text-gray-900 dark:text-white mb-1">Deployment Overview</h1>
-            <p className="text-gray-600 dark:text-gray-400 text-xs font-medium">Monitor real-time system performance and compliance tracking.</p>
-          </div>
-        </div>
+        <header className="mb-8">
+          <h1 className="text-xl font-black tracking-tight text-gray-900 dark:text-white mb-2">Deployment Dashboard</h1>
+          <p className="text-gray-500 dark:text-gray-400 text-sm font-medium">Real-time infrastructure performance and safety compliance metrics.</p>
+        </header>
 
-        <div className="grid grid-cols-1 xl:grid-cols-4 gap-6 max-w-full">
+        <div className="grid grid-cols-1 xl:grid-cols-4 gap-4 max-w-full">
           {/* Main Content Area (3 cols) */}
-          <div className="xl:col-span-3 flex flex-col gap-6">
+          <div className="xl:col-span-3 flex flex-col gap-4">
           
           {/* Top Stat Row */}
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
             
             {/* PPE Compliance */}
             <div className="bg-white dark:bg-[#1e1e1e] border border-gray-100 dark:border-[#222] rounded-[11px] p-6 shadow-sm flex flex-col relative overflow-hidden group hover:border-[#52C5F3]/50 transition-colors">
@@ -129,7 +132,7 @@ export const DeployDashboard = () => {
               <div className="flex items-center justify-between gap-4 flex-1">
                  <div className="relative w-16 h-16 shrink-0 drop-shadow-sm">
                     <PieChart width={64} height={64}>
-                       <Pie data={[{value:14},{value:52},{value:118},{value:125}]} innerRadius={22} outerRadius={32} paddingAngle={3} dataKey="value" stroke="none">
+                       <Pie data={[{value:14},{value:52},{value:118},{value:125}]} innerRadius={25} outerRadius={32} paddingAngle={4} cornerRadius={4} dataKey="value" stroke="none">
                           <Cell fill="#ef4444" />
                           <Cell fill="#f97316" />
                           <Cell fill="#3b82f6" />
@@ -206,7 +209,7 @@ export const DeployDashboard = () => {
           </div>
 
           {/* Row 2: Trends and Types */}
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
             
             {/* Violations Trends */}
             <div className="lg:col-span-1 xl:col-span-1 2xl:col-span-1 bg-white dark:bg-[#1e1e1e] border border-gray-100 dark:border-[#222] rounded-[11px] p-6 shadow-sm flex flex-col group">
@@ -228,11 +231,13 @@ export const DeployDashboard = () => {
                            </linearGradient>
                         ))}
                      </defs>
-                     <CartesianGrid strokeDasharray="3 3" stroke={isDark ? '#2a2a2a' : '#e5e7eb'} vertical={false} />
+                     <CartesianGrid strokeDasharray="3 3" stroke={isDark ? '#2a2a2a' : '#f3f4f6'} vertical={false} strokeOpacity={0.6} />
                      <XAxis dataKey="time" axisLine={false} tickLine={false} tick={{fontSize: 9, fill: '#888', fontWeight: 600}} dy={10} angle={-45} textAnchor="end" height={40}/>
-                     <YAxis axisLine={false} tickLine={false} tick={{fontSize: 10, fill: '#888', fontWeight: 600}} />
+                     <YAxis axisLine={false} tickLine={false} tick={{fontSize: 10, fill: '#888', fontWeight: 600}} width={35} />
                      <Tooltip cursor={{ stroke: isDark ? '#333' : '#e5e7eb', strokeWidth: 1, strokeDasharray: '3 3' }} content={<CustomTooltip />} />
-                     <Area type="monotone" dataKey="helmet" stroke={colorMap.helmet} strokeWidth={2} fillOpacity={1} fill="url(#colorhelmet)" />
+                     <Area type="monotone" dataKey="boots" stackId="1" stroke={colorMap.boots} strokeWidth={1.5} fillOpacity={1} fill="url(#colorboots)" />
+                     <Area type="monotone" dataKey="vest" stackId="1" stroke={colorMap.vest} strokeWidth={1.5} fillOpacity={1} fill="url(#colorvest)" />
+                     <Area type="monotone" dataKey="helmet" stackId="1" stroke={colorMap.helmet} strokeWidth={1.5} fillOpacity={1} fill="url(#colorhelmet)" />
                    </AreaChart>
                  </ResponsiveContainer>
                </div>
@@ -255,7 +260,7 @@ export const DeployDashboard = () => {
                <div className="flex-1 w-full flex items-center justify-center min-h-[160px] drop-shadow-sm">
                  <ResponsiveContainer width="100%" height="100%">
                    <PieChart>
-                     <Pie data={violationTypes} innerRadius={40} outerRadius={60} paddingAngle={2} dataKey="value" stroke="none">
+                     <Pie data={violationTypes} innerRadius={50} outerRadius={65} paddingAngle={4} cornerRadius={4} dataKey="value" stroke="none">
                        {violationTypes.map((entry, index) => (
                          <Cell key={`cell-${index}`} fill={entry.color} />
                        ))}
@@ -302,7 +307,7 @@ export const DeployDashboard = () => {
           </div>
 
           {/* Row 3: Area Distribution and Heatmap */}
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
             {/* Area Violations */}
              <div className="bg-white dark:bg-[#1e1e1e] border border-gray-100 dark:border-[#222] rounded-[11px] p-6 shadow-sm flex flex-col group">
                <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6 gap-3">
@@ -325,14 +330,14 @@ export const DeployDashboard = () => {
                </div>
                <div className="h-48 w-full">
                   <ResponsiveContainer width="100%" height="100%">
-                    <BarChart data={areaViolations} margin={{ top: 0, right: 0, left: -20, bottom: 0 }} barSize={60}>
-                      <CartesianGrid strokeDasharray="3 3" stroke={isDark ? '#2a2a2a' : '#e5e7eb'} vertical={false} />
+                    <BarChart data={areaViolations} margin={{ top: 0, right: 0, left: -20, bottom: 0 }} barSize={40}>
+                      <CartesianGrid strokeDasharray="3 3" stroke={isDark ? '#2a2a2a' : '#f3f4f6'} vertical={false} strokeOpacity={0.6} />
                       <XAxis dataKey="name" axisLine={false} tickLine={false} tick={{fontSize: 10, fill: '#888', fontWeight: 600}} dy={10} />
-                      <YAxis axisLine={false} tickLine={false} tick={{fontSize: 10, fill: '#888', fontWeight: 600}} />
-                      <Tooltip cursor={{ fill: isDark ? '#ffffff05' : '#00000005' }} content={<CustomTooltip />} />
-                      <Bar dataKey="helmet" stackId="a" fill={colorMap.helmet} />
-                      <Bar dataKey="vest" stackId="a" fill={colorMap.vest} />
+                      <YAxis axisLine={false} tickLine={false} tick={{fontSize: 10, fill: '#888', fontWeight: 600}} width={35} />
+                      <Tooltip cursor={{ fill: isDark ? '#ffffff05' : '#00000003' }} content={<CustomTooltip />} />
                       <Bar dataKey="boots" stackId="a" fill={colorMap.boots} />
+                      <Bar dataKey="vest" stackId="a" fill={colorMap.vest} />
+                      <Bar dataKey="helmet" stackId="a" fill={colorMap.helmet} />
                     </BarChart>
                   </ResponsiveContainer>
                </div>
@@ -375,7 +380,7 @@ export const DeployDashboard = () => {
         </div>
 
         {/* Sidebar Space (1 col) */}
-        <div className="xl:col-span-1 flex flex-col gap-6">
+        <div className="xl:col-span-1 flex flex-col gap-4">
            {/* Active Cam */}
            <div className="bg-white dark:bg-[#1e1e1e] border border-gray-100 dark:border-[#222] rounded-[11px] p-6 shadow-sm group">
               <div className="flex items-center justify-between mb-6 shrink-0 w-full text-gray-400 dark:text-gray-500">

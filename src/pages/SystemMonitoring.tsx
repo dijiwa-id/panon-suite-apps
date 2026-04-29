@@ -1,7 +1,7 @@
 import React from 'react';
 import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, ReferenceLine } from 'recharts';
 import { cn } from '../lib/utils';
-import { HardDrive, Cpu, Zap, Activity, Monitor, Network, ShieldCheck } from 'lucide-react';
+import { HardDrive, Cpu, Zap, Activity, Monitor, Network, ShieldCheck, ChevronDown } from 'lucide-react';
 import { useTheme } from '../context/ThemeContext';
 
 const hardwareData = [
@@ -40,16 +40,21 @@ export const SystemMonitoring = () => {
   };
 
   return (
-    <main className="flex-1 overflow-y-auto bg-gray-50 dark:bg-[#161616] p-6 md:p-8 text-gray-800 dark:text-gray-200 transition-colors custom-scrollbar">
+    <main className="flex-1 overflow-y-auto bg-transparent p-6 md:p-8 text-gray-800 dark:text-gray-200 transition-colors custom-scrollbar">
       <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-4 gap-4">
         <div>
           <h1 className="text-sm font-bold tracking-tight text-gray-900 dark:text-white mb-1">System Monitoring</h1>
           <p className="text-gray-600 dark:text-gray-400 text-xs font-medium">Real-time performance and resource utilization.</p>
         </div>
         <div className="flex gap-3">
-          <select className="bg-gray-100 dark:bg-[#151515] border border-gray-200 dark:border-[#222] rounded-xl px-4 py-2 text-xs font-semibold text-gray-800 dark:text-gray-200 outline-none focus:border-accent/50 focus:ring-1 focus:ring-accent/50 transition-all cursor-pointer">
-            <option>Analytic Workstation</option>
-          </select>
+          <div className="relative">
+             <div className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 pointer-events-none">
+                  <ChevronDown size={14} />
+             </div>
+             <select className="w-full bg-gray-100 dark:bg-[#151515] border border-gray-200 dark:border-[#222] rounded-xl pl-4 pr-9 h-[37px] text-[12px] font-semibold text-gray-800 dark:text-gray-200 outline-none focus:border-accent/50 focus:ring-1 focus:ring-accent/50 transition-all cursor-pointer appearance-none">
+                <option>Analytic Workstation</option>
+             </select>
+          </div>
         </div>
       </div>
 

@@ -41,12 +41,12 @@ export const RoleModules = () => {
   };
 
   return (
-    <main className="flex-1 overflow-y-auto bg-gray-50 dark:bg-[#161616] text-gray-900 dark:text-gray-200 transition-colors p-6 md:p-8 custom-scrollbar relative">
+    <main className="flex-1 overflow-y-auto bg-transparent text-gray-900 dark:text-gray-200 transition-colors p-6 md:p-8 custom-scrollbar relative">
       <div className="max-w-[1600px] mx-auto h-full flex flex-col">
         <div className="flex flex-col md:flex-row justify-between items-start md:items-end mb-4 gap-4 shrink-0">
           <div>
             <h1 className="text-sm font-black text-gray-900 dark:text-white mb-2 tracking-tight">Role Modules Mapping</h1>
-            <p className="text-[10px] text-gray-500 font-black leading-none uppercase tracking-widest">User Management • Modifiers</p>
+            <p className="text-[10px] text-gray-500 font-black leading-none capitalize tracking-widest">User Management • Modifiers</p>
           </div>
         </div>
 

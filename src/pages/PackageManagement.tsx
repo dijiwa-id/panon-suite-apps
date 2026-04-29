@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Search, Plus, X } from 'lucide-react';
+import { Search, Plus, X, ChevronDown } from 'lucide-react';
 
 const packages = [
   { id: 'SECURITY', name: 'Security', context: 'Parkir Liar' },
@@ -60,17 +60,22 @@ const AddPackageModal = ({ isOpen, onClose }: { isOpen: boolean; onClose: () => 
 
           <div>
             <label className="block text-[10px] font-black text-gray-500 mb-2 uppercase tracking-widest">Context</label>
-            <select 
-              required
-              value={formData.context}
-              onChange={(e) => setFormData({ ...formData, context: e.target.value })}
-              className="w-full bg-gray-50 dark:bg-[#161616] border border-gray-200 dark:border-[#222] rounded-lg px-4 py-2.5 text-xs text-gray-800 dark:text-gray-200 outline-none focus:border-accent/50 focus:ring-1 focus:ring-accent/50 transition-all appearance-none cursor-pointer"
-            >
-              <option value="" className="bg-white dark:bg-[#1e1e1e]">Select Context</option>
-              {['Parkir Liar', 'People Count', 'Kemacetan', 'Water Level'].map(opt => (
-                <option key={opt} value={opt} className="bg-white dark:bg-[#1e1e1e]">{opt}</option>
-              ))}
-            </select>
+            <div className="relative">
+                <div className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 pointer-events-none">
+                  <ChevronDown size={14} />
+                </div>
+                <select 
+                  required
+                  value={formData.context}
+                  onChange={(e) => setFormData({ ...formData, context: e.target.value })}
+                  className="w-full bg-gray-100 dark:bg-[#151515] border border-gray-200 dark:border-[#222] rounded-xl pl-4 pr-9 h-[37px] text-[12px] text-gray-800 dark:text-gray-200 outline-none focus:border-accent/50 focus:ring-1 focus:ring-accent/50 transition-all appearance-none cursor-pointer"
+                >
+                  <option value="" className="bg-white dark:bg-[#1e1e1e]">Select Context</option>
+                  {['Parkir Liar', 'People Count', 'Kemacetan', 'Water Level'].map(opt => (
+                    <option key={opt} value={opt} className="bg-white dark:bg-[#1e1e1e]">{opt}</option>
+                  ))}
+                </select>
+            </div>
           </div>
 
           <div className="flex justify-between mt-8 pt-4 border-t border-gray-200 dark:border-[#222] items-center">
@@ -98,7 +103,7 @@ export const PackageManagement = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   return (
-    <main className="flex-1 overflow-y-auto bg-gray-50 dark:bg-[#161616] p-6 md:p-8 text-gray-800 dark:text-gray-200 transition-colors custom-scrollbar">
+    <main className="flex-1 overflow-y-auto bg-transparent p-6 md:p-8 text-gray-800 dark:text-gray-200 transition-colors custom-scrollbar">
       <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-4 gap-4">
         <div>
           <h1 className="text-sm font-bold tracking-tight text-gray-900 dark:text-white mb-1">Algorithm Package &gt; Package Management</h1>
@@ -117,9 +122,9 @@ export const PackageManagement = () => {
         <div className="p-5 border-b border-gray-200 dark:border-[#222] flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 bg-gray-50/50 dark:bg-[#1a1a1a]">
           <h2 className="text-sm font-bold text-gray-900 dark:text-white">Algorithm Packages</h2>
           <div className="flex gap-3 w-full sm:w-auto">
-             <div className="bg-gray-100 dark:bg-[#151515] px-4 py-2 rounded-xl border border-gray-200 dark:border-[#222] flex items-center gap-2 flex-1 sm:flex-none">
+             <div className="bg-gray-100 dark:bg-[#151515] px-4 py-2 rounded-xl border border-gray-200 dark:border-[#222] flex items-center gap-2 flex-1 sm:flex-none focus-within:border-accent/50 focus-within:ring-1 focus-within:ring-accent/50 transition-all">
                 <Search className="text-gray-600 dark:text-gray-400" size={16} />
-                <input type="text" placeholder="Search by Name..." className="bg-transparent outline-none text-xs font-medium text-gray-800 dark:text-gray-200 w-full sm:w-48" />
+                <input type="text" placeholder="Search by Name..." className="bg-transparent outline-none text-xs font-medium text-gray-800 dark:text-gray-200 w-full sm:w-64 placeholder-gray-600" />
              </div>
           </div>
         </div>

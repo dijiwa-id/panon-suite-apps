@@ -12,7 +12,7 @@ export const Dashboard = () => {
   const [searchQuery, setSearchQuery] = useState('');
 
   return (
-    <main className="flex-1 overflow-y-auto bg-gray-50 dark:bg-[#161616] text-gray-900 dark:text-white transition-colors p-6 md:p-8 custom-scrollbar">
+    <main className="flex-1 overflow-y-auto bg-transparent text-gray-900 dark:text-white transition-colors p-6 md:p-8 custom-scrollbar">
       <div className="max-w-[1600px] mx-auto">
         {/* Page Header */}
         <div className="flex flex-col md:flex-row md:items-end justify-between mb-4 gap-4">

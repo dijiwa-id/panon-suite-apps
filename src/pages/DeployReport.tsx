@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useTheme } from '../context/ThemeContext';
 import { Link, useLocation } from 'react-router-dom';
 import { cn } from '../lib/utils';
 import { FileText, Download, Calendar } from 'lucide-react';
@@ -22,12 +23,12 @@ const TREND_DATA = [
 ];
 
 const BREAKDOWN_DATA = [
-  { name: 'No Stay', value: 15, color: '#ef4444' },
-  { name: 'Crowd', value: 20, color: '#f59e0b' },
+  { name: 'No Stay', value: 15, color: '#52C5F3' },
+  { name: 'Crowd', value: 20, color: '#EC3292' },
   { name: 'Fire/Smoke', value: 10, color: '#8b5cf6' },
-  { name: 'Helmet', value: 25, color: '#f97316' },
-  { name: 'Vest', value: 15, color: '#3b82f6' },
-  { name: 'Intrusion', value: 15, color: '#10b981' },
+  { name: 'Helmet', value: 25, color: '#10b981' },
+  { name: 'Vest', value: 15, color: '#f59e0b' },
+  { name: 'Intrusion', value: 15, color: '#4b5563' },
 ];
 
 const AREA_DATA = [
@@ -43,9 +44,33 @@ const AREA_DATA = [
 export const DeployReport = () => {
   const location = useLocation();
   const [activeTab, setActiveTab] = useState('Today');
+  const { theme } = useTheme();
+  const isDark = theme === 'dark';
+
+  const CustomTooltip = ({ active, payload, label }: any) => {
+    if (active && payload && payload.length) {
+      return (
+        <div className="bg-white/90 dark:bg-[#161616]/90 backdrop-blur-sm border border-gray-100 dark:border-[#2a2a2a] text-gray-900 dark:text-white text-[10px] px-3 py-2 rounded-lg shadow-xl font-bold translate-y-[-10px]">
+          {label && <div className="text-gray-500 tracking-wide mb-1.5 pb-1 border-b border-gray-100 dark:border-[#2a2a2a]">{label}</div>}
+          <div className="space-y-1">
+            {payload.map((entry: any, index: number) => (
+              <div key={index} className="flex items-center justify-between gap-4">
+                <div className="flex items-center gap-1.5">
+                  <div className="w-1.5 h-1.5 rounded-full" style={{ backgroundColor: entry.color || entry.payload?.fill || '#52C5F3' }}></div>
+                  <span className="text-gray-600 dark:text-gray-400 font-medium capitalize">{entry.name}</span>
+                </div>
+                <span className="font-black" style={{ color: entry.color || entry.payload?.fill || '#fff' }}>{entry.value}</span>
+              </div>
+            ))}
+          </div>
+        </div>
+      );
+    }
+    return null;
+  };
 
   return (
-    <main className="flex-1 overflow-y-auto bg-gray-50 dark:bg-[#161616] p-6 lg:p-8 text-gray-800 dark:text-gray-200 transition-colors custom-scrollbar">
+    <main className="flex-1 overflow-y-auto bg-transparent p-6 lg:p-8 text-gray-800 dark:text-gray-200 transition-colors custom-scrollbar">
       <div className="max-w-[1600px] mx-auto flex flex-col h-full relative">
         
         {/* Page Header */}
@@ -138,24 +163,24 @@ export const DeployReport = () => {
                      <div className="flex-1 w-full min-h-[220px]">
                        <ResponsiveContainer width="100%" height="100%">
                          <LineChart data={TREND_DATA} margin={{ top: 5, right: 10, left: -20, bottom: 20 }}>
-                           <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#ccc" opacity={0.5} />
+                           <CartesianGrid strokeDasharray="3 3" vertical={false} stroke={isDark ? '#2a2a2a' : '#f3f4f6'} strokeOpacity={0.6} />
                            <XAxis 
                             dataKey="time" 
                             axisLine={false} 
                             tickLine={false} 
-                            tick={{ fontSize: 10, fill: '#6b7280' }} 
+                            tick={{ fontSize: 9, fill: '#888', fontWeight: 600 }} 
                             dy={10} 
                             angle={-45}
                             textAnchor="end"
                            />
-                           <YAxis axisLine={false} tickLine={false} tick={{ fontSize: 10, fill: '#6b7280' }} />
+                           <YAxis axisLine={false} tickLine={false} tick={{ fontSize: 10, fill: '#888', fontWeight: 600 }} width={35} />
                            <RechartsTooltip 
-                             contentStyle={{ backgroundColor: '#fff', borderColor: '#e5e7eb', color: '#1f2937', borderRadius: '8px', fontSize: '12px', boxShadow: '0 4px 6px -1px rgb(0 0 0 / 0.1)' }}
-                             itemStyle={{ color: '#1f2937' }}
+                             cursor={{ stroke: isDark ? '#333' : '#e5e7eb', strokeWidth: 1, strokeDasharray: '3 3' }}
+                             content={<CustomTooltip />}
                            />
-                           <Legend wrapperStyle={{ fontSize: '10px', paddingTop: '20px' }} iconType="square" iconSize={8} />
-                           <Line type="monotone" dataKey="helmet" name="Helmet" stroke="#ef4444" strokeWidth={2} dot={false} activeDot={{ r: 4 }} />
-                           <Line type="monotone" dataKey="vest" name="Vest" stroke="#f59e0b" strokeWidth={2} dot={false} activeDot={{ r: 4 }} />
+                           <Legend wrapperStyle={{ fontSize: '10px', paddingTop: '20px', fontWeight: 600, color: '#888' }} iconType="circle" iconSize={6} />
+                           <Line type="monotone" dataKey="helmet" name="Helmet" stroke="#52C5F3" strokeWidth={1.5} dot={false} activeDot={{ r: 4, fill: '#52C5F3', stroke: isDark ? '#161616' : '#fff', strokeWidth: 2 }} />
+                           <Line type="monotone" dataKey="vest" name="Vest" stroke="#EC3292" strokeWidth={1.5} dot={false} activeDot={{ r: 4, fill: '#EC3292', stroke: isDark ? '#161616' : '#fff', strokeWidth: 2 }} />
                          </LineChart>
                        </ResponsiveContainer>
                      </div>
@@ -171,9 +196,10 @@ export const DeployReport = () => {
                              data={BREAKDOWN_DATA}
                              cx="50%"
                              cy="45%"
-                             innerRadius={45}
-                             outerRadius={80}
-                             paddingAngle={2}
+                             innerRadius={50}
+                             outerRadius={65}
+                             paddingAngle={4}
+                             cornerRadius={4}
                              dataKey="value"
                              stroke="none"
                            >
@@ -181,14 +207,11 @@ export const DeployReport = () => {
                                <Cell key={`cell-${index}`} fill={entry.color} />
                              ))}
                            </Pie>
-                           <RechartsTooltip 
-                             contentStyle={{ backgroundColor: '#fff', borderColor: '#e5e7eb', color: '#1f2937', borderRadius: '8px', fontSize: '12px', boxShadow: '0 4px 6px -1px rgb(0 0 0 / 0.1)' }}
-                             itemStyle={{ color: '#1f2937' }}
-                           />
+                           <RechartsTooltip content={<CustomTooltip />} />
                            <Legend 
-                              wrapperStyle={{ fontSize: '10px', paddingTop: '10px' }} 
-                              iconType="square" 
-                              iconSize={8}
+                              wrapperStyle={{ fontSize: '10px', paddingTop: '10px', fontWeight: 600, color: '#888' }} 
+                              iconType="circle" 
+                              iconSize={6}
                               layout="horizontal"
                               verticalAlign="bottom"
                               align="center"
@@ -203,27 +226,27 @@ export const DeployReport = () => {
                      <h3 className="text-xs font-black tracking-widest capitalize text-gray-900 dark:text-gray-200 mb-6">Area Distribution</h3>
                      <div className="flex-1 w-full min-h-[220px]">
                        <ResponsiveContainer width="100%" height="100%">
-                         <BarChart data={AREA_DATA} margin={{ top: 5, right: 10, left: -20, bottom: 20 }} barSize={30}>
-                           <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#ccc" opacity={0.5} />
+                         <BarChart data={AREA_DATA} margin={{ top: 5, right: 10, left: -20, bottom: 20 }} barSize={16}>
+                           <CartesianGrid strokeDasharray="3 3" vertical={false} stroke={isDark ? '#2a2a2a' : '#f3f4f6'} strokeOpacity={0.6} />
                            <XAxis 
                             dataKey="zone" 
                             axisLine={false} 
                             tickLine={false} 
-                            tick={{ fontSize: 10, fill: '#6b7280' }} 
+                            tick={{ fontSize: 9, fill: '#888', fontWeight: 600 }} 
                             dy={10}
                             angle={-30}
                             textAnchor="end"
                            />
-                           <YAxis axisLine={false} tickLine={false} tick={{ fontSize: 10, fill: '#6b7280' }} />
+                           <YAxis axisLine={false} tickLine={false} tick={{ fontSize: 10, fill: '#888', fontWeight: 600 }} width={35} />
                            <RechartsTooltip 
-                             cursor={{ fill: 'transparent' }}
-                             contentStyle={{ backgroundColor: '#fff', borderColor: '#e5e7eb', color: '#1f2937', borderRadius: '8px', fontSize: '12px', boxShadow: '0 4px 6px -1px rgb(0 0 0 / 0.1)' }}
+                             cursor={{ fill: isDark ? '#ffffff05' : '#00000003' }}
+                             content={<CustomTooltip />}
                            />
-                           <Legend wrapperStyle={{ fontSize: '10px', paddingTop: '20px' }} iconType="square" iconSize={8} />
-                           <Bar dataKey="ppe" name="PPE" stackId="a" fill="#ef4444" />
-                           <Bar dataKey="intrusion" name="Intrusion" stackId="a" fill="#8b5cf6" />
-                           <Bar dataKey="fire" name="Fire" stackId="a" fill="#f97316" />
-                           <Bar dataKey="other" name="Other" stackId="a" fill="#9ca3af" />
+                           <Legend wrapperStyle={{ fontSize: '10px', paddingTop: '20px', fontWeight: 600, color: '#888' }} iconType="circle" iconSize={6} />
+                           <Bar dataKey="ppe" name="PPE" stackId="a" fill="#10b981" radius={[0, 0, 0, 0]} />
+                           <Bar dataKey="intrusion" name="Intrusion" stackId="a" fill="#52C5F3" radius={[0, 0, 0, 0]} />
+                           <Bar dataKey="fire" name="Fire" stackId="a" fill="#EC3292" radius={[0, 0, 0, 0]} />
+                           <Bar dataKey="other" name="Other" stackId="a" fill="#8b5cf6" radius={[2, 2, 0, 0]} />
                          </BarChart>
                        </ResponsiveContainer>
                      </div>

@@ -3,6 +3,7 @@ import { Play, Square, Activity, Database, Cpu, Clock, History } from 'lucide-re
 import { cn } from '../lib/utils';
 import { AreaChart, Area, ResponsiveContainer, YAxis, Tooltip, CartesianGrid } from 'recharts';
 import { useTheme } from '../context/ThemeContext';
+import { PerformanceLineChart } from '../components/ChartCards';
 
 const jobs = [
   { id: 'TR-092', name: 'Security-Cam-YoloV8', dataset: 'Main Gate Vehicles', epoch: '45/100', map: 0.82, status: 'training', timeRemaining: '2h 15m' },
@@ -30,7 +31,7 @@ export const ModelTraining = () => {
   };
 
   return (
-    <main className="flex-1 overflow-y-auto bg-gray-50 dark:bg-[#161616] p-6 lg:p-8 text-gray-800 dark:text-gray-200 transition-colors custom-scrollbar">
+    <main className="flex-1 overflow-y-auto bg-transparent p-6 lg:p-8 text-gray-800 dark:text-gray-200 transition-colors custom-scrollbar">
       <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-4 gap-4">
         <div>
           <h1 className="text-sm font-bold tracking-tight text-gray-900 dark:text-white mb-1">Model Training</h1>
@@ -137,6 +138,10 @@ export const ModelTraining = () => {
                 </div>
             </div>
         </div>
+      </div>
+
+      <div className="mb-4">
+        <PerformanceLineChart />
       </div>
 
       <div className="bg-white dark:bg-[#1e1e1e] rounded-[11px] border border-gray-200 dark:border-[#222] overflow-hidden shadow-sm">

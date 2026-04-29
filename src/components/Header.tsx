@@ -14,19 +14,20 @@ export const Header = () => {
   };
 
   return (
-    <header className="h-[60px] flex items-center justify-end px-[30px] bg-white dark:bg-[#161616] border-b border-gray-200 dark:border-[#2a2a2a] transition-colors shrink-0 z-50">
+    <header className="h-[55px] flex items-center justify-end px-[30px] bg-white/80 dark:bg-[#161616]/80 backdrop-blur-md border-b border-gray-200/50 dark:border-[#2a2a2a]/50 transition-colors shrink-0 z-50">
       <div className="flex items-center gap-4">
-        <div className="relative">
+        <div className="bg-gray-100 dark:bg-[#151515] px-3 py-1.5 rounded-xl border border-gray-200 dark:border-[#222] flex items-center gap-2 w-64 focus-within:border-accent/50 focus-within:ring-1 focus-within:ring-accent/50 transition-all">
+          <Search size={14} className="text-gray-500 shrink-0" />
           <input 
             type="text" 
             placeholder="Search..." 
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            className="input-field w-64 pr-10 bg-gray-50 dark:bg-[#1f1f1f] border border-gray-200 dark:border-[#2a2a2a] rounded-lg px-3 py-1.5 text-sm text-gray-900 dark:text-white outline-none focus:border-accent"
+            className="bg-transparent outline-none text-xs font-medium text-gray-800 dark:text-gray-200 w-full placeholder-gray-600"
           />
-          <button className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 hover:text-gray-300">
-             <KeySquare size={14} className="opacity-50" />
-          </button>
+          <div className="text-gray-500 opacity-50 shrink-0 ml-auto">
+            <KeySquare size={14} />
+          </div>
         </div>
 
         <div className="flex items-center gap-4">

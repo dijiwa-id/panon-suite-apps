@@ -26,30 +26,31 @@ import { cn } from "../lib/utils";
 import { motion } from "motion/react";
 
 const iconMap: Record<string, React.ReactNode> = {
-  Dashboard: <LayoutDashboard size={18} />,
-  Notification: <Bell size={18} />,
-  "Data Collection": <Database size={18} />,
-  "Data Set": <Layers size={18} />,
-  "Image Annotation": <Edit3 size={18} />,
-  "Model Training": <Cpu size={18} />,
-  "AI Models": <Box size={18} />,
-  "Building Blocks": <Layout size={18} />,
-  "No Code Editor": <Code size={18} />,
-  Applications: <Grid size={18} />,
-  "System Monitoring": <Cpu size={18} />,
-  "Workstation Management": <Box size={18} />,
-  "Camera Management": <Aperture size={18} />,
-  "Channel Management": <Layers size={18} />,
-  "Model Management": <Cpu size={18} />,
-  "Algorithm Package": <Code size={18} />,
-  "User Management": <Users size={18} />,
-  "Roles": <Layers size={18} />,
-  "Users": <Box size={18} />,
-  "Role Modules": <Layers size={18} />,
-  "Configuration": <Layout size={18} />,
-  "Live Feed Camera": <Camera size={18} />,
-  "Detection Log": <List size={18} />,
-  "Report": <FileText size={18} />,
+  Dashboard: <LayoutDashboard size={14} />,
+  Notification: <Bell size={14} />,
+  "Data Collection": <Database size={14} />,
+  "Data Set": <Layers size={14} />,
+  "Image Annotation": <Edit3 size={14} />,
+  "Model Training": <Cpu size={14} />,
+  "AI Models": <Box size={14} />,
+  "Building Blocks": <Layout size={14} />,
+  "No Code Editor": <Code size={14} />,
+  Applications: <Grid size={14} />,
+  "System Monitoring": <Cpu size={14} />,
+  "Workstation Management": <Box size={14} />,
+  "Camera Management": <Aperture size={14} />,
+  "Channel Management": <Layers size={14} />,
+  "Model Management": <Cpu size={14} />,
+  "Model Deployment": <Cpu size={14} />,
+  "Algorithm Package": <Code size={14} />,
+  "User Management": <Users size={14} />,
+  "Roles": <Layers size={14} />,
+  "Users": <Box size={14} />,
+  "Role Modules": <Layers size={14} />,
+  "Configuration": <Layout size={14} />,
+  "Live Feed Camera": <Camera size={14} />,
+  "Detection Log": <List size={14} />,
+  "Report": <FileText size={14} />,
 };
 
 interface NavItemProps {
@@ -104,7 +105,7 @@ const NavItem: React.FC<NavItemProps & { subItems?: SubItem[]; isOpen?: boolean;
           <div
             className={cn(
               "flex items-center",
-              isCollapsed ? "justify-center" : "gap-3.5",
+              isCollapsed ? "justify-center" : "gap-3",
             )}
           >
             <span
@@ -117,7 +118,7 @@ const NavItem: React.FC<NavItemProps & { subItems?: SubItem[]; isOpen?: boolean;
                     : "text-gray-600 group-hover:text-accent",
               )}
             >
-              {iconMap[icon] || <Box size={18} />}
+              {iconMap[icon] || <Box size={14} />}
             </span>
             {!isCollapsed && (
               <span className="text-xs font-normal tracking-wide capitalize">
@@ -139,9 +140,9 @@ const NavItem: React.FC<NavItemProps & { subItems?: SubItem[]; isOpen?: boolean;
         </div>
       </Link>
       {hasSubItems && !isCollapsed && isSubOpen && (
-        <div className="pl-12 space-y-1 mt-1">
+        <div className="pl-6 ml-6 border-l border-gray-200 dark:border-[#222] space-y-1 mt-1">
           {subItems!.map(sub => (
-              <Link key={sub.path} to={sub.path} className={cn("block text-[12px] py-1 hover:text-accent", location.pathname === sub.path ? "text-accent font-bold" : "text-gray-500")}>
+              <Link key={sub.path} to={sub.path} className={cn("block text-[12px] py-1 hover:text-accent pl-2", location.pathname === sub.path ? "text-accent font-bold" : "text-gray-500")}>
                 {sub.label}
               </Link>
           ))}
@@ -154,15 +155,18 @@ const NavItem: React.FC<NavItemProps & { subItems?: SubItem[]; isOpen?: boolean;
 export const Sidebar = ({
   isCollapsed,
   toggleSidebar,
+  className
 }: {
   isCollapsed: boolean;
   toggleSidebar: () => void;
+  className?: string;
 }) => {
   return (
     <aside
       className={cn(
-        "flex flex-col h-screen border-r border-gray-200 dark:border-[#262626] bg-white dark:bg-[#151515] transition-all duration-300 shrink-0",
-        isCollapsed ? "w-20" : "w-64",
+        "flex flex-col h-screen border-r border-gray-200/50 dark:border-[#262626]/50 bg-white/80 dark:bg-[#151515]/80 backdrop-blur-md transition-all duration-300 shrink-0 relative z-20",
+        isCollapsed ? "w-16" : "w-64",
+        className
       )}
     >
       <div className="px-6 h-[60px] flex items-center">
@@ -294,6 +298,7 @@ export const Sidebar = ({
                 ],
               },
               { label: "Model Management", path: "/system-admin/model-management" },
+              { label: "Model Deployment", path: "/system-admin/model-deployment" },
               {
                 label: "Algorithm Package",
                 path: "#",
@@ -342,7 +347,7 @@ export const Sidebar = ({
         >
           <div className="flex items-center gap-3">
             <ChevronLeft
-              size={16}
+              size={14}
               className={cn(
                 "transition-transform",
                 isCollapsed
@@ -351,7 +356,7 @@ export const Sidebar = ({
               )}
             />
             {!isCollapsed && (
-              <span className="text-sm font-medium tracking-wide">
+              <span className="text-xs font-medium tracking-wide">
                 Collapse
               </span>
             )}
@@ -387,7 +392,7 @@ const NavSection = ({
           isCollapsed && "justify-center px-0",
         )}
       >
-        {!isCollapsed && <span className="tracking-tight">{title}</span>}
+        {!isCollapsed && <span className="tracking-tight text-[12px]">{title}</span>}
         {!isCollapsed && (
           <motion.div
             animate={{ rotate: isOpen ? 0 : -90 }}

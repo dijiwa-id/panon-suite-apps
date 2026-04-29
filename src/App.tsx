@@ -16,6 +16,7 @@ import { SystemMonitoring } from './pages/SystemMonitoring';
 import { WorkstationManagement } from './pages/WorkstationManagement';
 import { CameraManagement } from './pages/CameraManagement';
 import { ModelManagement } from './pages/ModelManagement';
+import { ModelDeployment } from './pages/ModelDeployment';
 import { ChannelManagement } from './pages/ChannelManagement';
 import { AlgorithmContext } from './pages/AlgorithmContext';
 import { PackageManagement } from './pages/PackageManagement';
@@ -42,9 +43,13 @@ const AppLayout = ({ children }: { children: React.ReactNode }) => {
   const [isSidebarCollapsed, setIsSidebarCollapsed] = React.useState(false);
 
   return (
-    <div className="flex h-screen overflow-hidden font-sans">
-      <Sidebar isCollapsed={isSidebarCollapsed} toggleSidebar={() => setIsSidebarCollapsed(!isSidebarCollapsed)} />
-      <div className="flex-1 flex flex-col min-w-0">
+    <div className="flex h-screen overflow-hidden font-sans bg-gray-50 dark:bg-[#161616] relative">
+      {/* Abstract Background Accents */}
+      <div className="absolute top-[-20%] left-[-10%] w-[50%] h-[50%] rounded-full bg-[#52C5F3]/5 blur-[120px] pointer-events-none z-0" />
+      <div className="absolute bottom-[-20%] right-[-10%] w-[50%] h-[50%] rounded-full bg-[#EC3292]/5 blur-[120px] pointer-events-none z-0" />
+      
+      <Sidebar isCollapsed={isSidebarCollapsed} toggleSidebar={() => setIsSidebarCollapsed(!isSidebarCollapsed)} className="z-10" />
+      <div className="flex-1 flex flex-col min-w-0 z-10 bg-transparent">
         <Header />
         {children}
       </div>
@@ -66,6 +71,7 @@ export default function App() {
           <Route path="/system-admin/workstation-management" element={<AppLayout><WorkstationManagement /></AppLayout>} />
           <Route path="/system-admin/camera-management" element={<AppLayout><CameraManagement /></AppLayout>} />
           <Route path="/system-admin/model-management" element={<AppLayout><ModelManagement /></AppLayout>} />
+          <Route path="/system-admin/model-deployment" element={<AppLayout><ModelDeployment /></AppLayout>} />
           <Route path="/train/data-collection" element={<AppLayout><DataCollection /></AppLayout>} />
           <Route path="/train/data-set" element={<AppLayout><DataSet /></AppLayout>} />
           <Route path="/train/image-annotation" element={<AppLayout><ImageAnnotation /></AppLayout>} />

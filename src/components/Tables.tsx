@@ -100,7 +100,7 @@ export const TableCard = ({ title, tabs, columns, data, className }: TableCardPr
                       </td>
                     );
                   }
-                  return <td key={j} className="py-2.5 pl-3">{val}</td>;
+                  return <td key={j} className="py-2.5 pl-3 text-[12px]">{val}</td>;
                 })}
                 <td className="py-2.5 text-right pr-3 shrink-0">
                    <button className="text-gray-600 dark:text-gray-400 hover:text-accent dark:hover:text-accent bg-gray-100 dark:bg-[#1a1a1a] hover:bg-accent/10 border border-transparent hover:border-accent/20 rounded-full p-1 opacity-0 group-hover:opacity-100 transition-all">
@@ -247,7 +247,7 @@ export const RequestList = () => {
                {sortedData.map((row, i) => (
                   <tr key={i} className="group hover:bg-gray-50/50 dark:hover:bg-[#252525]/50 transition-colors cursor-pointer">
                      <td className="py-2.5 pl-2 text-xs font-bold text-gray-700 dark:text-gray-300 group-hover:text-gray-900 dark:group-hover:text-white transition-colors">{row.from}</td>
-                     <td className="py-2.5 font-medium">{row.time}</td>
+                     <td className="py-2.5 font-medium text-[12px]">{row.time}</td>
                      <td className="py-2.5 text-[10px] font-medium text-gray-500 dark:text-[#888] transition-colors uppercase tracking-widest font-black">{row.sum}</td>
                   </tr>
                ))}

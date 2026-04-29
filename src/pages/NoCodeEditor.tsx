@@ -1,6 +1,7 @@
 import React, { useState, useCallback, useRef } from 'react';
 import { Play, Save, Settings, Video, BrainCircuit, Server, Search, MousePointer2, Plus } from 'lucide-react';
 import { cn } from '../lib/utils';
+import { useTheme } from '../context/ThemeContext';
 import {
   ReactFlow,
   Background,
@@ -24,23 +25,23 @@ const CustomNode = ({ data, type, selected }: { data: any, type: string, selecte
   const isProcessor = type === 'processorNode';
   const colorClass = isSource ? 'bg-blue-500' : isSink ? 'bg-green-500' : isProcessor ? 'bg-accent' : 'bg-secondary';
   const borderColorClass = isSource ? 'border-blue-500' : isSink ? 'border-green-500' : isProcessor ? 'border-accent' : 'border-secondary';
-  const glowClass = selected ? 'shadow-[0_0_20px_rgba(255,255,255,0.1)] ring-2 ring-white/50' : isProcessor ? 'shadow-[0_0_15px_rgba(82,197,243,0.05)]' : isSource ? 'shadow-blue-500/5' : isSink ? 'shadow-green-500/5' : 'shadow-[0_0_15px_rgba(236,50,146,0.05)]';
+  const glowClass = selected ? 'shadow-md ring-2 ring-gray-400 dark:shadow-[0_0_20px_rgba(255,255,255,0.1)] dark:ring-white/50' : isProcessor ? 'shadow-sm dark:shadow-[0_0_15px_rgba(82,197,243,0.05)]' : isSource ? 'shadow-sm' : isSink ? 'shadow-sm' : 'shadow-sm dark:shadow-[0_0_15px_rgba(236,50,146,0.05)]';
 
-  return (
-    <div className={cn(`w-52 bg-gray-50/50 dark:bg-[#1a1a1a] border-2 rounded-xl flex flex-col transition-all cursor-move`, glowClass, borderColorClass)}>
-       {!isSource && <Handle type="target" position={Position.Left} className={cn(`!w-3.5 !h-3.5 !bg-gray-50 dark:bg-[#111] !border-2 !rounded-full !-ml-[9px]`, borderColorClass)} />}
-       <div className="bg-gray-50 dark:bg-[#111] p-2.5 border-b border-gray-200 dark:border-[#222] rounded-t-xl flex justify-between items-center group">
-           <span className="text-[11px] font-bold text-gray-900 dark:text-white flex items-center gap-2">
+   return (
+    <div className={cn(`w-52 bg-white dark:bg-[#1a1a1a] border-2 rounded-xl flex flex-col transition-all cursor-move`, glowClass, borderColorClass)}>
+       {!isSource && <Handle type="target" position={Position.Left} className={cn(`!w-3.5 !h-3.5 !bg-white dark:!bg-[#111] !border-2 !rounded-full !-ml-[9px]`, borderColorClass)} />}
+       <div className="bg-gray-50 dark:bg-[#111] p-2.5 border-b border-gray-100 dark:border-[#222] rounded-t-xl flex justify-between items-center group">
+           <span className="text-[11px] font-bold text-gray-800 dark:text-white flex items-center gap-2">
                <div className={`w-2 h-2 rounded-full ${colorClass}`}></div> {data.label}
            </span>
-           <Settings size={12} className="text-gray-500 cursor-pointer hover:text-white transition-colors opacity-0 group-hover:opacity-100" />
+           <Settings size={12} className="text-gray-400 cursor-pointer hover:text-gray-900 dark:hover:text-white transition-colors opacity-0 group-hover:opacity-100" />
        </div>
-       <div className="p-3 bg-gray-50/50 dark:bg-[#1a1a1a] rounded-b-xl flex-1 flex flex-col justify-center">
-           {data.subLabel && <div className="text-[10px] text-gray-500 font-mono truncate uppercase tracking-widest font-black">{data.subLabel}</div>}
+       <div className="p-3 bg-white dark:bg-[#1a1a1a] rounded-b-xl flex-1 flex flex-col justify-center gap-0.5">
+           {data.subLabel && <div className="text-[10px] text-gray-500 dark:text-gray-500 font-mono truncate uppercase tracking-widest font-black mb-1">{data.subLabel}</div>}
            {data.details?.map((d: string, i: number) => <div key={i} className="text-[10px] text-gray-600 dark:text-gray-400 font-medium">{d}</div>)}
-           {data.muted?.map((d: string, i: number) => <div key={i} className="text-[10px] text-gray-500 font-mono mt-1 uppercase tracking-widest font-black">{d}</div>)}
+           {data.muted?.map((d: string, i: number) => <div key={i} className="text-[10px] text-gray-400 dark:text-gray-500 font-mono mt-1 uppercase tracking-widest font-black">{d}</div>)}
        </div>
-       {!isSink && <Handle type="source" position={Position.Right} className={cn(`!w-3.5 !h-3.5 !bg-gray-50 dark:bg-[#111] !border-2 !rounded-full !-mr-[9px]`, borderColorClass)} />}
+       {!isSink && <Handle type="source" position={Position.Right} className={cn(`!w-3.5 !h-3.5 !bg-white dark:!bg-[#111] !border-2 !rounded-full !-mr-[9px]`, borderColorClass)} />}
     </div>
   );
 };
@@ -79,6 +80,7 @@ const initialEdges: Edge[] = [
 ];
 
 export const NoCodeEditor = () => {
+  const { theme } = useTheme();
   const reactFlowWrapper = useRef<HTMLDivElement>(null);
   const [nodes, setNodes, onNodesChange] = useNodesState(initialNodes);
   const [edges, setEdges, onEdgesChange] = useEdgesState(initialEdges);
@@ -129,9 +131,9 @@ export const NoCodeEditor = () => {
   );
 
   return (
-    <main className="flex-1 overflow-hidden bg-gray-50 dark:bg-[#161616] flex flex-col text-gray-800 dark:text-gray-200">
+    <main className="flex-1 overflow-hidden bg-transparent flex flex-col text-gray-800 dark:text-gray-200">
       {/* Header Toolbar */}
-      <div className="h-[60px] border-b border-gray-200 dark:border-[#222] bg-gray-50 dark:bg-[#161616] flex items-center justify-between px-6 shrink-0 z-20">
+      <div className="h-[60px] border-b border-gray-200 dark:border-[#222] bg-white dark:bg-[#161616] flex items-center justify-between px-6 shrink-0 z-20">
         <div className="flex items-center gap-4">
           <div>
             <h1 className="text-sm font-bold text-gray-900 dark:text-white flex items-center gap-2">
@@ -143,7 +145,7 @@ export const NoCodeEditor = () => {
         </div>
 
         <div className="flex gap-3 items-center">
-          <button className="flex items-center gap-2 bg-gray-50/50 dark:bg-[#1a1a1a] hover:bg-gray-100 dark:hover:bg-[#202020] text-gray-600 dark:text-gray-400 hover:text-white border border-gray-200 dark:border-[#222] h-[32px] rounded-lg text-xs font-bold px-4 transition-colors">
+          <button className="flex items-center gap-2 bg-white dark:bg-[#1a1a1a] hover:bg-gray-50 dark:hover:bg-[#202020] text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white border border-gray-200 dark:border-[#222] h-[32px] rounded-lg text-xs font-bold px-4 transition-colors shadow-sm">
             <Save size={14} /> Save Pipeline
           </button>
           <button className="flex items-center gap-2 bg-accent hover:bg-accent/90 text-black h-[32px] rounded-lg text-xs font-bold px-5 transition-colors shadow-[0_0_15px_rgba(82,197,243,0.3)]">
@@ -154,21 +156,21 @@ export const NoCodeEditor = () => {
 
       <div className="flex-1 flex overflow-hidden">
         {/* Left Sidebar - Nodes Palette */}
-        <div className="w-64 border-r border-gray-200 dark:border-[#222] bg-gray-50 dark:bg-[#161616] flex flex-col shrink-0 z-10">
+        <div className="w-64 border-r border-gray-200 dark:border-[#222] bg-white dark:bg-[#161616] flex flex-col shrink-0 z-10">
           <div className="p-4 border-b border-gray-200 dark:border-[#222]">
-             <div className="bg-gray-50 dark:bg-[#111] px-3 py-2 rounded-lg border border-gray-200 dark:border-[#222] flex items-center gap-2 focus-within:border-accent/50 transition-all">
-                <Search className="text-gray-500" size={14} />
-                <input type="text" placeholder="Search blocks..." className="bg-transparent outline-none text-xs font-medium text-gray-800 dark:text-gray-200 w-full placeholder-gray-600" />
+             <div className="bg-white dark:bg-[#151515] px-4 py-2 rounded-xl border border-gray-200 dark:border-[#222] flex items-center gap-2 focus-within:border-accent/50 focus-within:ring-1 focus-within:ring-accent/50 transition-all shadow-sm">
+                <Search className="text-gray-400 dark:text-gray-400" size={16} />
+                <input type="text" placeholder="Search blocks..." className="bg-transparent outline-none text-xs font-medium text-gray-800 dark:text-gray-200 w-full placeholder-gray-400 dark:placeholder-gray-600" />
              </div>
           </div>
           <div className="flex-1 overflow-y-auto p-4 space-y-6">
               <div>
                   <h3 className="text-[10px] font-black text-gray-500 mb-3 flex items-center gap-1.5 uppercase tracking-widest"><Video size={12}/> Sources</h3>
                   <div className="space-y-2">
-                      <div onDragStart={(event) => onDragStart(event, 'sourceNode', 'RTSP Stream')} draggable className="bg-gray-50/50 dark:bg-[#1a1a1a] border border-gray-200 dark:border-[#222] hover:border-gray-500 p-2.5 rounded-lg cursor-grab flex items-center gap-2 text-xs font-semibold text-gray-700 dark:text-gray-300">
+                      <div onDragStart={(event) => onDragStart(event, 'sourceNode', 'RTSP Stream')} draggable className="bg-white dark:bg-[#1a1a1a] border border-gray-200 dark:border-[#222] hover:border-gray-500 p-2.5 rounded-lg cursor-grab flex items-center gap-2 text-xs font-semibold text-gray-700 dark:text-gray-300">
                           <div className="w-2 h-2 rounded-full bg-blue-500"></div> RTSP Stream
                       </div>
-                      <div onDragStart={(event) => onDragStart(event, 'sourceNode', 'Video File')} draggable className="bg-gray-50/50 dark:bg-[#1a1a1a] border border-gray-200 dark:border-[#222] hover:border-gray-500 p-2.5 rounded-lg cursor-grab flex items-center gap-2 text-xs font-semibold text-gray-700 dark:text-gray-300">
+                      <div onDragStart={(event) => onDragStart(event, 'sourceNode', 'Video File')} draggable className="bg-white dark:bg-[#1a1a1a] border border-gray-200 dark:border-[#222] hover:border-gray-500 p-2.5 rounded-lg cursor-grab flex items-center gap-2 text-xs font-semibold text-gray-700 dark:text-gray-300">
                           <div className="w-2 h-2 rounded-full bg-blue-500"></div> Video File
                       </div>
                   </div>
@@ -176,13 +178,13 @@ export const NoCodeEditor = () => {
               <div>
                   <h3 className="text-[10px] font-black text-gray-500 mb-3 flex items-center gap-1.5 uppercase tracking-widest"><BrainCircuit size={12}/> Processors</h3>
                   <div className="space-y-2">
-                      <div onDragStart={(event) => onDragStart(event, 'processorNode', 'YOLOv8 Detection')} draggable className="bg-gray-50/50 dark:bg-[#1a1a1a] border border-gray-200 dark:border-[#222] hover:border-gray-500 p-2.5 rounded-lg cursor-grab flex items-center gap-2 text-xs font-semibold text-gray-700 dark:text-gray-300">
+                      <div onDragStart={(event) => onDragStart(event, 'processorNode', 'YOLOv8 Detection')} draggable className="bg-white dark:bg-[#1a1a1a] border border-gray-200 dark:border-[#222] hover:border-gray-500 p-2.5 rounded-lg cursor-grab flex items-center gap-2 text-xs font-semibold text-gray-700 dark:text-gray-300">
                           <div className="w-2 h-2 rounded-full bg-accent"></div> YOLOv8 Detection
                       </div>
-                      <div onDragStart={(event) => onDragStart(event, 'processorNode', 'DeepSORT Tracker')} draggable className="bg-gray-50/50 dark:bg-[#1a1a1a] border border-gray-200 dark:border-[#222] hover:border-gray-500 p-2.5 rounded-lg cursor-grab flex items-center gap-2 text-xs font-semibold text-gray-700 dark:text-gray-300">
+                      <div onDragStart={(event) => onDragStart(event, 'processorNode', 'DeepSORT Tracker')} draggable className="bg-white dark:bg-[#1a1a1a] border border-gray-200 dark:border-[#222] hover:border-gray-500 p-2.5 rounded-lg cursor-grab flex items-center gap-2 text-xs font-semibold text-gray-700 dark:text-gray-300">
                           <div className="w-2 h-2 rounded-full bg-accent"></div> DeepSORT Tracker
                       </div>
-                      <div onDragStart={(event) => onDragStart(event, 'logicNode', 'Line Region Logic')} draggable className="bg-gray-50/50 dark:bg-[#1a1a1a] border border-gray-200 dark:border-[#222] hover:border-gray-500 p-2.5 rounded-lg cursor-grab flex items-center gap-2 text-xs font-semibold text-gray-700 dark:text-gray-300">
+                      <div onDragStart={(event) => onDragStart(event, 'logicNode', 'Line Region Logic')} draggable className="bg-white dark:bg-[#1a1a1a] border border-gray-200 dark:border-[#222] hover:border-gray-500 p-2.5 rounded-lg cursor-grab flex items-center gap-2 text-xs font-semibold text-gray-700 dark:text-gray-300">
                           <div className="w-2 h-2 rounded-full bg-secondary"></div> Line Region Logic
                       </div>
                   </div>
@@ -190,7 +192,7 @@ export const NoCodeEditor = () => {
               <div>
                   <h3 className="text-[10px] font-black text-gray-500 mb-3 flex items-center gap-1.5 uppercase tracking-widest"><Server size={12}/> Sinks</h3>
                   <div className="space-y-2">
-                      <div onDragStart={(event) => onDragStart(event, 'sinkNode', 'Webhook Event')} draggable className="bg-gray-50/50 dark:bg-[#1a1a1a] border border-gray-200 dark:border-[#222] hover:border-gray-500 p-2.5 rounded-lg cursor-grab flex items-center gap-2 text-xs font-semibold text-gray-700 dark:text-gray-300">
+                      <div onDragStart={(event) => onDragStart(event, 'sinkNode', 'Webhook Event')} draggable className="bg-white dark:bg-[#1a1a1a] border border-gray-200 dark:border-[#222] hover:border-gray-500 p-2.5 rounded-lg cursor-grab flex items-center gap-2 text-xs font-semibold text-gray-700 dark:text-gray-300">
                           <div className="w-2 h-2 rounded-full bg-green-500"></div> Webhook Event
                       </div>
                   </div>
@@ -213,10 +215,10 @@ export const NoCodeEditor = () => {
                     nodeTypes={nodeTypes}
                     fitView
                     className="bg-gray-50 dark:bg-[#161616]"
-                    colorMode="dark"
+                    colorMode={theme}
                 >
-                    <Background color="#2a2a2a" gap={24} size={2} />
-                    <Controls className="bg-gray-50 dark:bg-[#161616] border border-gray-200 dark:border-[#222] fill-white" />
+                    <Background color={theme === 'dark' ? '#2a2a2a' : '#e5e7eb'} gap={24} size={2} />
+                    <Controls className="bg-gray-50 dark:bg-[#161616] border border-gray-200 dark:border-[#222]" />
                 </ReactFlow>
             </ReactFlowProvider>
         </div>

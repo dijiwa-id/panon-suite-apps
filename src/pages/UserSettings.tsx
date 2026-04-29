@@ -8,7 +8,7 @@ export const UserSettings = () => {
   const [email, setEmail] = useState('iqbal@panon.com');
 
   return (
-    <main className="flex-1 overflow-y-auto bg-gray-50 dark:bg-[#161616] p-6 lg:p-8 text-gray-900 dark:text-gray-200 transition-colors custom-scrollbar">
+    <main className="flex-1 overflow-y-auto bg-transparent p-6 lg:p-8 text-gray-900 dark:text-gray-200 transition-colors custom-scrollbar">
       <div className="max-w-5xl mx-auto flex flex-col gap-6">
         
         {/* Page Header */}

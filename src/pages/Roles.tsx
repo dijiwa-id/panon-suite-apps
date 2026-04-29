@@ -18,12 +18,12 @@ export const Roles = () => {
   );
 
   return (
-    <main className="flex-1 overflow-y-auto bg-gray-50 dark:bg-[#161616] text-gray-900 dark:text-gray-200 transition-colors p-6 md:p-8 custom-scrollbar relative">
+    <main className="flex-1 overflow-y-auto bg-transparent text-gray-900 dark:text-gray-200 transition-colors p-6 md:p-8 custom-scrollbar relative">
       <div className="max-w-[1600px] mx-auto">
         <div className="flex flex-col md:flex-row justify-between items-start md:items-end mb-4 gap-4">
           <div>
             <h1 className="text-sm font-black text-gray-900 dark:text-white mb-2 tracking-tight">System Roles</h1>
-            <p className="text-[10px] text-gray-500 font-black leading-none uppercase tracking-widest">User Management • {roles.length} Roles</p>
+            <p className="text-[10px] text-gray-500 font-black leading-none capitalize tracking-widest">User Management • {roles.length} Roles</p>
           </div>
           <div className="flex gap-2.5">
             <button className="bg-transparent border border-gray-300 dark:border-[#222] h-8 text-gray-700 dark:text-gray-300 rounded-full text-xs font-bold px-4 hover:bg-gray-100 dark:hover:bg-[#1a1a1a] transition-colors leading-[12px] flex items-center gap-1.5">
@@ -37,14 +37,14 @@ export const Roles = () => {
 
         <div className="bg-white dark:bg-[#1e1e1e] rounded-[11px] border border-gray-200 dark:border-[#222] shadow-sm flex flex-col">
           <div className="p-4 border-b border-gray-200 dark:border-[#222] flex justify-between items-center bg-gray-50/50 dark:bg-[#1a1a1a]/50 rounded-t-xl">
-             <div className="relative group w-full max-w-sm h-8">
-                <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-500" size={12} />
+             <div className="bg-gray-100 dark:bg-[#151515] px-4 py-2 rounded-xl border border-gray-200 dark:border-[#222] flex items-center gap-2 focus-within:border-accent/50 focus-within:ring-1 focus-within:ring-accent/50 transition-all w-full max-w-sm">
+                <Search className="text-gray-600 dark:text-gray-400" size={16} />
                 <input 
                   type="text" 
                   placeholder="Search roles..." 
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
-                  className="bg-white dark:bg-[#151515] border border-gray-300 dark:border-[#222] rounded-full h-full w-full pl-8 pr-4 text-[10px] font-medium text-gray-900 dark:text-white focus:outline-none focus:border-accent/50 transition-colors" 
+                  className="bg-transparent outline-none text-xs font-medium text-gray-800 dark:text-gray-200 w-full placeholder-gray-600" 
                 />
              </div>
           </div>
@@ -55,7 +55,7 @@ export const Roles = () => {
                 <tr className="border-b border-gray-200 dark:border-[#222] bg-gray-50/50 dark:bg-transparent">
                   {['Name', 'Description', 'Users', 'Status', ''].map((header, i) => (
                     <th key={header} className={cn(
-                      "py-3 text-[10px] font-black tracking-widest uppercase text-gray-500 whitespace-nowrap",
+                      "py-3 text-[10px] font-black tracking-widest capitalize text-gray-500 whitespace-nowrap",
                       i === 0 ? "pl-5" : "px-3",
                       i === 4 ? "pr-5 w-10 text-right" : ""
                     )}>
@@ -101,7 +101,7 @@ export const Roles = () => {
                    <Search size={16} />
                  </div>
                  <p className="text-[11px] font-bold text-gray-900 dark:text-white mb-1">No roles found</p>
-                 <p className="text-[10px] text-gray-500 uppercase tracking-widest font-black">Try adjusting your search criteria</p>
+                 <p className="text-[10px] text-gray-500 capitalize tracking-widest font-black">Try adjusting your search criteria</p>
               </div>
             )}
           </div>

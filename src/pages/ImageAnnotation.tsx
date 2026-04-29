@@ -172,7 +172,7 @@ export const ImageAnnotation = () => {
   const handleZoomReset = () => setZoom(100);
 
   return (
-    <main className="flex-1 overflow-hidden bg-gray-50 dark:bg-[#161616] flex flex-col text-gray-800 dark:text-gray-200">
+    <main className="flex-1 overflow-hidden bg-transparent flex flex-col text-gray-800 dark:text-gray-200">
       {/* Header Toolbar */}
       <div className="h-[60px] border-b border-gray-200 dark:border-[#222] bg-gray-50 dark:bg-[#161616] flex items-center justify-between px-6 shrink-0 z-40 relative">
         <div className="flex items-center gap-4">

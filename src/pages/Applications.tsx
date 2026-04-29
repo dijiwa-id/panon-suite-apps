@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Search, Plus, Play, ExternalLink, Activity, Server, ShieldCheck, Pause, Settings, X, Video, Cpu, Activity as ActivityIcon } from 'lucide-react';
+import { Search, Plus, Play, ExternalLink, Activity, Server, ShieldCheck, Pause, Settings, X, Video, Cpu, Activity as ActivityIcon, ChevronDown } from 'lucide-react';
 import { cn } from '../lib/utils';
 
 const apps = [
@@ -42,7 +42,7 @@ export const Applications = () => {
   };
 
   return (
-    <main className="flex-1 overflow-y-auto bg-gray-50 dark:bg-[#161616] p-6 lg:p-8 text-gray-800 dark:text-gray-200 transition-colors relative custom-scrollbar">
+    <main className="flex-1 overflow-y-auto bg-transparent p-6 lg:p-8 text-gray-800 dark:text-gray-200 transition-colors relative custom-scrollbar">
       {/* Existing Content */}
       <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-4 gap-4">
         <div>
@@ -181,28 +181,38 @@ export const Applications = () => {
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                       <div>
                           <label className="block text-xs font-semibold text-gray-700 dark:text-gray-300 mb-1.5">Input Stream</label>
-                          <select 
-                              value={inputStream}
-                              onChange={(e) => setInputStream(e.target.value)}
-                              className="w-full bg-gray-100 dark:bg-[#151515] border border-gray-200 dark:border-[#222] rounded-xl px-4 py-2.5 text-xs text-gray-900 dark:text-white focus:border-accent/50 focus:ring-1 focus:ring-accent/50 outline-none transition-all font-medium appearance-none"
-                          >
-                              <option>Cam-01 (Main Gate)</option>
-                              <option>Cam-02 (Lobby Entrance)</option>
-                              <option>Cam-03 (Perimeter North)</option>
-                              <option>VMS Integration (Edge)</option>
-                          </select>
+                          <div className="relative">
+                              <div className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 pointer-events-none">
+                                  <ChevronDown size={14} />
+                              </div>
+                              <select 
+                                  value={inputStream}
+                                  onChange={(e) => setInputStream(e.target.value)}
+                                  className="w-full bg-gray-100 dark:bg-[#151515] border border-gray-200 dark:border-[#222] rounded-xl pl-4 pr-9 h-[37px] text-[12px] text-gray-900 dark:text-white focus:border-accent/50 focus:ring-1 focus:ring-accent/50 outline-none transition-all font-medium appearance-none cursor-pointer"
+                              >
+                                  <option>Cam-01 (Main Gate)</option>
+                                  <option>Cam-02 (Lobby Entrance)</option>
+                                  <option>Cam-03 (Perimeter North)</option>
+                                  <option>VMS Integration (Edge)</option>
+                              </select>
+                          </div>
                       </div>
                       <div>
                           <label className="block text-xs font-semibold text-gray-700 dark:text-gray-300 mb-1.5">Vision Pipeline</label>
-                          <select 
-                              value={visionPipeline}
-                              onChange={(e) => setVisionPipeline(e.target.value)}
-                              className="w-full bg-gray-100 dark:bg-[#151515] border border-gray-200 dark:border-[#222] rounded-xl px-4 py-2.5 text-xs text-gray-900 dark:text-white focus:border-accent/50 focus:ring-1 focus:ring-accent/50 outline-none transition-all font-medium appearance-none"
-                          >
-                              <option>Main Gate Security Pipeline</option>
-                              <option>Lobby Face Auth Pipeline</option>
-                              <option>Night Intrusion Pipeline</option>
-                          </select>
+                          <div className="relative">
+                              <div className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 pointer-events-none">
+                                  <ChevronDown size={14} />
+                              </div>
+                              <select 
+                                  value={visionPipeline}
+                                  onChange={(e) => setVisionPipeline(e.target.value)}
+                                  className="w-full bg-gray-100 dark:bg-[#151515] border border-gray-200 dark:border-[#222] rounded-xl pl-4 pr-9 h-[37px] text-[12px] text-gray-900 dark:text-white focus:border-accent/50 focus:ring-1 focus:ring-accent/50 outline-none transition-all font-medium appearance-none cursor-pointer"
+                              >
+                                  <option>Main Gate Security Pipeline</option>
+                                  <option>Lobby Face Auth Pipeline</option>
+                                  <option>Night Intrusion Pipeline</option>
+                              </select>
+                          </div>
                       </div>
                   </div>
               </div>

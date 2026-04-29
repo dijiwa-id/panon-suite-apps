@@ -20,7 +20,7 @@ export const DeployDetectionLog = () => {
   const location = useLocation();
 
   return (
-    <main className="flex-1 overflow-y-auto bg-gray-50 dark:bg-[#161616] p-6 lg:p-8 text-gray-800 dark:text-gray-200 transition-colors custom-scrollbar">
+    <main className="flex-1 overflow-y-auto bg-transparent p-6 lg:p-8 text-gray-800 dark:text-gray-200 transition-colors custom-scrollbar">
       <div className="max-w-[1600px] mx-auto">
         {/* Page Header */}
         <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-4 gap-4">
@@ -43,7 +43,7 @@ export const DeployDetectionLog = () => {
                  
                  <div className="flex items-center gap-3">
                    <div className="relative">
-                     <select className="appearance-none bg-white dark:bg-[#161616] border border-gray-200 dark:border-[#222] text-gray-700 dark:text-gray-300 text-xs rounded-lg pl-3 pr-8 py-2 focus:outline-none focus:ring-1 focus:ring-[#52C5F3] min-w-[120px]">
+                     <select className="appearance-none bg-gray-100 dark:bg-[#151515] border border-gray-200 dark:border-[#222] text-gray-700 dark:text-gray-300 text-[12px] h-[37px] rounded-xl pl-3 pr-8 focus:outline-none focus:ring-1 focus:ring-[#52C5F3] min-w-[120px] cursor-pointer">
                        <option>all</option>
                        <option>APD</option>
                        <option>Intrusion</option>
@@ -52,7 +52,7 @@ export const DeployDetectionLog = () => {
                    </div>
                    
                    <div className="relative">
-                     <select className="appearance-none bg-white dark:bg-[#161616] border border-gray-200 dark:border-[#222] text-gray-700 dark:text-gray-300 text-xs rounded-lg pl-3 pr-8 py-2 focus:outline-none focus:ring-1 focus:ring-[#52C5F3] min-w-[120px]">
+                     <select className="appearance-none bg-gray-100 dark:bg-[#151515] border border-gray-200 dark:border-[#222] text-gray-700 dark:text-gray-300 text-[12px] h-[37px] rounded-xl pl-3 pr-8 focus:outline-none focus:ring-1 focus:ring-[#52C5F3] min-w-[120px] cursor-pointer">
                        <option>all</option>
                        <option>ERM</option>
                        <option>Safety</option>
@@ -61,7 +61,7 @@ export const DeployDetectionLog = () => {
                    </div>
                    
                    <div className="relative">
-                     <select className="appearance-none bg-white dark:bg-[#161616] border border-gray-200 dark:border-[#222] text-gray-700 dark:text-gray-300 text-xs rounded-lg pl-3 pr-8 py-2 focus:outline-none focus:ring-1 focus:ring-[#52C5F3] min-w-[120px]">
+                     <select className="appearance-none bg-gray-100 dark:bg-[#151515] border border-gray-200 dark:border-[#222] text-gray-700 dark:text-gray-300 text-[12px] h-[37px] rounded-xl pl-3 pr-8 focus:outline-none focus:ring-1 focus:ring-[#52C5F3] min-w-[120px] cursor-pointer">
                        <option>all</option>
                        <option>RASTEK</option>
                      </select>
