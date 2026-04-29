@@ -71,7 +71,7 @@ export const Roles = () => {
                       <div className="font-bold text-xs text-gray-900 dark:text-white mb-0.5">{role.name}</div>
                       <div className="text-[9px] text-gray-500 font-mono">ID: {role.id}</div>
                     </td>
-                    <td className="py-3.5 px-3 text-[10px] text-gray-600 dark:text-[#888] font-medium max-w-md truncate">
+                    <td className="py-3.5 px-3 text-[12px] text-gray-600 dark:text-[#888] font-medium max-w-md truncate">
                       {role.description}
                     </td>
                     <td className="py-3.5 px-3">

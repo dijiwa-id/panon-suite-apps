@@ -81,7 +81,7 @@ export const Users = () => {
                       </div>
                     </td>
                     <td className="py-3.5 px-3">
-                      <div className="inline-flex items-center gap-1.5 px-2 py-0.5 rounded bg-gray-100 dark:bg-white/5 border border-gray-200 dark:border-white/10 text-[9px] font-bold text-gray-700 dark:text-gray-300">
+                      <div className="inline-flex items-center gap-1.5 px-2 py-0.5 rounded bg-gray-100 dark:bg-white/5 border border-gray-200 dark:border-white/10 text-[12px] font-bold text-gray-700 dark:text-gray-300">
                         {user.role === 'SysAdmin' && <ShieldAlert size={10} className="text-accent" />}
                         {user.role}
                       </div>

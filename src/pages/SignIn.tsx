@@ -44,8 +44,8 @@ export const SignIn = () => {
   return (
     <div className="flex min-h-screen bg-gray-50 dark:bg-[#161616] items-center justify-center p-6 relative overflow-hidden">
       {/* Abstract Background Accents */}
-      <div className="absolute top-[-20%] left-[-10%] w-[50%] h-[50%] rounded-full bg-[#52C5F3]/10 blur-[120px] pointer-events-none" />
-      <div className="absolute bottom-[-20%] right-[-10%] w-[50%] h-[50%] rounded-full bg-[#EC3292]/10 blur-[120px] pointer-events-none" />
+      <div className="absolute top-[-20%] left-[-10%] w-[50%] h-[50%] rounded-full bg-gray-300/50 dark:bg-gray-600/10 blur-[120px] pointer-events-none" />
+      <div className="absolute bottom-[-20%] right-[-10%] w-[50%] h-[50%] rounded-full bg-gray-400/40 dark:bg-gray-800/20 blur-[120px] pointer-events-none" />
 
       <div className="w-full max-w-[400px] z-10">
         <div className="text-center mb-10 space-y-4">
