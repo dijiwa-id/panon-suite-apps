@@ -33,6 +33,10 @@ import { BuildingBlocks } from './pages/BuildingBlocks';
 import { NoCodeEditor } from './pages/NoCodeEditor';
 import { Applications } from './pages/Applications';
 import { Notifications } from './pages/Notifications';
+import { DeployDashboard } from './pages/DeployDashboard';
+import { DeployLiveFeedCamera } from './pages/DeployLiveFeedCamera';
+import { DeployDetectionLog } from './pages/DeployDetectionLog';
+import { DeployReport } from './pages/DeployReport';
 
 const AppLayout = ({ children }: { children: React.ReactNode }) => {
   const [isSidebarCollapsed, setIsSidebarCollapsed] = React.useState(false);
@@ -70,6 +74,10 @@ export default function App() {
           <Route path="/develop/building-blocks" element={<AppLayout><BuildingBlocks /></AppLayout>} />
           <Route path="/develop/no-code-editor" element={<AppLayout><NoCodeEditor /></AppLayout>} />
           <Route path="/develop/applications" element={<AppLayout><Applications /></AppLayout>} />
+          <Route path="/deploy/dashboard" element={<AppLayout><DeployDashboard /></AppLayout>} />
+          <Route path="/deploy/live-feed-camera" element={<AppLayout><DeployLiveFeedCamera /></AppLayout>} />
+          <Route path="/deploy/detection-log" element={<AppLayout><DeployDetectionLog /></AppLayout>} />
+          <Route path="/deploy/report" element={<AppLayout><DeployReport /></AppLayout>} />
           <Route path="/system-admin/channel-management/*" element={<AppLayout><ChannelManagement /></AppLayout>} />
           <Route path="/system-admin/algorithm-context" element={<AppLayout><AlgorithmContext /></AppLayout>} />
           <Route path="/system-admin/package-management" element={<AppLayout><PackageManagement /></AppLayout>} />

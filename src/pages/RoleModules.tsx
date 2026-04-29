@@ -41,20 +41,20 @@ export const RoleModules = () => {
   };
 
   return (
-    <main className="flex-1 overflow-y-auto bg-[#161616] text-gray-900 dark:text-gray-200 transition-colors p-6 md:p-8 custom-scrollbar relative">
+    <main className="flex-1 overflow-y-auto bg-gray-50 dark:bg-[#161616] text-gray-900 dark:text-gray-200 transition-colors p-6 md:p-8 custom-scrollbar relative">
       <div className="max-w-[1600px] mx-auto h-full flex flex-col">
-        <div className="flex flex-col md:flex-row justify-between items-start md:items-end mb-6 gap-4 shrink-0">
+        <div className="flex flex-col md:flex-row justify-between items-start md:items-end mb-4 gap-4 shrink-0">
           <div>
-            <h1 className="text-xl font-black text-gray-900 dark:text-white mb-2 tracking-tight">Role Modules Mapping</h1>
-            <p className="text-[10px] text-gray-500 font-bold uppercase tracking-widest leading-none">User Management • Modifiers</p>
+            <h1 className="text-sm font-black text-gray-900 dark:text-white mb-2 tracking-tight">Role Modules Mapping</h1>
+            <p className="text-[10px] text-gray-500 font-black leading-none uppercase tracking-widest">User Management • Modifiers</p>
           </div>
         </div>
 
-        <div className="flex-1 flex flex-col lg:flex-row gap-6 min-h-0 relative">
+        <div className="flex-1 flex flex-col lg:flex-row gap-4 min-h-0 relative">
            {/* Sidebar array of Roles */}
-           <div className="w-full lg:w-64 shrink-0 flex flex-col bg-white dark:bg-[#1e1e1e] border border-gray-200 dark:border-[#1f232d] shadow-sm rounded-xl overflow-hidden">
-              <div className="px-4 py-3 border-b border-gray-200 dark:border-[#1f232d] bg-gray-50/50 dark:bg-[#1a1a1a]/50">
-                <h3 className="text-[10px] font-bold text-gray-900 dark:text-white uppercase tracking-widest">Select Role</h3>
+           <div className="w-full lg:w-64 shrink-0 flex flex-col bg-white dark:bg-[#1e1e1e] border border-gray-200 dark:border-[#222] shadow-sm rounded-[11px] overflow-hidden">
+              <div className="px-4 py-3 border-b border-gray-200 dark:border-[#222] bg-gray-50/50 dark:bg-[#1a1a1a]/50">
+                <h3 className="text-[10px] font-bold text-gray-900 dark:text-white">Select Role</h3>
               </div>
               <div className="flex-1 overflow-y-auto p-2">
                  {roleModules.map((rm) => (
@@ -68,7 +68,7 @@ export const RoleModules = () => {
                           : "text-gray-600 dark:text-gray-400 hover:bg-gray-50 dark:hover:bg-white/5 font-medium border border-transparent"
                       )}
                     >
-                       <span className="text-[11px] tracking-wide">{rm.role}</span>
+                       <span className="text-xs tracking-wide">{rm.role}</span>
                        <span className="text-[9px] bg-gray-200 dark:bg-black/40 px-1.5 py-0.5 rounded text-gray-700 dark:text-gray-300 font-mono">
                          {rm.modules.length} mods
                        </span>
@@ -78,13 +78,13 @@ export const RoleModules = () => {
            </div>
 
            {/* Modules Checklist */}
-           <div className="flex-1 bg-white dark:bg-[#1e1e1e] border border-gray-200 dark:border-[#1f232d] shadow-sm rounded-xl flex flex-col overflow-hidden">
-               <div className="p-4 border-b border-gray-200 dark:border-[#1f232d] bg-gray-50/50 dark:bg-[#1a1a1a]/50 flex justify-between items-center">
+           <div className="flex-1 bg-white dark:bg-[#1e1e1e] border border-gray-200 dark:border-[#222] shadow-sm rounded-[11px] flex flex-col overflow-hidden">
+               <div className="p-4 border-b border-gray-200 dark:border-[#222] bg-gray-50/50 dark:bg-[#1a1a1a]/50 flex justify-between items-center">
                   <div className="flex items-center gap-2 text-gray-900 dark:text-white">
                      <LayoutGrid size={14} className="text-gray-500" />
                      <h2 className="text-[12px] font-bold tracking-wide">Access For: <span className="text-accent">{activeRole}</span></h2>
                   </div>
-                  <button className="bg-[#1c1c1c] border border-gray-700 h-[29px] text-white rounded-full text-[10px] font-bold uppercase tracking-wide px-5 hover:bg-[#2a2a2a] transition-colors leading-[12px]">
+                  <button className="bg-[#1c1c1c] border border-gray-700 h-8 text-white rounded-full text-xs font-bold tracking-wide px-6 leading-[12px] hover:bg-[#2a2a2a] transition-colors flex items-center justify-center">
                     Save Changes
                   </button>
                </div>
@@ -101,17 +101,17 @@ export const RoleModules = () => {
                               "flex items-center gap-3 p-3 rounded-lg border transition-all cursor-pointer group",
                               hasAccess 
                                 ? "bg-accent/5 border-accent/20 hover:bg-accent/10" 
-                                : "bg-gray-50/50 dark:bg-[#151515] border-gray-200 dark:border-[#2a2a2a] hover:border-gray-300 dark:hover:border-gray-600"
+                                : "bg-gray-50/50 dark:bg-[#151515] border-gray-200 dark:border-[#222] hover:border-gray-300 dark:hover:border-gray-600"
                             )}
                           >
                              {hasAccess ? (
                                <CheckCircle2 size={16} className="text-accent shrink-0" />
                              ) : (
-                               <Circle size={16} className="text-gray-400 group-hover:text-gray-500 transition-colors shrink-0" />
+                               <Circle size={16} className="text-gray-600 dark:text-gray-400 group-hover:text-gray-500 transition-colors shrink-0" />
                              )}
                              <div>
                                <div className={cn(
-                                  "text-[11px] tracking-wide mb-0.5", 
+                                  "text-xs tracking-wide mb-0.5", 
                                   hasAccess ? "font-bold text-gray-900 dark:text-white" : "font-medium text-gray-600 dark:text-gray-400"
                                )}>
                                   {moduleName}

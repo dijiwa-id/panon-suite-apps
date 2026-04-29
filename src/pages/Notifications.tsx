@@ -113,17 +113,17 @@ export const Notifications = () => {
       case 'warning': return 'bg-yellow-500/10 border-yellow-500/20';
       case 'success': return 'bg-green-500/10 border-green-500/20';
       case 'info': return 'bg-blue-500/10 border-blue-500/20';
-      default: return 'bg-[#1a1a1a] border-[#2a2a2a]';
+      default: return 'bg-gray-50/50 dark:bg-[#1a1a1a] border-gray-200 dark:border-[#222]';
     }
   };
 
   const unreadCount = notifications.filter(n => !n.isRead).length;
 
   return (
-    <main className="flex-1 overflow-y-auto bg-[#161616] p-6 lg:p-8 text-gray-200 transition-colors">
-      <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-6 gap-4">
+    <main className="flex-1 overflow-y-auto bg-gray-50 dark:bg-[#161616] p-6 lg:p-8 text-gray-800 dark:text-gray-200 transition-colors">
+      <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-4 gap-4">
         <div>
-          <h1 className="text-xl font-bold tracking-tight text-white mb-1 flex items-center gap-2">
+          <h1 className="text-sm font-bold tracking-tight text-gray-900 dark:text-white mb-1 flex items-center gap-2">
             <Bell className="text-accent" size={24} /> 
             Notifications & Alerts
             {unreadCount > 0 && (
@@ -132,7 +132,7 @@ export const Notifications = () => {
                 </span>
             )}
           </h1>
-          <p className="text-xs text-gray-400 font-medium">Manage system alerts and computer vision event notifications</p>
+          <p className="text-xs text-gray-600 dark:text-gray-400 font-medium">Manage system alerts and computer vision event notifications</p>
         </div>
         
         <div className="flex gap-3 w-full md:w-auto">
@@ -140,10 +140,10 @@ export const Notifications = () => {
             onClick={markAllAsRead}
             disabled={unreadCount === 0}
             className={cn(
-                "flex justify-center items-center gap-2 h-[36px] rounded-full text-xs font-bold px-6 transition-colors border",
+                "flex justify-center items-center gap-2 h-8 rounded-full text-xs font-bold px-5 transition-colors border",
                 unreadCount > 0 
-                  ? "bg-[#1e1e1e] border-[#2a2a2a] text-white hover:bg-[#252525] hover:border-gray-500" 
-                  : "bg-[#1a1a1a] border-transparent text-gray-600 cursor-not-allowed"
+                  ? "bg-white dark:bg-[#1e1e1e] border-gray-200 dark:border-[#222] text-gray-900 dark:text-white hover:bg-gray-100 dark:hover:bg-[#252525] hover:border-gray-500" 
+                  : "bg-gray-50/50 dark:bg-[#1a1a1a] border-transparent text-gray-600 cursor-not-allowed"
             )}
           >
             <CheckCircle size={14} /> Mark all as read
@@ -152,15 +152,15 @@ export const Notifications = () => {
       </div>
 
       {/* Filters & Search */}
-      <div className="flex flex-col sm:flex-row gap-4 mb-6">
-          <div className="flex bg-[#1a1a1a] border border-[#2a2a2a] p-1 rounded-xl w-full sm:w-auto overflow-x-auto custom-scrollbar shrink-0">
+      <div className="flex flex-col sm:flex-row gap-4 mb-4">
+          <div className="flex bg-gray-50/50 dark:bg-[#1a1a1a] border border-gray-200 dark:border-[#222] p-1 rounded-xl w-full sm:w-auto overflow-x-auto custom-scrollbar shrink-0">
               {['all', 'critical', 'warning', 'security', 'hardware'].map(f => (
                   <button 
                       key={f}
                       onClick={() => setFilter(f)}
                       className={cn(
                           "px-4 py-1.5 text-xs font-bold rounded-lg capitalize whitespace-nowrap transition-colors",
-                          filter === f ? "bg-accent text-black shadow-md" : "text-gray-400 hover:text-white"
+                          filter === f ? "bg-accent text-black shadow-md" : "text-gray-600 dark:text-gray-400 hover:text-white"
                       )}
                   >
                       {f}
@@ -174,7 +174,7 @@ export const Notifications = () => {
                   placeholder="Search alerts or sources..." 
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
-                  className="w-full bg-[#1a1a1a] border border-[#2a2a2a] rounded-xl pl-10 pr-4 py-2.5 text-xs text-white placeholder-gray-500 focus:outline-none focus:border-accent focus:ring-1 focus:ring-accent transition-all"
+                  className="w-full bg-gray-50/50 dark:bg-[#1a1a1a] border border-gray-200 dark:border-[#222] rounded-xl pl-10 pr-4 py-2.5 text-xs text-gray-900 dark:text-white placeholder-gray-500 focus:outline-none focus:border-accent focus:ring-1 focus:ring-accent transition-all"
               />
           </div>
       </div>
@@ -186,8 +186,8 @@ export const Notifications = () => {
             <div 
                 key={notification.id} 
                 className={cn(
-                    "flex flex-col sm:flex-row gap-4 p-4 rounded-xl border transition-all cursor-pointer",
-                    !notification.isRead ? "bg-[#1e1e1e] border-gray-600/50 shadow-lg" : "bg-[#151515] border-[#2a2a2a] opacity-75 hover:opacity-100"
+                    "flex flex-col sm:flex-row gap-4 p-4 rounded-[11px] border transition-all cursor-pointer",
+                    !notification.isRead ? "bg-white dark:bg-[#1e1e1e] border-gray-600/50 shadow-lg" : "bg-gray-100 dark:bg-[#151515] border-gray-200 dark:border-[#222] opacity-75 hover:opacity-100"
                 )}
                 onClick={() => markAsRead(notification.id)}
             >
@@ -198,16 +198,16 @@ export const Notifications = () => {
                 </div>
                 <div className="flex-1 min-w-0">
                     <div className="flex flex-col sm:flex-row sm:justify-between sm:items-start gap-1 sm:gap-4 mb-1">
-                        <h3 className={cn("text-sm font-bold truncate", !notification.isRead ? "text-white" : "text-gray-300")}>
+                        <h3 className={cn("text-sm font-bold truncate", !notification.isRead ? "text-gray-900 dark:text-white" : "text-gray-700 dark:text-gray-300")}>
                             {notification.title}
                         </h3>
                         <div className="flex items-center gap-1.5 text-[11px] font-mono text-gray-500 shrink-0">
                             <Clock size={12} /> {notification.timestamp}
                         </div>
                     </div>
-                    <p className="text-xs text-gray-400 mb-2.5 leading-relaxed">{notification.message}</p>
+                    <p className="text-xs text-gray-600 dark:text-gray-400 mb-2.5 leading-relaxed">{notification.message}</p>
                     <div className="flex items-center gap-2">
-                        <span className="flex items-center gap-1.5 px-2 py-1 rounded bg-black/40 border border-[#2a2a2a] text-[10px] font-bold text-gray-400 uppercase tracking-wider">
+                        <span className="flex items-center gap-1.5 px-2 py-1 rounded bg-gray-100 dark:bg-black/40 border border-gray-200 dark:border-[#222] text-[10px] font-bold text-gray-700 dark:text-gray-400">
                             {notification.category === 'security' || notification.category === 'model' ? <Activity size={10} /> : <Server size={10} />}
                             {notification.source}
                         </span>
@@ -219,10 +219,10 @@ export const Notifications = () => {
             </div>
           ))
         ) : (
-            <div className="flex flex-col items-center justify-center py-20 px-4 border border-[#2a2a2a] rounded-xl border-dashed bg-[#1a1a1a]/50">
+            <div className="flex flex-col items-center justify-center py-20 px-4 border border-gray-200 dark:border-[#222] rounded-xl border-dashed bg-gray-50/50 dark:bg-[#1a1a1a]/50">
                 <Bell size={48} className="text-gray-600 mb-4" />
-                <h3 className="text-sm font-bold text-gray-300 mb-1">No notifications found</h3>
-                <p className="text-xs text-gray-500">You're all caught up! No recent alerts mach your filters.</p>
+                <h3 className="text-sm font-bold text-gray-700 dark:text-gray-300 mb-1">No notifications found</h3>
+                <p className="text-[10px] text-gray-500 uppercase tracking-widest font-black">You're all caught up! No recent alerts mach your filters.</p>
             </div>
         )}
       </div>

@@ -168,7 +168,7 @@ export const Sidebar = ({
         >
           <Logo className={cn("h-8", isCollapsed ? "w-8" : "w-8")} />
           {!isCollapsed && (
-            <span className="font-bold text-lg tracking-tight text-white">panonsuite</span>
+            <span className="font-bold text-lg tracking-tight text-gray-900 dark:text-white">panonsuite</span>
           )}
         </Link>
       </div>
@@ -177,42 +177,42 @@ export const Sidebar = ({
         <Link
           to="/user-settings"
           className={cn(
-            "px-4 mb-10 transition-all block",
+            "px-4 mb-8 transition-all block",
             isCollapsed && "px-2 mb-6",
           )}
         >
           <div
             className={cn(
-              "flex items-center gap-3 rounded-xl cursor-pointer transition-all group/profile",
+              "flex items-center gap-3 rounded-[11px] cursor-pointer transition-all group/profile",
               isCollapsed
-                ? "flex-col justify-center"
-                : "p-3 bg-gray-100 dark:bg-[#1e1e1e] border border-gray-200 dark:border-[#2a2a2a] hover:border-accent/40 shadow-lg",
+                ? "flex-col justify-center py-2 hover:bg-gray-100 dark:hover:bg-[#1e1e1e]"
+                : "p-2 hover:bg-gray-100 dark:hover:bg-[#1e1e1e] border border-transparent hover:border-gray-200 dark:hover:border-[#222]"
             )}
           >
             <div
               className={cn(
-                "rounded-lg bg-accent/20 flex items-center justify-center p-2 overflow-hidden ring-1 ring-accent/30 group-hover/profile:scale-105 transition-transform",
-                isCollapsed ? "w-12 h-12" : "w-10 h-10 shrink-0",
+                "rounded-lg bg-accent/10 flex items-center justify-center p-0.5 overflow-hidden ring-1 ring-accent/20 group-hover/profile:scale-105 transition-transform",
+                isCollapsed ? "w-10 h-10" : "w-9 h-9 shrink-0"
               )}
             >
               <img
                 src="https://api.dicebear.com/7.x/avataaars/svg?seed=Lucky"
                 alt="avatar"
-                className="w-full h-full object-cover"
+                className="w-full h-full object-cover rounded shadow-sm"
               />
             </div>
             {!isCollapsed && (
               <div className="flex-1 overflow-hidden">
-                <p className="text-[14px] font-bold text-gray-900 dark:text-white truncate">
+                <p className="text-[13px] font-black tracking-tight text-gray-900 dark:text-white truncate leading-none mb-1">
                   panon PT.
                 </p>
-                <p className="text-[11px] text-gray-500 font-medium truncate">
+                <p className="text-[10px] tracking-wider font-bold text-gray-500 uppercase truncate leading-none">
                   M Iqbal
                 </p>
               </div>
             )}
             {!isCollapsed && (
-              <ChevronDown size={14} className="text-gray-500 shrink-0" />
+              <ChevronDown size={14} className="text-gray-500 shrink-0 opacity-0 group-hover/profile:opacity-100 transition-opacity" />
             )}
           </div>
         </Link>
@@ -239,7 +239,7 @@ export const Sidebar = ({
         <div className="space-y-6 pb-20">
           <NavSection
             isCollapsed={isCollapsed}
-            title="TRAIN"
+            title="Train"
             items={[
               { label: "Data Collection", path: "/train/data-collection" },
               { label: "Data Set", path: "/train/data-set" },
@@ -251,7 +251,7 @@ export const Sidebar = ({
 
           <NavSection
             isCollapsed={isCollapsed}
-            title="DEVELOP"
+            title="Develop"
             items={[
               { label: "Building Blocks", path: "/develop/building-blocks" },
               { label: "No Code Editor", path: "/develop/no-code-editor" },
@@ -259,10 +259,19 @@ export const Sidebar = ({
             ]}
           />
 
-          <NavSection isCollapsed={isCollapsed} title="DEPLOY" items={[]} />
           <NavSection
             isCollapsed={isCollapsed}
-            title="SYSTEM ADMIN"
+            title="Deploy"
+            items={[
+              { label: "Dashboard", path: "/deploy/dashboard" },
+              { label: "Live Feed Camera", path: "/deploy/live-feed-camera" },
+              { label: "Detection Log", path: "/deploy/detection-log" },
+              { label: "Report", path: "/deploy/report" },
+            ]}
+          />
+          <NavSection
+            isCollapsed={isCollapsed}
+            title="System Admin"
             items={[
               { label: "Dashboard", path: "/system-admin/dashboard" },
               { label: "System Monitoring", path: "/system-admin/system-monitoring" },
@@ -305,14 +314,14 @@ export const Sidebar = ({
       <div className="p-4 border-t border-gray-200 dark:border-[#2a2a2a] space-y-4">
         {!isCollapsed && (
           <div className="flex items-center gap-3 px-4 py-3 bg-gray-100 dark:bg-[#1e1e1e]/50 rounded-xl border border-gray-200 dark:border-[#2a2a2a] cursor-pointer group hover:bg-gray-200 dark:hover:bg-[#1e1e1e] transition-colors">
-            <div className="w-10 h-10 rounded-full border-2 border-primary flex items-center justify-center text-primary font-black text-sm shrink-0">
+            <div className="w-10 h-10 rounded-full border-2 border-accent flex items-center justify-center text-accent font-black text-sm shrink-0 shadow-[0_0_10px_rgba(82,197,243,0.3)]">
               4
             </div>
             <div className="shrink-0">
-              <p className="text-[11px] font-bold text-gray-900 dark:text-white group-hover:text-primary transition-colors tracking-tight">
+              <p className="text-[11px] font-bold text-gray-900 dark:text-white group-hover:text-accent transition-colors tracking-tight">
                 Setup Panon Suite
               </p>
-              <p className="text-[11px] text-gray-500 mt-1">4 Remaining Task</p>
+              <p className="text-[11px] text-gray-500 mt-1">4 Remaining Tasks</p>
             </div>
           </div>
         )}
@@ -368,11 +377,11 @@ const NavSection = ({
       <div
         onClick={() => setIsOpen(!isOpen)}
         className={cn(
-          "px-6 flex items-center justify-between text-[10px] font-black tracking-widest text-gray-500 dark:text-gray-600 cursor-pointer group hover:text-gray-800 dark:hover:text-gray-400",
+          "px-6 flex items-center justify-between text-[10px] font-black tracking-tight text-gray-500 dark:text-gray-600 cursor-pointer group hover:text-gray-800 dark:hover:text-gray-400",
           isCollapsed && "justify-center px-0",
         )}
       >
-        {!isCollapsed && <span>{title}</span>}
+        {!isCollapsed && <span className="tracking-tight">{title}</span>}
         {!isCollapsed && (
           <motion.div
             animate={{ rotate: isOpen ? 0 : -90 }}

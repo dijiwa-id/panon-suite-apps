@@ -36,7 +36,7 @@
 }
 
 .btn-primary {
-  @apply bg-accent text-white font-black uppercase tracking-[0.15em] text-[10px] px-6 py-2.5 rounded-xl hover:scale-[1.02] active:scale-[0.98] transition-all shadow-md dark:shadow-[0_0_20px_rgba(82,197,243,0.2)];
+  @apply bg-accent text-black font-black tracking-tight text-[11px] px-6 py-2.5 rounded-xl hover:scale-[1.02] active:scale-[0.98] transition-all shadow-md dark:shadow-[0_0_20px_rgba(82,197,243,0.2)];
 }
 
 .btn-secondary {

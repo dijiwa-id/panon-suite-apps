@@ -15,7 +15,7 @@ export const Header = () => {
 
   return (
     <header className="h-[60px] flex items-center justify-end px-[30px] bg-white dark:bg-[#161616] border-b border-gray-200 dark:border-[#2a2a2a] transition-colors shrink-0 z-50">
-      <div className="flex items-center gap-6">
+      <div className="flex items-center gap-4">
         <div className="relative">
           <input 
             type="text" 
@@ -30,24 +30,24 @@ export const Header = () => {
         </div>
 
         <div className="flex items-center gap-4">
-           <button onClick={toggleTheme} className="text-gray-400 hover:text-gray-900 dark:hover:text-gray-200 transition-all relative">
+           <button onClick={toggleTheme} className="text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-200 transition-all relative">
              {theme === 'dark' ? <Sun size={18} /> : <Moon size={18} />}
            </button>
-           <button onClick={() => console.log('Bell clicked')} className="text-gray-400 hover:text-gray-900 dark:hover:text-gray-200 transition-all relative">
+           <button onClick={() => console.log('Bell clicked')} className="text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-200 transition-all relative">
              <Bell size={18} />
            </button>
-           <button onClick={() => console.log('Monitor clicked')} className="text-gray-400 hover:text-gray-900 dark:hover:text-gray-200 transition-all relative">
+           <button onClick={() => console.log('Monitor clicked')} className="text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-200 transition-all relative">
              <Monitor size={18} />
              <span className="absolute top-0 right-0 w-2 h-2 bg-accent rounded-full border border-white dark:border-[#18181b]"></span>
            </button>
-           <button onClick={() => navigate('/user-settings')} className="text-gray-400 hover:text-gray-900 dark:hover:text-gray-200 transition-all">
+           <button onClick={() => navigate('/user-settings')} className="text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-200 transition-all">
              <User size={18} />
            </button>
         </div>
 
         <div className="h-4 w-[1px] bg-gray-200 dark:bg-white/[0.1]"></div>
 
-        <button onClick={handleLogout} className="flex items-center gap-2 text-gray-400 hover:text-gray-900 dark:hover:text-gray-200 transition-all text-xs font-medium">
+        <button onClick={handleLogout} className="flex items-center gap-2 text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-200 transition-all text-xs font-medium">
           <LogOut size={16} />
           <span className="hidden xl:inline">Log Out</span>
         </button>

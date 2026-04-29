@@ -172,31 +172,31 @@ export const ImageAnnotation = () => {
   const handleZoomReset = () => setZoom(100);
 
   return (
-    <main className="flex-1 overflow-hidden bg-[#0e1016] flex flex-col text-gray-200">
+    <main className="flex-1 overflow-hidden bg-gray-50 dark:bg-[#161616] flex flex-col text-gray-800 dark:text-gray-200">
       {/* Header Toolbar */}
-      <div className="h-[60px] border-b border-[#2a2a2a] bg-[#161616] flex items-center justify-between px-6 shrink-0 z-40 relative">
+      <div className="h-[60px] border-b border-gray-200 dark:border-[#222] bg-gray-50 dark:bg-[#161616] flex items-center justify-between px-6 shrink-0 z-40 relative">
         <div className="flex items-center gap-4">
           <button 
             onClick={handlePrev}
             disabled={currentImageIndex === 0}
-            className="p-2 text-gray-400 hover:text-white bg-[#1a1a1a] border border-[#2a2a2a] rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+            className="p-2 text-gray-600 dark:text-gray-400 hover:text-white bg-gray-50/50 dark:bg-[#1a1a1a] border border-gray-200 dark:border-[#222] rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
           >
             <ChevronLeft size={16} />
           </button>
           <div className="text-center w-40">
-            <h1 className="text-sm font-bold text-white truncate">{currentImage.name}</h1>
-            <p className="text-[10px] text-gray-500 font-mono mt-0.5">{currentImageIndex + 1} of {images.length} • {currentImage.w}x{currentImage.h}</p>
+            <h1 className="text-sm font-bold text-gray-900 dark:text-white truncate">{currentImage.name}</h1>
+            <p className="text-[10px] text-gray-500 font-mono mt-0.5 uppercase tracking-widest font-black">{currentImageIndex + 1} of {images.length} • {currentImage.w}x{currentImage.h}</p>
           </div>
           <button 
             onClick={handleNext}
             disabled={currentImageIndex === images.length - 1}
-            className="p-2 text-gray-400 hover:text-white bg-[#1a1a1a] border border-[#2a2a2a] rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+            className="p-2 text-gray-600 dark:text-gray-400 hover:text-white bg-gray-50/50 dark:bg-[#1a1a1a] border border-gray-200 dark:border-[#222] rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
           >
             <ChevronRight size={16} />
           </button>
         </div>
 
-        <div className="flex items-center gap-2 bg-[#1a1a1a] p-1 rounded-xl border border-[#2a2a2a]">
+        <div className="flex items-center gap-2 bg-gray-50/50 dark:bg-[#1a1a1a] p-1 rounded-xl border border-gray-200 dark:border-[#222]">
           {[
             { id: 'select', icon: <MousePointer2 size={14} />, label: 'Select' },
             { id: 'box', icon: <Square size={14} />, label: 'Box' },
@@ -206,7 +206,7 @@ export const ImageAnnotation = () => {
               onClick={() => setActiveTool(tool.id)}
               className={cn(
                 "p-2 rounded-lg flex items-center gap-2 transition-all text-xs font-semibold select-none",
-                activeTool === tool.id ? "bg-[#2a2a2a] text-white shadow-sm" : "hover:bg-[#202020] text-gray-400"
+                activeTool === tool.id ? "bg-gray-200 dark:bg-[#2a2a2a] text-gray-900 dark:text-white shadow-sm" : "hover:bg-gray-100 dark:hover:bg-[#202020] text-gray-600 dark:text-gray-400"
               )}
             >
               {tool.icon} {tool.label}
@@ -227,13 +227,13 @@ export const ImageAnnotation = () => {
 
       <div className="flex-1 flex overflow-hidden">
         {/* Main Canvas Area */}
-        <div className="flex-1 relative bg-[#0e1016] overflow-hidden flex items-center justify-center p-8 overflow-y-auto">
+        <div className="flex-1 relative bg-gray-50 dark:bg-[#161616] overflow-hidden flex items-center justify-center p-8 overflow-y-auto">
             <div className="absolute inset-0 pattern-dots pattern-gray-800 pattern-bg-transparent pattern-size-4 pattern-opacity-40"></div>
             
             {/* Mock Image container */}
             <div 
               ref={containerRef}
-              className="relative w-full max-w-4xl aspect-video bg-[#1a1a1a] shadow-2xl rounded-sm ring-1 ring-white/5 transition-transform origin-center"
+              className="relative w-full max-w-4xl aspect-video bg-gray-50/50 dark:bg-[#1a1a1a] shadow-2xl rounded-sm ring-1 ring-white/5 transition-transform origin-center"
               style={{ transform: `scale(${zoom / 100})`, cursor: activeTool === 'box' ? 'crosshair' : 'default' }}
               onMouseDown={handleMouseDown}
               onMouseMove={handleMouseMove}
@@ -304,19 +304,19 @@ export const ImageAnnotation = () => {
             </div>
 
             {/* Canvas Controls */}
-            <div className="absolute bottom-6 left-1/2 -translate-x-1/2 flex items-center gap-2 bg-[#161616]/90 backdrop-blur-md p-1.5 rounded-full border border-[#2a2a2a] shadow-xl z-40">
-                <button onClick={handleZoomOut} className="p-2 hover:bg-[#2a2a2a] rounded-full text-gray-400 hover:text-white transition-colors"><ZoomOut size={16} /></button>
-                <button onClick={handleZoomReset} className="text-xs font-mono font-medium text-white px-2 hover:text-accent transition-colors">{zoom}%</button>
-                <button onClick={handleZoomIn} className="p-2 hover:bg-[#2a2a2a] rounded-full text-gray-400 hover:text-white transition-colors"><ZoomIn size={16} /></button>
-                <div className="w-px h-4 bg-[#2a2a2a] mx-1"></div>
-                <button onClick={handleZoomReset} className="p-2 hover:bg-[#2a2a2a] rounded-full text-gray-400 hover:text-white transition-colors"><Maximize size={16} /></button>
+            <div className="absolute bottom-6 left-1/2 -translate-x-1/2 flex items-center gap-2 bg-gray-50 dark:bg-[#161616]/90 backdrop-blur-md p-1.5 rounded-full border border-gray-200 dark:border-[#222] shadow-xl z-40">
+                <button onClick={handleZoomOut} className="p-2 hover:bg-gray-200 dark:hover:bg-gray-200 dark:bg-[#2a2a2a] rounded-full text-gray-600 dark:text-gray-400 hover:text-white transition-colors"><ZoomOut size={16} /></button>
+                <button onClick={handleZoomReset} className="text-xs font-mono font-medium text-gray-900 dark:text-white px-2 hover:text-accent transition-colors">{zoom}%</button>
+                <button onClick={handleZoomIn} className="p-2 hover:bg-gray-200 dark:hover:bg-gray-200 dark:bg-[#2a2a2a] rounded-full text-gray-600 dark:text-gray-400 hover:text-white transition-colors"><ZoomIn size={16} /></button>
+                <div className="w-px h-4 bg-gray-200 dark:bg-[#2a2a2a] mx-1"></div>
+                <button onClick={handleZoomReset} className="p-2 hover:bg-gray-200 dark:hover:bg-gray-200 dark:bg-[#2a2a2a] rounded-full text-gray-600 dark:text-gray-400 hover:text-white transition-colors"><Maximize size={16} /></button>
             </div>
         </div>
 
         {/* Right Sidebar - Classes & Instances */}
-        <div className="w-80 border-l border-[#2a2a2a] bg-[#161616] flex flex-col shrink-0">
-          <div className="p-4 border-b border-[#2a2a2a]">
-            <h2 className="text-sm font-bold text-white mb-3">Label Classes</h2>
+        <div className="w-80 border-l border-gray-200 dark:border-[#222] bg-gray-50 dark:bg-[#161616] flex flex-col shrink-0">
+          <div className="p-4 border-b border-gray-200 dark:border-[#222]">
+            <h2 className="text-sm font-bold text-gray-900 dark:text-white mb-3">Label Classes</h2>
             <div className="space-y-1.5">
               {classes.map((c) => (
                 <button
@@ -324,14 +324,14 @@ export const ImageAnnotation = () => {
                   onClick={() => setActiveClass(c.id)}
                   className={cn(
                     "w-full flex items-center justify-between p-2 rounded-lg transition-all text-sm",
-                    activeClass === c.id ? "bg-[#2a2a2a] text-white select-none" : "hover:bg-[#1a1a1a] text-gray-400"
+                    activeClass === c.id ? "bg-gray-200 dark:bg-[#2a2a2a] text-gray-900 dark:text-white select-none" : "hover:bg-[#1a1a1a] text-gray-600 dark:text-gray-400"
                   )}
                 >
                   <div className="flex items-center gap-3">
                     <div className="w-3 h-3 rounded-sm border border-white/20" style={{ backgroundColor: c.color }}></div>
                     <span className="font-medium">{c.name}</span>
                   </div>
-                  <span className="bg-[#1a1a1a] text-xs font-mono px-2 py-0.5 rounded text-gray-500 border border-[#2a2a2a]">
+                  <span className="bg-gray-50/50 dark:bg-[#1a1a1a] text-[10px] font-mono px-2 py-0.5 rounded text-gray-500 border border-gray-200 dark:border-[#222] uppercase tracking-widest font-black">
                     {c.id}
                   </span>
                 </button>
@@ -339,7 +339,7 @@ export const ImageAnnotation = () => {
             </div>
             
             {isAddingClass ? (
-              <div className="mt-3 bg-[#1a1a1a] p-2 rounded-lg border border-[#2a2a2a]">
+              <div className="mt-3 bg-gray-50/50 dark:bg-[#1a1a1a] p-2 rounded-lg border border-gray-200 dark:border-[#222]">
                 <div className="flex items-center gap-2 mb-2">
                   <input
                     autoFocus
@@ -348,7 +348,7 @@ export const ImageAnnotation = () => {
                     value={newClassName}
                     onChange={(e) => setNewClassName(e.target.value)}
                     onKeyDown={(e) => e.key === 'Enter' && handleAddClass()}
-                    className="flex-1 bg-transparent border-none text-xs text-white placeholder-gray-500 focus:outline-none"
+                    className="flex-1 bg-transparent border-none text-xs text-gray-900 dark:text-white placeholder-gray-500 focus:outline-none"
                   />
                   <button onClick={() => setIsAddingClass(false)} className="text-gray-500 hover:text-white p-1">
                     <X size={12} />
@@ -364,7 +364,7 @@ export const ImageAnnotation = () => {
             ) : (
               <button 
                 onClick={() => setIsAddingClass(true)}
-                className="w-full mt-3 border border-dashed border-[#2a2a2a] hover:border-accent hover:text-accent hover:bg-accent/5 text-gray-500 rounded-lg py-2 text-xs font-bold transition-all flex items-center justify-center gap-1.5"
+                className="w-full mt-3 border border-dashed border-gray-200 dark:border-[#222] hover:border-accent hover:text-accent hover:bg-accent/5 text-gray-500 rounded-lg py-2 text-[10px] font-black transition-all flex items-center justify-center gap-1.5 uppercase tracking-widest"
               >
                   <Plus size={14} /> Add Class
               </button>
@@ -373,7 +373,7 @@ export const ImageAnnotation = () => {
 
           <div className="flex-1 overflow-y-auto p-4">
              <div className="flex items-center justify-between mb-4">
-                 <h2 className="text-sm font-bold text-white">Instances ({annotations.length})</h2>
+                 <h2 className="text-sm font-bold text-gray-900 dark:text-white">Instances ({annotations.length})</h2>
                  <button className="text-gray-500 hover:text-white"><Settings size={14}/></button>
              </div>
              
@@ -390,14 +390,14 @@ export const ImageAnnotation = () => {
                           setActiveTool('select');
                        }}
                        className={cn(
-                           "bg-[#1a1a1a] p-3 rounded-xl border transition-colors group cursor-pointer",
-                           isSelected ? "border-white" : "border-[#2a2a2a] hover:border-gray-500"
+                           "bg-gray-50/50 dark:bg-[#1a1a1a] p-3 rounded-xl border transition-colors group cursor-pointer",
+                           isSelected ? "border-white" : "border-gray-200 dark:border-[#222] hover:border-gray-500"
                        )}
                      >
                          <div className="flex justify-between items-center mb-2">
                              <div className="flex items-center gap-2">
                                 <div className="w-2.5 h-2.5 rounded-sm" style={{ backgroundColor: itemClass.color }}></div>
-                                <span className={cn("text-sm font-semibold selection:bg-accent/30", isSelected ? "text-white" : "text-gray-300")}>{itemClass.name} {index + 1}</span>
+                                <span className={cn("text-sm font-semibold selection:bg-accent/30", isSelected ? "text-gray-900 dark:text-white" : "text-gray-700 dark:text-gray-300")}>{itemClass.name} {index + 1}</span>
                              </div>
                              <button 
                                onClick={(e) => { e.stopPropagation(); setAnnotationToDelete(annotation.id); }}
@@ -406,25 +406,25 @@ export const ImageAnnotation = () => {
                                 <Trash2 size={14}/>
                              </button>
                          </div>
-                         <div className="text-[10px] text-gray-500 font-mono">BBox [{Math.round(annotation.x)}%, {Math.round(annotation.y)}%, {Math.round(annotation.width)}%, {Math.round(annotation.height)}%]</div>
+                         <div className="text-[10px] text-gray-500 font-mono uppercase tracking-widest font-black">BBox [{Math.round(annotation.x)}%, {Math.round(annotation.y)}%, {Math.round(annotation.width)}%, {Math.round(annotation.height)}%]</div>
                      </div>
                    );
                  })}
                  {annotations.length === 0 && (
-                     <div className="text-center py-6 border border-[#2a2a2a] border-dashed rounded-xl">
-                         <div className="text-xs text-gray-500 font-medium">No instances added yet.</div>
+                     <div className="text-center py-6 border border-gray-200 dark:border-[#222] border-dashed rounded-xl">
+                         <div className="text-[10px] text-gray-500 font-medium uppercase tracking-widest font-black">No instances added yet.</div>
                      </div>
                  )}
                  
                  {/* Delete Confirmation Modal */}
                  {annotationToDelete && (
                    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm p-4">
-                     <div className="bg-[#1e1e1e] border border-[#2a2a2a] rounded-xl shadow-2xl p-6 w-full max-w-sm">
-                       <h2 className="text-lg font-bold text-white mb-2">Delete Annotation</h2>
-                       <p className="text-sm text-gray-400 mb-6">Are you sure you want to delete this annotation? This action cannot be undone.</p>
+                     <div className="bg-white dark:bg-[#1e1e1e] border border-gray-200 dark:border-[#222] rounded-[11px] shadow-2xl p-6 w-full max-w-sm">
+                       <h2 className="text-sm font-bold text-gray-900 dark:text-white mb-2">Delete Annotation</h2>
+                       <p className="text-sm text-gray-600 dark:text-gray-400 mb-4">Are you sure you want to delete this annotation? This action cannot be undone.</p>
                        <div className="flex gap-3 justify-end">
-                         <button onClick={() => setAnnotationToDelete(null)} className="px-4 py-2 rounded-lg text-sm font-bold text-gray-300 hover:bg-[#2a2a2a] transition-colors">Cancel</button>
-                         <button onClick={confirmDelete} className="px-4 py-2 rounded-lg text-sm font-bold bg-red-600 text-white hover:bg-red-700 transition-colors">Delete</button>
+                         <button onClick={() => setAnnotationToDelete(null)} className="px-4 py-2 rounded-lg text-sm font-bold text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-200 dark:bg-[#2a2a2a] transition-colors">Cancel</button>
+                         <button onClick={confirmDelete} className="px-4 py-2 rounded-lg text-sm font-bold bg-red-600 text-gray-900 dark:text-white hover:bg-red-700 transition-colors">Delete</button>
                        </div>
                      </div>
                    </div>
