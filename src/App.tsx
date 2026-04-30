@@ -13,6 +13,7 @@ import { SignIn } from './pages/SignIn';
 import { SignUp } from './pages/SignUp';
 import { SystemAdminDashboard } from './pages/SystemAdminDashboard';
 import { SystemMonitoring } from './pages/SystemMonitoring';
+import { NetworkManagement } from './pages/NetworkManagement';
 import { WorkstationManagement } from './pages/WorkstationManagement';
 import { CameraManagement } from './pages/CameraManagement';
 import { ModelManagement } from './pages/ModelManagement';
@@ -68,6 +69,7 @@ export default function App() {
           <Route path="/dashboard" element={<AppLayout><Dashboard /></AppLayout>} />
           <Route path="/system-admin/dashboard" element={<AppLayout><SystemAdminDashboard /></AppLayout>} />
           <Route path="/system-admin/system-monitoring" element={<AppLayout><SystemMonitoring /></AppLayout>} />
+          <Route path="/system-admin/network-management" element={<AppLayout><NetworkManagement /></AppLayout>} />
           <Route path="/system-admin/workstation-management" element={<AppLayout><WorkstationManagement /></AppLayout>} />
           <Route path="/system-admin/camera-management" element={<AppLayout><CameraManagement /></AppLayout>} />
           <Route path="/system-admin/model-management" element={<AppLayout><ModelManagement /></AppLayout>} />

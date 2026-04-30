@@ -55,7 +55,7 @@ export const SignIn = () => {
                <span className="text-2xl tracking-tight text-gray-900 dark:text-white"><span className="font-bold">panon</span><span className="font-light">suite</span></span>
              </div>
           </div>
-          <h2 className="text-2xl font-black text-gray-900 dark:text-white tracking-tight">Sign In</h2>
+          <h2 className="text-[18px] font-black text-gray-900 dark:text-white tracking-tight">Sign In</h2>
           <p className="text-sm font-medium text-gray-500 tracking-wide">Enter your credentials to access the workspace.</p>
         </div>
         

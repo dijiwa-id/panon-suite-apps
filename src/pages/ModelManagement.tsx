@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { Search, Upload, Database, CheckCircle, BrainCircuit, Box, Trash2, ShieldCheck, FileCheck, X } from 'lucide-react';
 import { cn } from '../lib/utils';
 
-const models = [
+const initialModels = [
   { id: '1', filename: 'Model-2026-Security-80-001', type: 'Intrusion & Weapon', classes: ['Vehicle', 'Person', 'Weapon', 'Crowd'], confidence: 0.8 },
   { id: '2', filename: 'Model-2026-ALPR-60-001', type: 'LPR / Vehicle', classes: ['License Plate'], confidence: 0.6 },
   { id: '3', filename: 'Model-2026-Sanitation-90-001', type: 'Environmental', classes: ['Person', 'Water', 'Vehicle'], confidence: 0.9 },
@@ -11,6 +11,34 @@ const models = [
 
 export const ModelManagement = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [models, setModels] = useState(initialModels);
+  const [searchQuery, setSearchQuery] = useState('');
+  const [uploadedFile, setUploadedFile] = useState<File | null>(null);
+
+  const handleUpload = () => {
+    if (uploadedFile) {
+      setModels([...models, {
+        id: Math.random().toString(),
+        filename: uploadedFile.name.replace('.onnx', ''),
+        type: 'Custom Import',
+        classes: ['Custom Object'],
+        confidence: 0.7
+      }]);
+    }
+    setUploadedFile(null);
+    setIsModalOpen(false);
+  };
+
+  const handleDelete = (id: string) => {
+    if (confirm('Are you sure you want to delete this custom model?')) {
+      setModels(models.filter(m => m.id !== id));
+    }
+  };
+
+  const filteredModels = models.filter(m => 
+    m.filename.toLowerCase().includes(searchQuery.toLowerCase()) || 
+    m.type.toLowerCase().includes(searchQuery.toLowerCase())
+  );
 
   return (
     <main className="flex-1 overflow-y-auto bg-transparent p-6 lg:p-8 text-gray-800 dark:text-gray-200 transition-colors custom-scrollbar">
@@ -40,12 +68,19 @@ export const ModelManagement = () => {
               <p className="text-xs text-gray-600 dark:text-gray-400 text-center">Import your pre-compiled .onnx model file for edge deployment.</p>
               
               <label className="border-2 border-dashed border-gray-200 dark:border-[#222] rounded-xl p-10 flex flex-col items-center justify-center gap-4 cursor-pointer hover:border-accent group transition-all bg-gray-50 dark:bg-[#161616]/50">
-                  <input type="file" accept=".onnx" className="hidden" />
-                  <div className="w-12 h-12 bg-gray-50/50 dark:bg-[#1a1a1a] border border-gray-200 dark:border-[#222] rounded-full flex items-center justify-center group-hover:scale-110 group-hover:border-accent transition-all">
-                    <Upload size={20} className="text-gray-500 group-hover:text-accent" />
+                  <input type="file" accept=".onnx" onChange={(e) => setUploadedFile(e.target.files?.[0] || null)} className="hidden" />
+                  <div className={cn(
+                    "w-12 h-12 border border-gray-200 dark:border-[#222] rounded-full flex items-center justify-center transition-all",
+                    uploadedFile ? "bg-accent/20 border-accent/40" : "bg-gray-50/50 dark:bg-[#1a1a1a] group-hover:scale-110 group-hover:border-accent"
+                  )}>
+                     {uploadedFile ? <CheckCircle size={20} className="text-accent" /> : <Upload size={20} className="text-gray-500 group-hover:text-accent" />}
                   </div>
                   <div className="text-center">
-                    <p className="text-sm font-bold text-gray-800 dark:text-gray-200 mb-1">Click or drag & drop</p>
+                    {uploadedFile ? (
+                      <p className="text-sm font-bold text-accent mb-1">{uploadedFile.name}</p>
+                    ) : (
+                      <p className="text-sm font-bold text-gray-800 dark:text-gray-200 mb-1">Click or drag & drop</p>
+                    )}
                     <p className="text-[10px] text-gray-500 font-black uppercase tracking-widest">ONNX File Only (Max 256MB)</p>
                   </div>
               </label>
@@ -53,7 +88,7 @@ export const ModelManagement = () => {
             
             <div className="p-6 border-t border-gray-200 dark:border-[#222] flex gap-3 justify-between items-center bg-gray-50/50 dark:bg-[#1a1a1a]">
                 <button onClick={() => setIsModalOpen(false)} className="text-gray-500 hover:text-white font-black text-[10px] transition-colors uppercase tracking-widest">Cancel</button>
-                <button onClick={() => { console.log('Uploading model...'); setIsModalOpen(false); }} className="bg-accent hover:bg-accent/90 text-black h-[32px] rounded-full text-xs font-bold px-8 transition-colors shadow-[0_0_15px_rgba(82,197,243,0.3)] leading-[12px]">Upload Model</button>
+                <button disabled={!uploadedFile} onClick={handleUpload} className="bg-accent disabled:opacity-50 disabled:cursor-not-allowed hover:bg-accent/90 text-black h-[32px] rounded-full text-xs font-bold px-8 transition-colors shadow-[0_0_15px_rgba(82,197,243,0.3)] leading-[12px]">Upload Model</button>
             </div>
           </div>
         </div>
@@ -67,7 +102,13 @@ export const ModelManagement = () => {
           <div className="flex gap-3 w-full sm:w-auto">
              <div className="bg-gray-100 dark:bg-[#151515] px-4 py-2 rounded-xl border border-gray-200 dark:border-[#222] flex items-center gap-2 flex-1 sm:flex-none focus-within:border-accent/50 focus-within:ring-1 focus-within:ring-accent/50 transition-all">
                 <Search className="text-gray-600 dark:text-gray-400" size={16} />
-                <input type="text" placeholder="Search by name, tags..." className="bg-transparent outline-none text-xs font-medium text-gray-800 dark:text-gray-200 w-full sm:w-64 placeholder-gray-600" />
+                <input 
+                  type="text" 
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                  placeholder="Search by name, tags..." 
+                  className="bg-transparent outline-none text-xs font-medium text-gray-800 dark:text-gray-200 w-full sm:w-64 placeholder-gray-600" 
+                />
              </div>
           </div>
         </div>
@@ -82,7 +123,7 @@ export const ModelManagement = () => {
               </tr>
             </thead>
             <tbody className="divide-y divide-gray-200 dark:divide-[#222]">
-              {models.map((model) => (
+              {filteredModels.map((model) => (
                 <tr key={model.id} className="hover:bg-white/5 hover:bg-gray-50 transition-colors group">
                   <td className="px-5 py-4">
                       <div className="flex items-center gap-2 mb-1">
@@ -112,7 +153,7 @@ export const ModelManagement = () => {
                     <button className="flex items-center gap-1.5 px-3 py-1.5 text-gray-600 dark:text-gray-400 hover:text-white transition-colors bg-gray-100 dark:bg-[#151515] border border-gray-200 dark:border-[#222] rounded-lg text-[10px] font-bold">
                       <Database size={12} /> Assign to Edge
                     </button>
-                    <button className="p-1.5 text-gray-500 hover:text-red-500 hover:bg-red-500/10 transition-colors bg-gray-100 dark:bg-[#151515] border border-gray-200 dark:border-[#222] rounded-lg">
+                    <button onClick={() => handleDelete(model.id)} className="p-1.5 text-gray-500 hover:text-red-500 hover:bg-red-500/10 transition-colors bg-gray-100 dark:bg-[#151515] border border-gray-200 dark:border-[#222] rounded-lg">
                       <Trash2 size={14} />
                     </button>
                   </td>

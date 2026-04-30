@@ -20,7 +20,8 @@ import {
   Users,
   Camera,
   List,
-  FileText
+  FileText,
+  Network
 } from "lucide-react";
 import { cn } from "../lib/utils";
 import { motion } from "motion/react";
@@ -43,6 +44,7 @@ const iconMap: Record<string, React.ReactNode> = {
   "Model Management": <Cpu size={14} />,
   "Model Deployment": <Cpu size={14} />,
   "Algorithm Package": <Code size={14} />,
+  "Network Management": <Network size={14} />,
   "User Management": <Users size={14} />,
   "Roles": <Layers size={14} />,
   "Users": <Box size={14} />,
@@ -169,7 +171,7 @@ export const Sidebar = ({
         className
       )}
     >
-      <div className="px-6 h-[60px] flex items-center">
+      <div className="px-6 h-[55px] flex items-center">
         <Link to="/dashboard"
           className={cn(
             "flex items-center gap-2 group w-full",
@@ -285,6 +287,7 @@ export const Sidebar = ({
             items={[
               { label: "Dashboard", path: "/system-admin/dashboard" },
               { label: "System Monitoring", path: "/system-admin/system-monitoring" },
+              { label: "Network Management", path: "/system-admin/network-management" },
               { label: "Workstation Management", path: "/system-admin/workstation-management" },
               { label: "Camera Management", path: "/system-admin/camera-management" },
               {

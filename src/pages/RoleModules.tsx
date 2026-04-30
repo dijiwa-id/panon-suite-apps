@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { Search, Plus, Filter, MoreVertical, LayoutGrid, CheckCircle2, Circle } from 'lucide-react';
 import { cn } from '../lib/utils';
 
-const roleModules = [
+const initialRoleModules = [
   { 
     id: 'RM-001', 
     role: 'SysAdmin', 
@@ -32,12 +32,27 @@ const allModules = [
 ];
 
 export const RoleModules = () => {
+  const [roleModules, setRoleModules] = useState(initialRoleModules);
   const [activeRole, setActiveRole] = useState(roleModules[0].role);
 
   const activeRoleData = roleModules.find(rm => rm.role === activeRole);
 
   const toggleModule = (moduleName: string) => {
-    // Logic to toggle module access mapping would go here
+    setRoleModules(prev => prev.map(rm => {
+      if (rm.role === activeRole) {
+        const hasModule = rm.modules.includes(moduleName);
+        return {
+          ...rm,
+          modules: hasModule ? rm.modules.filter(m => m !== moduleName) : [...rm.modules, moduleName]
+        };
+      }
+      return rm;
+    }));
+  };
+
+  const handleSave = () => {
+    console.log('Saved modules for:', activeRole, activeRoleData?.modules);
+    alert(`Permissions saved for ${activeRole}!`);
   };
 
   return (
@@ -84,7 +99,7 @@ export const RoleModules = () => {
                      <LayoutGrid size={14} className="text-gray-500" />
                      <h2 className="text-[12px] font-bold tracking-wide">Access For: <span className="text-accent">{activeRole}</span></h2>
                   </div>
-                  <button className="bg-[#1c1c1c] border border-gray-700 h-8 text-white rounded-full text-xs font-bold tracking-wide px-6 leading-[12px] hover:bg-[#2a2a2a] transition-colors flex items-center justify-center">
+                  <button onClick={handleSave} className="bg-[#1c1c1c] border border-gray-700 h-8 text-white rounded-full text-xs font-bold tracking-wide px-6 leading-[12px] hover:bg-[#2a2a2a] transition-colors flex items-center justify-center">
                     Save Changes
                   </button>
                </div>

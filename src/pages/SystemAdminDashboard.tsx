@@ -83,7 +83,7 @@ export const SystemAdminDashboard = () => {
             <h2 className="text-sm font-bold text-gray-900 dark:text-white">Inference Detections vs Latency</h2>
           </div>
           <div className="h-64 pb-2 flex-1 w-full">
-            <ResponsiveContainer width="100%" height="100%">
+            <ResponsiveContainer width="100%" height="100%" minWidth={0} minHeight={0}>
               <AreaChart data={inferenceData} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
                 <defs>
                   <linearGradient id="colorDetections" x1="0" y1="0" x2="0" y2="1">
@@ -113,7 +113,7 @@ export const SystemAdminDashboard = () => {
              <h2 className="text-sm font-bold text-gray-900 dark:text-white">Camera Global Status Over Time</h2>
           </div>
           <div className="h-64 pb-2 flex-1 w-full">
-            <ResponsiveContainer width="100%" height="100%">
+            <ResponsiveContainer width="100%" height="100%" minWidth={0} minHeight={0}>
               <AreaChart data={statusData} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
                 <defs>
                   <linearGradient id="colorActive" x1="0" y1="0" x2="0" y2="1">

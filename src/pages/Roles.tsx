@@ -1,16 +1,106 @@
 import React, { useState } from 'react';
-import { Search, Plus, Settings, Filter, MoreVertical } from 'lucide-react';
+import { Search, Plus, Settings, Filter, MoreVertical, X, Edit2, Trash2, ChevronDown } from 'lucide-react';
 import { cn } from '../lib/utils';
 
-const roles = [
+const initialRoles = [
   { id: '1', name: 'SysAdmin', users: 2, status: 'Active', description: 'System Administrator with full access' },
   { id: '2', name: 'Admin', users: 5, status: 'Active', description: 'General administrative role' },
   { id: '3', name: 'User', users: 124, status: 'Active', description: 'Standard user with base permissions' },
   { id: '4', name: 'Operator', users: 45, status: 'Inactive', description: 'Operator for specific modules' },
 ];
 
+const RoleModal = ({ isOpen, onClose, role, onSave }: { isOpen: boolean; onClose: () => void; role: any; onSave: (r: any) => void }) => {
+  const [formData, setFormData] = useState(role || { name: '', description: '', status: 'Active', users: 0 });
+
+  React.useEffect(() => {
+    setFormData(role || { name: '', description: '', status: 'Active', users: 0 });
+  }, [role, isOpen]);
+
+  if (!isOpen) return null;
+
+  return (
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm p-4">
+      <div className="bg-white dark:bg-[#1e1e1e] border border-gray-200 dark:border-[#222] rounded-[11px] shadow-2xl w-full max-w-md overflow-hidden">
+        <div className="p-6 border-b border-gray-200 dark:border-[#222] flex items-center justify-between bg-gray-50/50 dark:bg-[#1a1a1a]">
+          <h2 className="text-sm font-black text-gray-900 dark:text-white">{role ? 'Edit Role' : 'New Role'}</h2>
+          <button onClick={onClose} className="text-gray-500 hover:text-white transition-colors">
+            <X size={16} />
+          </button>
+        </div>
+        
+        <form onSubmit={(e) => { e.preventDefault(); onSave(formData); }} className="p-6 space-y-5">
+          <div>
+            <label className="block text-[10px] font-black text-gray-500 mb-2 uppercase tracking-widest">Role Name</label>
+            <input 
+              type="text" 
+              required
+              value={formData.name}
+              onChange={e => setFormData({...formData, name: e.target.value})}
+              placeholder="e.g. Moderator" 
+              className="w-full bg-gray-50 dark:bg-[#161616] border border-gray-200 dark:border-[#222] rounded-lg px-4 py-2.5 text-xs text-gray-800 dark:text-gray-200 outline-none focus:border-accent/50 focus:ring-1 focus:ring-accent/50 transition-all placeholder:text-gray-700" 
+            />
+          </div>
+          <div>
+            <label className="block text-[10px] font-black text-gray-500 mb-2 uppercase tracking-widest">Description</label>
+            <textarea 
+              rows={3}
+              required
+              value={formData.description}
+              onChange={e => setFormData({...formData, description: e.target.value})}
+              placeholder="Brief description of this role's permissions..." 
+              className="w-full bg-gray-50 dark:bg-[#161616] border border-gray-200 dark:border-[#222] rounded-lg px-4 py-2.5 text-xs text-gray-800 dark:text-gray-200 outline-none focus:border-accent/50 focus:ring-1 focus:ring-accent/50 transition-all placeholder:text-gray-700 resize-none" 
+            />
+          </div>
+          
+          <div>
+            <label className="block text-[10px] font-black text-gray-500 mb-2 uppercase tracking-widest">Status</label>
+            <div className="relative">
+              <div className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 pointer-events-none">
+                <ChevronDown size={14} />
+              </div>
+              <select value={formData.status} onChange={e => setFormData({...formData, status: e.target.value})} className="w-full bg-gray-100 dark:bg-[#151515] border border-gray-200 dark:border-[#222] rounded-xl pl-4 pr-9 h-[37px] text-[12px] font-bold text-gray-700 dark:text-gray-300 outline-none focus:border-accent/50 focus:ring-1 focus:ring-accent/50 transition-all appearance-none cursor-pointer">
+                <option>Active</option>
+                <option>Inactive</option>
+              </select>
+            </div>
+          </div>
+          
+          <div className="pt-4 flex gap-3">
+             <button type="button" onClick={onClose} className="flex-1 bg-gray-100 dark:bg-[#151515] border border-gray-200 dark:border-[#222] h-[37px] text-gray-700 dark:text-gray-300 rounded-xl text-xs font-bold transition-colors hover:bg-gray-200 dark:hover:bg-[#2a2a2a]">
+                Cancel
+             </button>
+             <button type="submit" className="flex-1 bg-accent hover:bg-accent/90 text-black h-[37px] rounded-xl text-xs font-bold transition-colors shadow-[0_0_15px_rgba(82,197,243,0.3)]">
+                {role ? 'Save Changes' : 'Create Role'}
+             </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  );
+};
+
 export const Roles = () => {
+  const [roles, setRoles] = useState(initialRoles);
   const [searchQuery, setSearchQuery] = useState('');
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [editingRole, setEditingRole] = useState<any>(null);
+
+  const handleSaveRole = (roleData: any) => {
+    if (editingRole) {
+      setRoles(roles.map(r => r.id === roleData.id ? roleData : r));
+    } else {
+      setRoles([...roles, { ...roleData, id: `${roles.length + 1}`, users: 0 }]);
+    }
+    setIsModalOpen(false);
+    setEditingRole(null);
+  };
+
+  const handleDeleteRole = (id: string, e: React.MouseEvent) => {
+    e.stopPropagation();
+    if(confirm('Are you sure you want to delete this role?')) {
+      setRoles(roles.filter(r => r.id !== id));
+    }
+  };
 
   const filteredRoles = roles.filter(role => 
     role.name.toLowerCase().includes(searchQuery.toLowerCase()) || 
@@ -29,7 +119,7 @@ export const Roles = () => {
             <button className="bg-transparent border border-gray-300 dark:border-[#222] h-8 text-gray-700 dark:text-gray-300 rounded-full text-xs font-bold px-4 hover:bg-gray-100 dark:hover:bg-[#1a1a1a] transition-colors leading-[12px] flex items-center gap-1.5">
               <Filter size={12} /> Filter
             </button>
-            <button className="bg-[#1c1c1c] border border-gray-700 h-8 text-white rounded-full text-xs font-bold tracking-wide px-6 leading-[12px] hover:bg-[#2a2a2a] transition-colors flex items-center gap-1.5">
+            <button onClick={() => setIsModalOpen(true)} className="bg-[#1c1c1c] border border-gray-700 h-8 text-white rounded-full text-xs font-bold tracking-wide px-6 leading-[12px] hover:bg-[#2a2a2a] transition-colors flex items-center gap-1.5">
               <Plus size={12} /> New Role
             </button>
           </div>
@@ -57,7 +147,7 @@ export const Roles = () => {
                     <th key={header} className={cn(
                       "py-3 text-[10px] font-black tracking-widest capitalize text-gray-500 whitespace-nowrap",
                       i === 0 ? "pl-5" : "px-3",
-                      i === 4 ? "pr-5 w-10 text-right" : ""
+                      i === 4 ? "pr-5 w-auto text-right" : ""
                     )}>
                       {header}
                     </th>
@@ -86,9 +176,14 @@ export const Roles = () => {
                       </div>
                     </td>
                     <td className="py-3.5 pr-5 text-right">
-                        <button className="p-1.5 text-gray-600 dark:text-gray-400 hover:text-accent transition-colors bg-white dark:bg-[#151515] border border-gray-200 dark:border-[#222] rounded shadow-sm opacity-0 group-hover:opacity-100">
-                            <Settings size={12} />
-                        </button>
+                        <div className="flex items-center justify-end gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
+                            <button onClick={(e) => { e.stopPropagation(); setEditingRole(role); setIsModalOpen(true); }} className="p-1.5 text-gray-600 dark:text-gray-400 hover:text-accent transition-colors bg-white dark:bg-[#151515] border border-gray-200 dark:border-[#222] rounded shadow-sm">
+                                <Edit2 size={12} />
+                            </button>
+                            <button onClick={(e) => handleDeleteRole(role.id, e)} className="p-1.5 text-gray-600 dark:text-gray-400 hover:text-red-500 transition-colors bg-white dark:bg-[#151515] border border-gray-200 dark:border-[#222] rounded shadow-sm">
+                                <Trash2 size={12} />
+                            </button>
+                        </div>
                     </td>
                   </tr>
                 ))}
@@ -107,6 +202,7 @@ export const Roles = () => {
           </div>
         </div>
       </div>
+      <RoleModal isOpen={isModalOpen} onClose={() => { setIsModalOpen(false); setEditingRole(null); }} role={editingRole} onSave={handleSaveRole} />
     </main>
   );
 };

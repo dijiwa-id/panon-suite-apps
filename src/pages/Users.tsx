@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
-import { Search, Plus, Filter, MoreVertical, Settings, Mail, ShieldAlert } from 'lucide-react';
+import { Search, Plus, Filter, MoreVertical, Settings, Mail, ShieldAlert, X, Edit2, Trash2, ChevronDown } from 'lucide-react';
 import { cn } from '../lib/utils';
 
-const users = [
+const initialUsers = [
   { id: 'USR-001', name: 'M Iqbal', email: 'iqbal@panon.com', role: 'SysAdmin', status: 'Active', lastLogin: '2 mins ago' },
   { id: 'USR-002', name: 'John Doe', email: 'john@panon.com', role: 'Admin', status: 'Active', lastLogin: '1 hour ago' },
   { id: 'USR-003', name: 'Jane Smith', email: 'jane@panon.com', role: 'User', status: 'Inactive', lastLogin: '2 days ago' },
@@ -10,8 +10,113 @@ const users = [
   { id: 'USR-005', name: 'Sarah Lee', email: 'sarah@panon.com', role: 'User', status: 'Active', lastLogin: '5 mins ago' },
 ];
 
+const UserModal = ({ isOpen, onClose, user, onSave }: { isOpen: boolean; onClose: () => void; user: any; onSave: (u: any) => void }) => {
+  const [formData, setFormData] = useState(user || { name: '', email: '', role: 'User', status: 'Active' });
+
+  React.useEffect(() => {
+    setFormData(user || { name: '', email: '', role: 'User', status: 'Active' });
+  }, [user, isOpen]);
+
+  if (!isOpen) return null;
+
+  return (
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm p-4">
+      <div className="bg-white dark:bg-[#1e1e1e] border border-gray-200 dark:border-[#222] rounded-[11px] shadow-2xl w-full max-w-md overflow-hidden">
+        <div className="p-6 border-b border-gray-200 dark:border-[#222] flex items-center justify-between bg-gray-50/50 dark:bg-[#1a1a1a]">
+          <h2 className="text-sm font-black text-gray-900 dark:text-white">{user ? 'Edit User' : 'New User'}</h2>
+          <button onClick={onClose} className="text-gray-500 hover:text-white transition-colors">
+            <X size={16} />
+          </button>
+        </div>
+        
+        <form onSubmit={(e) => { e.preventDefault(); onSave(formData); }} className="p-6 space-y-5">
+          <div>
+            <label className="block text-[10px] font-black text-gray-500 mb-2 uppercase tracking-widest">Full Name</label>
+            <input 
+              type="text" 
+              required
+              value={formData.name}
+              onChange={e => setFormData({...formData, name: e.target.value})}
+              placeholder="e.g. John Doe" 
+              className="w-full bg-gray-50 dark:bg-[#161616] border border-gray-200 dark:border-[#222] rounded-lg px-4 py-2.5 text-xs text-gray-800 dark:text-gray-200 outline-none focus:border-accent/50 focus:ring-1 focus:ring-accent/50 transition-all placeholder:text-gray-700" 
+            />
+          </div>
+          <div>
+            <label className="block text-[10px] font-black text-gray-500 mb-2 uppercase tracking-widest">Email Address</label>
+            <input 
+              type="email" 
+              required
+              value={formData.email}
+              onChange={e => setFormData({...formData, email: e.target.value})}
+              placeholder="e.g. john@panon.com" 
+              className="w-full bg-gray-50 dark:bg-[#161616] border border-gray-200 dark:border-[#222] rounded-lg px-4 py-2.5 text-xs text-gray-800 dark:text-gray-200 outline-none focus:border-accent/50 focus:ring-1 focus:ring-accent/50 transition-all placeholder:text-gray-700" 
+            />
+          </div>
+          
+          <div className="grid grid-cols-2 gap-4">
+            <div>
+              <label className="block text-[10px] font-black text-gray-500 mb-2 uppercase tracking-widest">Role</label>
+              <div className="relative">
+                <div className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 pointer-events-none">
+                  <ChevronDown size={14} />
+                </div>
+                <select value={formData.role} onChange={e => setFormData({...formData, role: e.target.value})} className="w-full bg-gray-100 dark:bg-[#151515] border border-gray-200 dark:border-[#222] rounded-xl pl-4 pr-9 h-[37px] text-[12px] font-bold text-gray-700 dark:text-gray-300 outline-none focus:border-accent/50 focus:ring-1 focus:ring-accent/50 transition-all appearance-none cursor-pointer">
+                  <option>SysAdmin</option>
+                  <option>Admin</option>
+                  <option>User</option>
+                  <option>Operator</option>
+                </select>
+              </div>
+            </div>
+            <div>
+              <label className="block text-[10px] font-black text-gray-500 mb-2 uppercase tracking-widest">Status</label>
+              <div className="relative">
+                <div className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 pointer-events-none">
+                  <ChevronDown size={14} />
+                </div>
+                <select value={formData.status} onChange={e => setFormData({...formData, status: e.target.value})} className="w-full bg-gray-100 dark:bg-[#151515] border border-gray-200 dark:border-[#222] rounded-xl pl-4 pr-9 h-[37px] text-[12px] font-bold text-gray-700 dark:text-gray-300 outline-none focus:border-accent/50 focus:ring-1 focus:ring-accent/50 transition-all appearance-none cursor-pointer">
+                  <option>Active</option>
+                  <option>Inactive</option>
+                </select>
+              </div>
+            </div>
+          </div>
+          <div className="pt-4 flex gap-3">
+             <button type="button" onClick={onClose} className="flex-1 bg-gray-100 dark:bg-[#151515] border border-gray-200 dark:border-[#222] h-[37px] text-gray-700 dark:text-gray-300 rounded-xl text-xs font-bold transition-colors hover:bg-gray-200 dark:hover:bg-[#2a2a2a]">
+                Cancel
+             </button>
+             <button type="submit" className="flex-1 bg-accent hover:bg-accent/90 text-black h-[37px] rounded-xl text-xs font-bold transition-colors shadow-[0_0_15px_rgba(82,197,243,0.3)]">
+                {user ? 'Save Changes' : 'Create User'}
+             </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  );
+};
+
 export const Users = () => {
+  const [users, setUsers] = useState(initialUsers);
   const [searchQuery, setSearchQuery] = useState('');
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [editingUser, setEditingUser] = useState<any>(null);
+
+  const handleSaveUser = (userData: any) => {
+    if (editingUser) {
+      setUsers(users.map(u => u.id === userData.id ? userData : u));
+    } else {
+      setUsers([...users, { ...userData, id: `USR-${Math.floor(Math.random()*1000).toString().padStart(3, '0')}`, lastLogin: 'Never' }]);
+    }
+    setIsModalOpen(false);
+    setEditingUser(null);
+  };
+
+  const handleDeleteUser = (id: string, e: React.MouseEvent) => {
+    e.stopPropagation();
+    if(confirm('Are you sure you want to delete this user?')) {
+      setUsers(users.filter(u => u.id !== id));
+    }
+  };
 
   const filteredUsers = users.filter(user => 
     user.name.toLowerCase().includes(searchQuery.toLowerCase()) || 
@@ -31,7 +136,7 @@ export const Users = () => {
             <button className="bg-transparent border border-gray-300 dark:border-[#222] h-8 text-gray-700 dark:text-gray-300 rounded-full text-xs font-bold px-4 hover:bg-gray-100 dark:hover:bg-[#1a1a1a] transition-colors leading-[12px] flex items-center gap-1.5">
               <Filter size={12} /> Filter
             </button>
-            <button className="bg-[#1c1c1c] border border-gray-700 h-8 text-white rounded-full text-xs font-bold tracking-wide px-6 leading-[12px] hover:bg-[#2a2a2a] transition-colors flex items-center gap-1.5">
+            <button onClick={() => setIsModalOpen(true)} className="bg-[#1c1c1c] border border-gray-700 h-8 text-white rounded-full text-xs font-bold tracking-wide px-6 leading-[12px] hover:bg-[#2a2a2a] transition-colors flex items-center gap-1.5">
               <Plus size={12} /> New User
             </button>
           </div>
@@ -59,7 +164,7 @@ export const Users = () => {
                     <th key={header} className={cn(
                       "py-3 text-[10px] font-black tracking-widest capitalize text-gray-500 whitespace-nowrap",
                       i === 0 ? "pl-5" : "px-3",
-                      i === 4 ? "pr-5 w-10 text-right" : ""
+                      i === 4 ? "pr-5 w-auto text-right" : ""
                     )}>
                       {header}
                     </th>
@@ -96,9 +201,14 @@ export const Users = () => {
                         {user.lastLogin}
                     </td>
                     <td className="py-3.5 pr-5 text-right">
-                        <button className="p-1.5 text-gray-600 dark:text-gray-400 hover:text-accent transition-colors bg-white dark:bg-[#151515] border border-gray-200 dark:border-[#222] rounded shadow-sm opacity-0 group-hover:opacity-100">
-                            <Settings size={12} />
-                        </button>
+                        <div className="flex items-center justify-end gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
+                            <button onClick={(e) => { e.stopPropagation(); setEditingUser(user); setIsModalOpen(true); }} className="p-1.5 text-gray-600 dark:text-gray-400 hover:text-accent transition-colors bg-white dark:bg-[#151515] border border-gray-200 dark:border-[#222] rounded shadow-sm">
+                                <Edit2 size={12} />
+                            </button>
+                            <button onClick={(e) => handleDeleteUser(user.id, e)} className="p-1.5 text-gray-600 dark:text-gray-400 hover:text-red-500 transition-colors bg-white dark:bg-[#151515] border border-gray-200 dark:border-[#222] rounded shadow-sm">
+                                <Trash2 size={12} />
+                            </button>
+                        </div>
                     </td>
                   </tr>
                 ))}
@@ -117,6 +227,7 @@ export const Users = () => {
           </div>
         </div>
       </div>
+      <UserModal isOpen={isModalOpen} onClose={() => { setIsModalOpen(false); setEditingUser(null); }} user={editingUser} onSave={handleSaveUser} />
     </main>
   );
 };

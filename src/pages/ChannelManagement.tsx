@@ -1,7 +1,18 @@
-import React, { useState } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { cn } from '../lib/utils';
 import { Play, Settings, Save, RefreshCw, Maximize, Video, Activity, Info, StopCircle, Eye, AlertTriangle, ChevronDown } from 'lucide-react';
 import { useParams } from 'react-router-dom';
+
+type DetectionLog = {
+    id: number;
+    timestamp: string;
+    objectClass: string;
+    confidence: number;
+    status: 'Tracked' | 'Ignored' | 'Alert';
+};
+
+const DUMMY_CLASSES = ['Person', 'Vehicle', 'Unknown', 'Bag', 'Animal'];
+const STATUSES: ('Tracked' | 'Ignored' | 'Alert')[] = ['Tracked', 'Ignored', 'Alert'];
 
 export const ChannelManagement = () => {
     const { "*": channelId } = useParams();
@@ -9,6 +20,74 @@ export const ChannelManagement = () => {
     
     const [isPlaying, setIsPlaying] = useState(false);
     const [confidence, setConfidence] = useState(75);
+    const [sourceCamera, setSourceCamera] = useState('CAM-001 (Main Gate)');
+    const [cameraUrl, setCameraUrl] = useState('rtsp://admin:panona123@192.168.1.100:554/cam/realmonitor');
+    const [capabilities, setCapabilities] = useState({
+        personTracking: true,
+        lineCrossing: true,
+        loitering: false
+    });
+    const [algoPackage, setAlgoPackage] = useState('Security & Intrusion');
+    const [logs, setLogs] = useState<DetectionLog[]>([]);
+
+    const videoContainerRef = useRef<HTMLDivElement>(null);
+
+    useEffect(() => {
+        let interval: NodeJS.Timeout;
+        if (isPlaying) {
+            interval = setInterval(() => {
+                setLogs(prev => {
+                    const newLog: DetectionLog = {
+                        id: Date.now(),
+                        timestamp: new Date().toLocaleTimeString([], { hour12: true, hour: '2-digit', minute: '2-digit', second: '2-digit' }),
+                        objectClass: DUMMY_CLASSES[Math.floor(Math.random() * DUMMY_CLASSES.length)],
+                        confidence: Number((Math.random() * 0.5 + 0.5).toFixed(2)),
+                        status: STATUSES[Math.floor(Math.random() * STATUSES.length)]
+                    };
+                    const newLogs = [newLog, ...prev];
+                    return newLogs.slice(0, 15); // keep max 15
+                });
+            }, 2000); // add new log every 2 seconds
+        } else {
+            setLogs([]);
+        }
+        return () => clearInterval(interval);
+    }, [isPlaying]);
+
+    const handleFullscreen = () => {
+        if (!document.fullscreenElement) {
+            videoContainerRef.current?.requestFullscreen().catch(err => {
+                console.error(`Error attempting to enable fullscreen: ${err.message}`);
+            });
+        } else {
+            document.exitFullscreen();
+        }
+    };
+
+    const handleSave = () => {
+        const settings = {
+            sourceCamera,
+            cameraUrl,
+            algoPackage,
+            capabilities,
+            confidence
+        };
+        console.log('Saved settings:', settings);
+        alert('Settings saved successfully!');
+    };
+
+    const handleRestart = () => {
+        setIsPlaying(false);
+        setTimeout(() => setIsPlaying(true), 1500);
+    };
+
+    const handleSourceChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+        const val = e.target.value;
+        setSourceCamera(val);
+        if (val === 'CAM-001 (Main Gate)') setCameraUrl('rtsp://admin:panona123@192.168.1.100:554/cam/realmonitor');
+        else if (val === 'CAM-002 (Lobby)') setCameraUrl('rtsp://admin:panona123@192.168.1.200:554/cam/lobbymonitor');
+        else setCameraUrl('');
+    };
 
     return (
         <main className="flex-1 overflow-y-auto bg-transparent p-6 text-gray-800 dark:text-gray-200 transition-colors custom-scrollbar">
@@ -22,10 +101,10 @@ export const ChannelManagement = () => {
                     <p className="text-gray-600 dark:text-gray-400 text-xs font-medium">Manage pipeline, ROIs, and model settings for this video stream.</p>
                 </div>
                 <div className="flex items-center gap-3 w-full lg:w-auto">
-                    <button onClick={() => console.log('Restarting stream...')} className="flex-1 lg:flex-none flex justify-center items-center gap-2 bg-white dark:bg-[#1c1c1c] border border-gray-300 dark:border-gray-700 h-[32px] text-gray-900 dark:text-white rounded-full text-xs font-bold px-5 hover:bg-gray-200 dark:hover:bg-[#2a2a2a] transition-colors leading-[12px]">
-                        <RefreshCw size={14} /> Restart Stream
+                    <button onClick={handleRestart} className="flex-1 lg:flex-none flex justify-center items-center gap-2 bg-white dark:bg-[#1c1c1c] border border-gray-300 dark:border-gray-700 h-[32px] text-gray-900 dark:text-white rounded-full text-xs font-bold px-5 hover:bg-gray-200 dark:hover:bg-[#2a2a2a] transition-colors leading-[12px]">
+                        <RefreshCw size={14} className={cn(isPlaying ? "animate-spin" : "")} /> Restart Stream
                     </button>
-                    <button onClick={() => console.log('Saving changes...')} className="flex-1 lg:flex-none flex justify-center items-center gap-2 bg-accent hover:bg-accent/90 text-black h-[32px] rounded-full text-xs font-bold px-5 transition-colors shadow-[0_0_15px_rgba(82,197,243,0.3)] leading-[12px]">
+                    <button onClick={handleSave} className="flex-1 lg:flex-none flex justify-center items-center gap-2 bg-accent hover:bg-accent/90 text-black h-[32px] rounded-full text-xs font-bold px-5 transition-colors shadow-[0_0_15px_rgba(82,197,243,0.3)] leading-[12px]">
                         <Save size={14} /> Save Changes
                     </button>
                 </div>
@@ -48,7 +127,7 @@ export const ChannelManagement = () => {
                                     <div className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 pointer-events-none">
                                         <ChevronDown size={14} />
                                     </div>
-                                    <select className="w-full bg-gray-100 dark:bg-[#151515] border border-gray-200 dark:border-[#222] rounded-xl pl-4 pr-9 h-[37px] text-[12px] font-medium text-gray-800 dark:text-gray-200 outline-none focus:border-accent/50 focus:ring-1 focus:ring-accent/50 transition-all cursor-pointer appearance-none">
+                                    <select value={sourceCamera} onChange={handleSourceChange} className="w-full bg-gray-100 dark:bg-[#151515] border border-gray-200 dark:border-[#222] rounded-xl pl-4 pr-9 h-[37px] text-[12px] font-medium text-gray-800 dark:text-gray-200 outline-none focus:border-accent/50 focus:ring-1 focus:ring-accent/50 transition-all cursor-pointer appearance-none">
                                         <option>CAM-001 (Main Gate)</option>
                                         <option>CAM-002 (Lobby)</option>
                                         <option>Custom RTSP URL</option>
@@ -57,7 +136,7 @@ export const ChannelManagement = () => {
                             </div>
                             <div>
                                 <label className="block text-xs font-semibold text-gray-600 dark:text-gray-400 mb-2">Camera URL</label>
-                                <input disabled type="text" defaultValue="rtsp://admin:panona123@192.168.1.100:554/cam/realmonitor" className="w-full bg-white dark:bg-[#1c1c1c] border border-gray-200 dark:border-[#222] rounded-xl px-4 py-2.5 text-[10px] text-gray-500 outline-none uppercase tracking-widest font-black" />
+                                <input disabled={sourceCamera !== 'Custom RTSP URL'} type="text" value={cameraUrl} onChange={(e) => setCameraUrl(e.target.value)} className="w-full bg-white dark:bg-[#1c1c1c] border border-gray-200 dark:border-[#222] rounded-xl px-4 py-2.5 text-[10px] text-gray-500 outline-none uppercase tracking-widest font-black" />
                             </div>
                             <div className="flex items-center gap-3 pt-2">
                                 <span className={cn("flex w-2.5 h-2.5 rounded-full relative", isPlaying ? "bg-green-500" : "bg-red-500")}>
@@ -81,7 +160,7 @@ export const ChannelManagement = () => {
                                     <div className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 pointer-events-none">
                                         <ChevronDown size={14} />
                                     </div>
-                                    <select className="w-full bg-gray-100 dark:bg-[#151515] border border-gray-200 dark:border-[#222] rounded-xl pl-4 pr-9 h-[37px] text-[12px] font-medium text-gray-800 dark:text-gray-200 outline-none focus:border-accent/50 focus:ring-1 focus:ring-accent/50 transition-all cursor-pointer appearance-none">
+                                    <select value={algoPackage} onChange={e => setAlgoPackage(e.target.value)} className="w-full bg-gray-100 dark:bg-[#151515] border border-gray-200 dark:border-[#222] rounded-xl pl-4 pr-9 h-[37px] text-[12px] font-medium text-gray-800 dark:text-gray-200 outline-none focus:border-accent/50 focus:ring-1 focus:ring-accent/50 transition-all cursor-pointer appearance-none">
                                         <option>Security & Intrusion</option>
                                         <option>Workplace Safety (PPE)</option>
                                         <option>Traffic Monitoring</option>
@@ -94,18 +173,18 @@ export const ChannelManagement = () => {
                                 <div className="space-y-3">
                                     <label className="flex items-center gap-3 cursor-pointer group">
                                         <div className="relative flex items-center justify-center">
-                                            <input type="checkbox" defaultChecked className="peer appearance-none w-4 h-4 rounded border border-gray-200 dark:border-[#222] bg-gray-50 dark:bg-[#161616] checked:bg-accent checked:border-accent transition-colors cursor-pointer" />
+                                            <input type="checkbox" checked={capabilities.personTracking} onChange={(e) => setCapabilities({...capabilities, personTracking: e.target.checked})} className="peer appearance-none w-4 h-4 rounded border border-gray-200 dark:border-[#222] bg-gray-50 dark:bg-[#161616] checked:bg-accent checked:border-accent transition-colors cursor-pointer" />
                                             <div className="absolute text-black opacity-0 peer-checked:opacity-100 pointer-events-none transition-opacity">
                                                 <svg width="10" height="10" viewBox="0 0 12 12" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><polyline points="2.5 6 5 8.5 9.5 3.5"></polyline></svg>
                                             </div>
                                         </div>
                                         <div className="flex flex-col">
-                                            <span className="text-xs font-semibold text-gray-800 dark:text-gray-200 group-hover:text-white transition-colors">Person Detection</span>
+                                            <span className="text-xs font-semibold text-gray-800 dark:text-gray-200 group-hover:text-white transition-colors">Person Tracking</span>
                                         </div>
                                     </label>
                                     <label className="flex items-center gap-3 cursor-pointer group">
                                         <div className="relative flex items-center justify-center">
-                                            <input type="checkbox" defaultChecked className="peer appearance-none w-4 h-4 rounded border border-gray-200 dark:border-[#222] bg-gray-50 dark:bg-[#161616] checked:bg-accent checked:border-accent transition-colors cursor-pointer" />
+                                            <input type="checkbox" checked={capabilities.lineCrossing} onChange={(e) => setCapabilities({...capabilities, lineCrossing: e.target.checked})} className="peer appearance-none w-4 h-4 rounded border border-gray-200 dark:border-[#222] bg-gray-50 dark:bg-[#161616] checked:bg-accent checked:border-accent transition-colors cursor-pointer" />
                                             <div className="absolute text-black opacity-0 peer-checked:opacity-100 pointer-events-none transition-opacity">
                                                 <svg width="10" height="10" viewBox="0 0 12 12" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><polyline points="2.5 6 5 8.5 9.5 3.5"></polyline></svg>
                                             </div>
@@ -116,7 +195,7 @@ export const ChannelManagement = () => {
                                     </label>
                                     <label className="flex items-center gap-3 cursor-pointer group">
                                         <div className="relative flex items-center justify-center">
-                                            <input type="checkbox" className="peer appearance-none w-4 h-4 rounded border border-gray-200 dark:border-[#222] bg-gray-50 dark:bg-[#161616] checked:bg-accent checked:border-accent transition-colors cursor-pointer" />
+                                            <input type="checkbox" checked={capabilities.loitering} onChange={(e) => setCapabilities({...capabilities, loitering: e.target.checked})} className="peer appearance-none w-4 h-4 rounded border border-gray-200 dark:border-[#222] bg-gray-50 dark:bg-[#161616] checked:bg-accent checked:border-accent transition-colors cursor-pointer" />
                                             <div className="absolute text-black opacity-0 peer-checked:opacity-100 pointer-events-none transition-opacity">
                                                 <svg width="10" height="10" viewBox="0 0 12 12" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><polyline points="2.5 6 5 8.5 9.5 3.5"></polyline></svg>
                                             </div>
@@ -149,14 +228,14 @@ export const ChannelManagement = () => {
                                 <h2 className="text-sm font-bold text-gray-900 dark:text-white">Live AI Preview</h2>
                             </div>
                             <div className="flex items-center gap-2">
-                                <button className="p-1.5 text-gray-600 dark:text-gray-400 hover:text-white transition-colors bg-gray-100 dark:bg-[#151515] border border-gray-200 dark:border-[#222] rounded-lg">
+                                <button onClick={handleFullscreen} className="p-1.5 text-gray-600 dark:text-gray-400 hover:text-white transition-colors bg-gray-100 dark:bg-[#151515] border border-gray-200 dark:border-[#222] rounded-lg title='Maximize'">
                                     <Maximize size={14} />
                                 </button>
                             </div>
                         </div>
                         
-                        <div className="p-1 bg-gray-50/50 dark:bg-[#1a1a1a]">
-                            <div className="aspect-video bg-black rounded-xl border border-gray-200 dark:border-[#222] flex flex-col items-center justify-center relative overflow-hidden group">
+                        <div className="p-1 bg-gray-50/50 dark:bg-[#1a1a1a]" ref={videoContainerRef}>
+                            <div className="aspect-video w-full h-full bg-black rounded-xl border border-gray-200 dark:border-[#222] flex flex-col items-center justify-center relative overflow-hidden group">
                                 {!isPlaying ? (
                                     <>
                                         <div className="absolute inset-20 border-2 border-accent/30 border-dashed rounded-3xl bg-accent/5 opacity-50"></div>
@@ -221,26 +300,22 @@ export const ChannelManagement = () => {
                                 </thead>
                                 <tbody className="divide-y divide-gray-200 dark:divide-[#222]">
                                     {isPlaying ? (
-                                        <>
-                                            <tr className="hover:bg-white/5 transition-colors">
-                                                <td className="px-5 py-2.5 font-mono text-gray-600 dark:text-gray-400 text-xs">10:45:02 AM</td>
-                                                <td className="px-5 py-2.5 font-semibold text-gray-900 dark:text-white">Vehicle</td>
-                                                <td className="px-5 py-2.5 font-mono text-gray-700 dark:text-gray-300 text-xs">0.94</td>
-                                                <td className="px-5 py-2.5"><span className="text-green-400 font-medium">Tracked</span></td>
+                                        logs.map(log => (
+                                            <tr key={log.id} className="hover:bg-white/5 transition-colors animate-in fade-in slide-in-from-top-2 duration-300">
+                                                <td className="px-5 py-2.5 font-mono text-gray-600 dark:text-gray-400 text-xs">{log.timestamp}</td>
+                                                <td className="px-5 py-2.5 font-semibold text-gray-900 dark:text-white">{log.objectClass}</td>
+                                                <td className={cn("px-5 py-2.5 font-mono text-xs", log.confidence >= 0.8 ? "text-green-500" : "text-orange-500")}>{log.confidence}</td>
+                                                <td className="px-5 py-2.5">
+                                                    <span className={cn(
+                                                        "font-medium",
+                                                        log.status === 'Tracked' ? 'text-green-400' :
+                                                        log.status === 'Alert' ? 'text-red-400' : 'text-orange-400'
+                                                    )}>
+                                                        {log.status}
+                                                    </span>
+                                                </td>
                                             </tr>
-                                            <tr className="hover:bg-white/5 transition-colors">
-                                                <td className="px-5 py-2.5 font-mono text-gray-600 dark:text-gray-400 text-xs">10:45:01 AM</td>
-                                                <td className="px-5 py-2.5 font-semibold text-gray-900 dark:text-white">Person</td>
-                                                <td className="px-5 py-2.5 font-mono text-gray-700 dark:text-gray-300 text-xs">0.89</td>
-                                                <td className="px-5 py-2.5"><span className="text-green-400 font-medium">Tracked</span></td>
-                                            </tr>
-                                            <tr className="hover:bg-white/5 transition-colors">
-                                                <td className="px-5 py-2.5 font-mono text-gray-600 dark:text-gray-400 text-xs">10:44:58 AM</td>
-                                                <td className="px-5 py-2.5 font-semibold text-gray-900 dark:text-white">Unknown</td>
-                                                <td className="px-5 py-2.5 font-mono text-gray-700 dark:text-gray-300 text-xs">0.45</td>
-                                                <td className="px-5 py-2.5"><span className="text-orange-400 font-medium">Ignored</span></td>
-                                            </tr>
-                                        </>
+                                        ))
                                     ) : (
                                         <tr>
                                             <td colSpan={4} className="px-5 py-10 text-center text-gray-500 font-medium">

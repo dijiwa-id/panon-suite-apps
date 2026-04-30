@@ -2,12 +2,14 @@ import React, { useState } from 'react';
 import { AccuracyLineChart, AccuracyCircularCard } from './ChartCards';
 import { StatsGrid } from './StatsGrid';
 import { ImageAnnotationTable, AnomalyTable, RequestList, TableCard } from './Tables';
+import { ApplicationTab } from './ApplicationTab';
 import { ImageAnnotationDetail } from './ImageAnnotation';
-import { Search, Grid, List, MoreVertical } from 'lucide-react';
+import { Search, Grid, List, MoreVertical, Activity } from 'lucide-react';
 import { cn } from '../lib/utils';
 
+
 export const Dashboard = () => {
-  const [activeTab, setActiveTab] = useState<'application' | 'modules'>('application');
+  const [activeTab, setActiveTab] = useState<'application' | 'modules'>('modules');
   const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid');
   const [searchQuery, setSearchQuery] = useState('');
 
@@ -17,18 +19,8 @@ export const Dashboard = () => {
         {/* Page Header */}
         <div className="flex flex-col md:flex-row md:items-end justify-between mb-4 gap-4">
           <div className="flex-1">
-            <h2 className="text-[16px] font-bold text-gray-900 dark:text-white mb-5 tracking-tight">Analytic Dashboard</h2>
+            <h2 className="text-[18px] font-bold text-gray-900 dark:text-white mb-5 tracking-tight">Analytic Dashboard</h2>
             <div className="flex gap-4 border-b border-gray-200 dark:border-[#222] pb-0">
-              <button 
-                onClick={() => setActiveTab('application')}
-                className={cn(
-                  "text-[11px] tracking-tight font-bold transition-colors pb-2.5 relative flex flex-col items-center group",
-                  activeTab === 'application' ? "text-accent" : "text-gray-500 hover:text-gray-900 dark:hover:text-white"
-                )}
-              >
-                Application
-                {activeTab === 'application' && <span className="absolute bottom-[-1px] w-full h-[1px] bg-accent transition-transform"></span>}
-              </button>
               <button 
                 onClick={() => setActiveTab('modules')}
                 className={cn(
@@ -38,6 +30,16 @@ export const Dashboard = () => {
               >
                 Modules
                 {activeTab === 'modules' && <span className="absolute bottom-[-1px] w-full h-[1px] bg-accent transition-transform"></span>}
+              </button>
+              <button 
+                onClick={() => setActiveTab('application')}
+                className={cn(
+                  "text-[11px] tracking-tight font-bold transition-colors pb-2.5 relative flex flex-col items-center group",
+                  activeTab === 'application' ? "text-accent" : "text-gray-500 hover:text-gray-900 dark:hover:text-white"
+                )}
+              >
+                Application
+                {activeTab === 'application' && <span className="absolute bottom-[-1px] w-full h-[1px] bg-accent transition-transform"></span>}
               </button>
             </div>
           </div>
@@ -83,41 +85,45 @@ export const Dashboard = () => {
           </div>
         </div>
 
-        {/* Grid Layout */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4 lg:gap-4">
-          {/* Row 1 */}
-          <div className="lg:col-span-2 h-full min-h-[220px]">
-              <AccuracyLineChart />
-          </div>
-          <div className="lg:col-span-1 h-full min-h-[220px]">
-              <AccuracyCircularCard />
-          </div>
-          <div className="lg:col-span-2 h-full min-h-[220px]">
-              <StatsGrid />
-          </div>
+        {/* Main Content */}
+        {activeTab === 'application' ? (
+          <ApplicationTab searchQuery={searchQuery} viewMode={viewMode} />
+        ) : (
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4 lg:gap-4">
+            {/* Row 1 */}
+            <div className="lg:col-span-2 h-full min-h-[220px]">
+                <AccuracyLineChart />
+            </div>
+            <div className="lg:col-span-1 h-full min-h-[220px]">
+                <AccuracyCircularCard />
+            </div>
+            <div className="lg:col-span-2 h-full min-h-[220px]">
+                <StatsGrid />
+            </div>
 
-          {/* Row 2 */}
-          <div className="lg:col-span-2 h-full">
-            <ImageAnnotationTable />
-          </div>
-          <div className="lg:col-span-1 h-full">
-            <AnomalyTable />
-          </div>
-          <div className="lg:col-span-2 h-full">
-            <RequestList />
-          </div>
+            {/* Row 2 */}
+            <div className="lg:col-span-2 h-full">
+              <ImageAnnotationTable />
+            </div>
+            <div className="lg:col-span-1 h-full">
+              <AnomalyTable />
+            </div>
+            <div className="lg:col-span-2 h-full">
+              <RequestList />
+            </div>
 
-          {/* Row 3 */}
-          <div className="lg:col-span-2 h-full min-h-[300px]">
-            <ImageAnnotationDetail />
+            {/* Row 3 */}
+            <div className="lg:col-span-2 h-full min-h-[300px]">
+              <ImageAnnotationDetail />
+            </div>
+            <div className="lg:col-span-2 h-full min-h-[300px]">
+              <ImageAnnotationTable isRow3 />
+            </div>
+            <div className="lg:col-span-1 h-full min-h-[300px]">
+              <AnomalyTable isRow3 />
+            </div>
           </div>
-          <div className="lg:col-span-2 h-full min-h-[300px]">
-            <ImageAnnotationTable isRow3 />
-          </div>
-          <div className="lg:col-span-1 h-full min-h-[300px]">
-            <AnomalyTable isRow3 />
-          </div>
-        </div>
+        )}
       </div>
     </main>
   );

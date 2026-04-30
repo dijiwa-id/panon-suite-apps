@@ -1,12 +1,19 @@
 import React from 'react';
-import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, ReferenceLine } from 'recharts';
+import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
 import { cn } from '../lib/utils';
-import { HardDrive, Cpu, Zap, Activity, Monitor, Network, ShieldCheck, ChevronDown } from 'lucide-react';
+import { HardDrive, Activity, Monitor, Network, ShieldCheck, ChevronDown } from 'lucide-react';
 import { useTheme } from '../context/ThemeContext';
 
-const hardwareData = [
-  { name: 'Memory Usage', color: '#52C5F3', data: [{ time: '04-13', value: 25 }, { time: '04-14', value: 28 }, { time: '04-15', value: 22 }, { time: '04-16', value: 26 }, { time: '04-17', value: 27 }, { time: '04-18', value: 25 }, { time: '04-19', value: 28 }, { time: '04-20', value: 25 }, { time: '04-21', value: 27 }] },
-  { name: 'Disk Usage', color: '#EC3292', data: [{ time: '04-13', value: 20 }, { time: '04-14', value: 22 }, { time: '04-15', value: 18 }, { time: '04-16', value: 25 }, { time: '04-17', value: 24 }, { time: '04-18', value: 22 }, { time: '04-19', value: 26 }, { time: '04-20', value: 23 }, { time: '04-21', value: 25 }] },
+const memoryData = [
+  { time: '08:00', value: 78.4 }, { time: '09:00', value: 82.1 }, { time: '10:00', value: 80.5 }, 
+  { time: '11:00', value: 85.2 }, { time: '12:00', value: 88.9 }, { time: '13:00', value: 84.6 }, 
+  { time: '14:00', value: 86.3 }, { time: '15:00', value: 85.1 }, { time: '16:00', value: 85.6 }
+];
+
+const diskData = [
+  { time: '08:00', value: 12.5 }, { time: '09:00', value: 13.2 }, { time: '10:00', value: 13.8 }, 
+  { time: '11:00', value: 14.5 }, { time: '12:00', value: 15.1 }, { time: '13:00', value: 15.9 }, 
+  { time: '14:00', value: 16.5 }, { time: '15:00', value: 17.0 }, { time: '16:00', value: 17.1 }
 ];
 
 const ProgressBar = ({ label, value, max, colorClass }: { label: string, value: number, max: number, colorClass: string }) => (
@@ -27,11 +34,12 @@ export const SystemMonitoring = () => {
 
   const CustomTooltip = ({ active, payload, label }: any) => {
     if (active && payload && payload.length) {
+      const entry = payload[0];
       return (
-        <div className="bg-[#1e1e1e] border border-[#222] text-white text-[10px] px-2.5 py-1.5 rounded shadow-md font-bold">
-          <div className="text-gray-400 mb-0.5">{label}</div>
-          <div style={{ color: payload[0].color }}>
-            {payload[0].name}: {payload[0].value}%
+        <div className="bg-[#1e1e1e] border border-[#222] text-white text-[10px] px-2.5 py-1.5 rounded shadow-md font-bold z-50 relative">
+          {label && <div className="text-gray-400 mb-0.5">{label}</div>}
+          <div style={{ color: entry.payload?.fill || entry.color || '#fff' }}>
+            {entry.name}: {entry.value}%
           </div>
         </div>
       );
@@ -59,7 +67,7 @@ export const SystemMonitoring = () => {
       </div>
 
       {/* Summary Card */}
-      <div className="bg-white dark:bg-[#1e1e1e] p-5 rounded-[11px] border border-gray-200 dark:border-[#222] mb-4 shadow-sm">
+      <div className="card-glass p-5 mb-4">
         <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-4 pb-4 border-b border-gray-200 dark:border-[#222] gap-4">
           <div className="flex items-center gap-3">
             <div className="h-10 w-10 rounded-xl bg-gray-100 dark:bg-[#151515] border border-gray-200 dark:border-[#222] flex items-center justify-center">
@@ -111,32 +119,55 @@ export const SystemMonitoring = () => {
 
       {/* Charts */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 mb-4">
-        {hardwareData.map((chart) => (
-          <div key={chart.name} className="card-glass bg-white dark:bg-[#1e1e1e] p-6 rounded-[11px] border border-gray-100 dark:border-[#222] shadow-sm flex flex-col">
-            <div className="flex items-center gap-2 mb-4 shrink-0">
-               <Activity size={16} className="text-gray-500" />
-               <h3 className="text-sm font-bold text-gray-900 dark:text-white">{chart.name}</h3>
-            </div>
-            <div className="h-40 pb-2 flex-1 w-full">
-              <ResponsiveContainer width="100%" height="100%">
-                <AreaChart data={chart.data} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
-                  <CartesianGrid strokeDasharray="3 3" stroke={isDark ? '#2a2a2a' : '#e5e7eb'} vertical={false} />
-                  <ReferenceLine y={25} stroke={isDark ? '#333' : '#d1d5db'} strokeDasharray="3 3" opacity={0.8} />
-                  <XAxis dataKey="time" axisLine={false} tickLine={false} tick={{fontSize: 10, fill: '#888', fontWeight: 600}} dy={10} />
-                  <YAxis axisLine={false} tickLine={false} tick={{fontSize: 10, fill: '#888', fontWeight: 600}} />
-                  <Tooltip cursor={{ stroke: isDark ? '#333' : '#e5e7eb', strokeWidth: 1, strokeDasharray: '3 3' }} content={<CustomTooltip />} />
-                  <Area type="monotone" dataKey="value" stroke={chart.color} strokeWidth={2} fill={`url(#colorUv-${chart.name.replace(/\s+/g, '-')})`} fillOpacity={1} animationDuration={1000} />
-                  <defs>
-                    <linearGradient id={`colorUv-${chart.name.replace(/\s+/g, '-')}`} x1="0" y1="0" x2="0" y2="1">
-                      <stop offset="5%" stopColor={chart.color} stopOpacity={0.15}/>
-                      <stop offset="95%" stopColor={chart.color} stopOpacity={0}/>
-                    </linearGradient>
-                  </defs>
-                </AreaChart>
-              </ResponsiveContainer>
-            </div>
+        {/* Memory Usage Card */}
+        <div className="card-glass p-5 flex flex-col">
+          <div className="flex justify-between items-start mb-4">
+             <div className="flex items-center gap-2">
+                <Activity size={16} className="text-gray-500" />
+                <h3 className="text-sm font-bold text-gray-900 dark:text-white tracking-tight">Memory Usage</h3>
+             </div>
+             <div className="text-right">
+                <div className="text-[20px] font-black text-[#52C5F3] leading-none">27.4 GB</div>
+                <div className="text-[10px] tracking-widest uppercase font-black text-gray-500 mt-1">/ 32.0 GB Total</div>
+             </div>
           </div>
-        ))}
+          <div className="h-48 pb-2 flex-1 w-full mt-2">
+            <ResponsiveContainer width="100%" height="100%" minWidth={0} minHeight={0}>
+              <LineChart data={memoryData} margin={{ top: 10, right: 0, left: -25, bottom: 0 }}>
+                <CartesianGrid strokeDasharray="3 3" stroke={isDark ? '#2a2a2a' : '#e5e7eb'} vertical={false} />
+                <XAxis dataKey="time" axisLine={false} tickLine={false} tick={{fontSize: 10, fill: '#888', fontWeight: 600}} dy={10} />
+                <YAxis axisLine={false} tickLine={false} tick={{fontSize: 10, fill: '#888', fontWeight: 600}} />
+                <Tooltip cursor={{ stroke: isDark ? '#333' : '#e5e7eb', strokeWidth: 1, strokeDasharray: '3 3' }} content={<CustomTooltip />} />
+                <Line type="monotone" name="Memory Usage" dataKey="value" stroke="#52C5F3" strokeWidth={2} dot={false} activeDot={{ r: 4 }} animationDuration={1000} />
+              </LineChart>
+            </ResponsiveContainer>
+          </div>
+        </div>
+
+        {/* Disk Usage Card */}
+        <div className="card-glass p-5 flex flex-col">
+          <div className="flex justify-between items-start mb-4">
+             <div className="flex items-center gap-2">
+                <HardDrive size={16} className="text-gray-500" />
+                <h3 className="text-sm font-bold text-gray-900 dark:text-white tracking-tight">Disk Usage</h3>
+             </div>
+             <div className="text-right">
+                <div className="text-[20px] font-black text-[#EC3292] leading-none">17.1%</div>
+                <div className="text-[10px] tracking-widest uppercase font-black text-gray-500 mt-1">Status: OK</div>
+             </div>
+          </div>
+          <div className="h-48 pb-2 flex-1 w-full mt-2">
+            <ResponsiveContainer width="100%" height="100%" minWidth={0} minHeight={0}>
+              <LineChart data={diskData} margin={{ top: 10, right: 0, left: -25, bottom: 0 }}>
+                <CartesianGrid strokeDasharray="3 3" stroke={isDark ? '#2a2a2a' : '#e5e7eb'} vertical={false} />
+                <XAxis dataKey="time" axisLine={false} tickLine={false} tick={{fontSize: 10, fill: '#888', fontWeight: 600}} dy={10} />
+                <YAxis axisLine={false} tickLine={false} tick={{fontSize: 10, fill: '#888', fontWeight: 600}} />
+                <Tooltip cursor={{ stroke: isDark ? '#333' : '#e5e7eb', strokeWidth: 1, strokeDasharray: '3 3' }} content={<CustomTooltip />} />
+                <Line type="monotone" name="Disk Usage" dataKey="value" stroke="#EC3292" strokeWidth={2} dot={false} activeDot={{ r: 4 }} animationDuration={1000} />
+              </LineChart>
+            </ResponsiveContainer>
+          </div>
+        </div>
       </div>
 
       {/* Tables */}
@@ -157,8 +188,8 @@ export const SystemMonitoring = () => {
             { label: 'API Gateway', value: <span className="text-green-400 font-semibold text-xs">Running</span> },
           ]}
         ].map(table => (
-          <div key={table.title} className="bg-white dark:bg-[#1e1e1e] rounded-[11px] border border-gray-200 dark:border-[#222] overflow-hidden shadow-sm">
-             <div className="p-5 border-b border-gray-200 dark:border-[#222] bg-gray-50/50 dark:bg-[#1a1a1a] flex items-center gap-2">
+          <div key={table.title} className="card-glass overflow-hidden">
+             <div className="p-5 border-b border-gray-200/80 dark:border-[#222] bg-gray-50/50 dark:bg-[#1a1a1a] flex items-center gap-2">
                {table.icon}
                <h3 className="text-sm font-bold text-gray-900 dark:text-white">{table.title}</h3>
              </div>
