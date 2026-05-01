@@ -1,5 +1,5 @@
 import React from 'react';
-import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
+import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
 import { cn } from '../lib/utils';
 import { Activity, ShieldCheck, ChevronDown, Wifi, ArrowUp, ArrowDown } from 'lucide-react';
 import { useTheme } from '../context/ThemeContext';
@@ -59,14 +59,24 @@ export const NetworkManagement = () => {
           </div>
           <div className="h-64 pb-2 flex-1 w-full mt-2">
             <ResponsiveContainer width="100%" height="100%" minWidth={0} minHeight={0}>
-              <LineChart data={networkData} margin={{ top: 10, right: 0, left: -25, bottom: 0 }}>
+              <AreaChart data={networkData} margin={{ top: 10, right: 0, left: -25, bottom: 0 }}>
+                <defs>
+                  <linearGradient id="colorUpload" x1="0" y1="0" x2="0" y2="1">
+                    <stop offset="5%" stopColor="#52C5F3" stopOpacity={0.3}/>
+                    <stop offset="95%" stopColor="#52C5F3" stopOpacity={0}/>
+                  </linearGradient>
+                  <linearGradient id="colorDownload" x1="0" y1="0" x2="0" y2="1">
+                    <stop offset="5%" stopColor="#EC3292" stopOpacity={0.3}/>
+                    <stop offset="95%" stopColor="#EC3292" stopOpacity={0}/>
+                  </linearGradient>
+                </defs>
                 <CartesianGrid strokeDasharray="3 3" stroke={isDark ? '#2a2a2a' : '#e5e7eb'} vertical={false} />
                 <XAxis dataKey="time" axisLine={false} tickLine={false} tick={{fontSize: 10, fill: '#888', fontWeight: 600}} dy={10} />
                 <YAxis axisLine={false} tickLine={false} tick={{fontSize: 10, fill: '#888', fontWeight: 600}} />
                 <Tooltip cursor={{ stroke: isDark ? '#333' : '#e5e7eb', strokeWidth: 1, strokeDasharray: '3 3' }} content={<CustomTooltip />} />
-                <Line type="monotone" name="Upload" dataKey="upload" stroke="#52C5F3" strokeWidth={2} dot={false} activeDot={{ r: 4 }} animationDuration={1000} />
-                <Line type="monotone" name="Download" dataKey="download" stroke="#EC3292" strokeWidth={2} dot={false} activeDot={{ r: 4 }} animationDuration={1000} />
-              </LineChart>
+                <Area type="monotone" name="Upload" dataKey="upload" stroke="#52C5F3" strokeWidth={2} fillOpacity={1} fill="url(#colorUpload)" activeDot={{ r: 4, strokeWidth: 0 }} animationDuration={1000} />
+                <Area type="monotone" name="Download" dataKey="download" stroke="#EC3292" strokeWidth={2} fillOpacity={1} fill="url(#colorDownload)" activeDot={{ r: 4, strokeWidth: 0 }} animationDuration={1000} />
+              </AreaChart>
             </ResponsiveContainer>
           </div>
         </div>
