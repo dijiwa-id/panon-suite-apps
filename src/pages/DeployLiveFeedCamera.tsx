@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
-import { Link, useLocation } from 'react-router-dom';
 import { cn } from '../lib/utils';
-import { Camera, Search, Filter, Plus, Maximize2, MoreVertical, LayoutGrid, LayoutList, Signal, SignalHigh, SignalMedium } from 'lucide-react';
+import { Camera, Search, Plus, Maximize2, MoreVertical, LayoutGrid, LayoutList, Signal, SignalHigh, SignalMedium } from 'lucide-react';
 
 // Dummy data for camera feeds
 const MOCK_CAMERAS = [
@@ -80,7 +79,6 @@ const MOCK_CAMERAS = [
 ];
 
 export const DeployLiveFeedCamera = () => {
-  const location = useLocation();
   const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid');
   const [activeZone, setActiveZone] = useState('All');
 
@@ -99,8 +97,8 @@ export const DeployLiveFeedCamera = () => {
         <div className="flex flex-col gap-6">
            
            {/* Toolbar */}
-           <div className="flex flex-col sm:flex-row items-center justify-between gap-4 bg-white dark:bg-[#1e1e1e] border border-gray-200 dark:border-[#222] p-4 rounded-[11px] shadow-sm shrink-0">
-             <div className="flex items-center gap-3 w-full sm:w-auto">
+           <div className="flex flex-col sm:flex-row items-center justify-between gap-4 bg-white dark:bg-[#1e1e1e] border border-gray-200 dark:border-[#222] px-4 h-[55px] rounded-[11px] shadow-sm shrink-0">
+             <div className="flex items-center gap-3 w-full sm:w-auto h-full">
                <div className="bg-gray-50 dark:bg-[#161616] px-3.5 py-1.5 rounded-[11px] border border-gray-200 dark:border-[#222] flex items-center gap-2 w-full sm:w-64 focus-within:border-[#52C5F3]/50 focus-within:ring-1 focus-within:ring-[#52C5F3]/50 transition-all">
                   <Search size={14} className="text-gray-500" />
                   <input 
@@ -171,17 +169,17 @@ export const DeployLiveFeedCamera = () => {
                           {/* Top Badges */}
                           <div className="absolute top-3 left-3 right-3 flex justify-between items-start">
                              <div className="flex gap-2">
-                               <div className="bg-black/50 backdrop-blur-md border border-white/5 py-1 px-2 rounded flex items-center gap-1.5 shadow-sm">
+                               <div className="bg-black/50 backdrop-blur-md border border-white/5 px-2 h-[25px] rounded flex items-center gap-1.5 shadow-sm">
                                  <div className="w-1.5 h-1.5 bg-green-500 rounded-full animate-pulse shadow-[0_0_8px_rgba(34,197,94,0.6)]"></div>
                                  <span className="text-[10px] font-black tracking-widest text-white uppercase">Live</span>
                                </div>
-                               <div className="bg-black/50 backdrop-blur-md border border-white/5 py-1 px-2 rounded shadow-sm">
+                               <div className="bg-black/50 backdrop-blur-md border border-white/5 px-2 h-[25px] flex items-center justify-center rounded shadow-sm">
                                  <span className="text-[10px] font-black tracking-widest text-[#ececec]">{cam.zone}</span>
                                </div>
                              </div>
                              <div className="flex gap-2">
                                {cam.stats.violations > 0 && (
-                                 <div className="bg-red-500/20 backdrop-blur-md border border-red-500/30 px-2 py-1 rounded shadow-sm flex items-center gap-1">
+                                 <div className="bg-red-500/20 backdrop-blur-md border border-red-500/30 px-2 h-[25px] flex items-center justify-center rounded shadow-sm gap-1">
                                     <span className="w-1.5 h-1.5 rounded-full bg-red-400 animate-pulse"></span>
                                     <span className="text-[10px] font-black tracking-widest text-red-400 capitalize">{cam.stats.violations} Alert{cam.stats.violations > 1 ? 's' : ''}</span>
                                  </div>
@@ -193,11 +191,11 @@ export const DeployLiveFeedCamera = () => {
                           <div className="absolute bottom-3 left-3 right-3 flex justify-between items-end opacity-80 group-hover/video:opacity-100 transition-opacity">
                              <div className="flex flex-col gap-1">
                                <div className="flex items-center gap-2 text-[10px] font-medium text-gray-300">
-                                  <span className="bg-black/40 px-1.5 py-0.5 rounded backdrop-blur border border-white/5">{cam.ip}</span>
-                                  <span className="bg-black/40 px-1.5 py-0.5 rounded backdrop-blur border border-white/5">Detects: {cam.stats.detections}</span>
+                                  <span className="bg-black/40 px-1.5 h-[20px] flex items-center justify-center rounded backdrop-blur border border-white/5">{cam.ip}</span>
+                                  <span className="bg-black/40 px-1.5 h-[20px] flex items-center justify-center rounded backdrop-blur border border-white/5">Detects: {cam.stats.detections}</span>
                                </div>
                              </div>
-                             <div className="bg-black/50 backdrop-blur-md border border-white/5 px-2 py-1 rounded flex items-center shadow-sm">
+                             <div className="bg-black/50 backdrop-blur-md border border-white/5 px-2 h-[25px] flex items-center justify-center rounded shadow-sm">
                                <span className="text-[10px] font-black tracking-widest text-[#52C5F3]">{cam.fps} FPS</span>
                              </div>
                           </div>
@@ -212,14 +210,14 @@ export const DeployLiveFeedCamera = () => {
                    </div>
                    
                    {/* Bottom Info */}
-                   <div className="p-4 bg-white dark:bg-[#1e1e1e] flex flex-col justify-center shrink-0">
+                   <div className="px-4 h-[65px] bg-white dark:bg-[#1e1e1e] flex flex-col justify-center shrink-0">
                       <div className="flex items-center justify-between mb-1.5">
                          <div className="flex items-center gap-2">
                            <div className={cn(
                              "w-1.5 h-1.5 rounded-full shrink-0",
                              cam.status === 'online' ? "bg-green-500 shadow-[0_0_8px_rgba(34,197,94,0.4)]" : "bg-red-500 shadow-[0_0_8px_rgba(239,68,68,0.4)]"
                            )}></div>
-                           <h4 className="text-sm font-bold text-gray-900 dark:text-white tracking-tight leading-none group-hover:text-[#52C5F3] transition-colors truncate" title={cam.name}>{cam.name}</h4>
+                           <h4 className="text-xs font-bold text-gray-900 dark:text-white tracking-tight leading-none group-hover:text-[#52C5F3] transition-colors truncate" title={cam.name}>{cam.name}</h4>
                          </div>
                          <div className="flex items-center gap-1 shrink-0">
                             <button className="p-1 rounded-[6px] text-gray-400 hover:text-gray-900 dark:hover:text-white hover:bg-gray-100 dark:hover:bg-[#2a2a2a] transition-all">

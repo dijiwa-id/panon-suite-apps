@@ -1,5 +1,5 @@
 import React, { useState, useCallback, useRef } from 'react';
-import { Play, Save, Settings, Video, BrainCircuit, Server, Search, MousePointer2, Plus, X } from 'lucide-react';
+import { Play, Save, Settings, Video, BrainCircuit, Server, Search, X } from 'lucide-react';
 import { cn } from '../lib/utils';
 import { useTheme } from '../context/ThemeContext';
 import {

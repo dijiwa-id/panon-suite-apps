@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import { useTheme } from '../context/ThemeContext';
-import { Link, useLocation } from 'react-router-dom';
 import { cn } from '../lib/utils';
 import { FileText, Download, Calendar } from 'lucide-react';
 import { 
@@ -42,7 +41,6 @@ const AREA_DATA = [
 ];
 
 export const DeployReport = () => {
-  const location = useLocation();
   const [activeTab, setActiveTab] = useState('Today');
   const { theme } = useTheme();
   const isDark = theme === 'dark';
