@@ -110,7 +110,7 @@ export const ApplicationTab = ({ searchQuery, viewMode }: { searchQuery: string,
                       <span className="text-[11px] font-bold">{app.cameras}</span>
                     </div>
                     <div className="flex flex-col">
-                      <span className="text-[10px] text-gray-500 font-medium">Uptime: {app.uptime}</span>
+                      <span className="text-xs text-gray-500 font-medium">Uptime: {app.uptime}</span>
                     </div>
                   </div>
                 </td>

@@ -14,7 +14,7 @@ export const UserSettings = () => {
         {/* Page Header */}
         <div className="flex flex-col md:flex-row md:items-end justify-between gap-4">
           <div className="flex-1">
-            <h2 className="text-xl font-black text-gray-900 dark:text-white mb-6 tracking-tight">Settings</h2>
+            <h2 className="text-base font-bold tracking-tight text-gray-900 dark:text-white mb-6">Settings</h2>
 
           </div>
           

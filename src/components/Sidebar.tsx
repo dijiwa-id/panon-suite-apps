@@ -178,9 +178,16 @@ export const Sidebar = ({
             isCollapsed ? "justify-center" : "justify-start"
           )}
         >
-          <Logo className={cn("h-8", isCollapsed ? "w-8" : "w-8")} />
+          <Logo className={cn("h-8 shrink-0", isCollapsed ? "w-8" : "w-8")} />
           {!isCollapsed && (
-            <span className="text-lg tracking-tight text-gray-900 dark:text-white"><span className="font-bold">panon</span><span className="font-normal">suite</span></span>
+            <div className="flex items-center gap-2 overflow-hidden">
+              <span className="text-lg tracking-tight text-gray-900 dark:text-white shrink-0">
+                <span className="font-bold">panon</span><span className="font-normal">suite</span>
+              </span>
+              <span className="text-[8px] font-mono font-bold tracking-widest text-gray-500 dark:text-gray-400 bg-gray-100 dark:bg-[#222] px-1.5 py-[2px] rounded uppercase leading-none border border-gray-200 dark:border-[#333] shrink-0 transform translate-y-[2px]">
+                v1.2.0
+              </span>
+            </div>
           )}
         </Link>
       </div>

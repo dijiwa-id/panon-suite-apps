@@ -127,7 +127,8 @@ export const NoCodeEditor = () => {
 
   const renderNodeConfig = () => {
     if (!selectedNode) return null;
-    const { type, data } = selectedNode;
+    const { type } = selectedNode;
+    const data = selectedNode.data as Record<string, any>;
 
     return (
       <>
@@ -381,7 +382,7 @@ export const NoCodeEditor = () => {
                    </div>
                    <div>
                      <h3 className="text-sm font-bold text-gray-900 dark:text-white leading-none mb-1">Configuration</h3>
-                     <p className="text-[9px] text-gray-500 font-mono uppercase tracking-widest font-black leading-none">{selectedNode.type.replace('Node', '')}</p>
+                     <p className="text-[9px] text-gray-500 font-mono uppercase tracking-widest font-black leading-none">{selectedNode.type?.replace('Node', '')}</p>
                    </div>
                </div>
                <button onClick={() => setSelectedNodeId(null)} className="p-1.5 rounded-[8px] text-gray-400 hover:text-gray-900 hover:bg-white border border-transparent hover:border-gray-200 hover:shadow-sm dark:hover:text-white dark:hover:bg-[#252525] dark:hover:border-[#333] transition-all">

@@ -91,9 +91,9 @@ export const DeployDashboard = () => {
     <main className="flex-1 overflow-y-auto bg-transparent p-6 lg:p-8 text-gray-800 dark:text-gray-200 transition-colors custom-scrollbar">
       <div className="max-w-[1600px] mx-auto">
         {/* Page Header */}
-        <header className="mb-8">
-          <h1 className="text-xl font-black tracking-tight text-gray-900 dark:text-white mb-2">Deployment Dashboard</h1>
-          <p className="text-gray-500 dark:text-gray-400 text-sm font-medium">Real-time infrastructure performance and safety compliance metrics.</p>
+        <header className="mb-4">
+          <h1 className="text-sm font-bold tracking-tight text-gray-900 dark:text-white mb-1">Deployment Dashboard</h1>
+          <p className="text-gray-600 dark:text-gray-400 text-xs font-medium">Real-time infrastructure performance and safety compliance metrics.</p>
         </header>
 
         <div className="grid grid-cols-1 xl:grid-cols-4 gap-4 max-w-full">

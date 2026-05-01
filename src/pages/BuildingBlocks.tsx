@@ -76,8 +76,8 @@ export const BuildingBlocks = () => {
     <main className="flex-1 overflow-y-auto bg-transparent p-6 lg:p-8 text-gray-800 dark:text-gray-200 transition-colors custom-scrollbar">
       <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-8 gap-4">
         <div>
-          <h1 className="text-xl font-black tracking-tight text-gray-900 dark:text-white mb-1">Building Blocks</h1>
-          <p className="text-gray-500 text-xs font-bold capitalize tracking-widest">Modular components for the vision AI pipeline</p>
+          <h1 className="text-sm font-bold tracking-tight text-gray-900 dark:text-white mb-1">Building Blocks</h1>
+          <p className="text-gray-600 dark:text-gray-400 text-xs font-medium">Modular components for the vision AI pipeline</p>
         </div>
         <div className="flex gap-3 w-full md:w-auto">
           <button 
