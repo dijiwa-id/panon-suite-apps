@@ -1,16 +1,16 @@
 
 import React, { useState } from 'react';
-import { Search, Plus, Check, X, Camera, MapPin, Hash, Link as LinkIcon, Settings, Activity, ChevronDown } from 'lucide-react';
+import { Search, Plus, Check, X, Camera, MapPin, Hash, Link as LinkIcon, Settings, Activity, ChevronDown, Pencil, Trash2 } from 'lucide-react';
 import { cn } from '../lib/utils';
 
-const cameras = [
+const initialCameras = [
   { id: 'CAM-001', name: 'Camera 001 / Main Gate', location: 'Perempatan Jalan', coordinate: '-6.9391256, 107.6284992', url: 'rtsp://admin:QRT.../av_stream', resolution: '1080p', fps: 15, onvif: true, active: false },
   { id: 'CAM-002', name: 'Camera 002 / Lobby', location: 'Depan Gedung A', coordinate: '-6.9391256, 107.6284992', url: 'rtsp://admin:QRT.../av_stream', resolution: '1080p', fps: 30, onvif: false, active: true },
   { id: 'CAM-003', name: 'Camera 003 / Parking', location: 'Samping Pasar', coordinate: '-6.9391256, 107.6284992', url: 'rtsp://admin:QRT.../av_stream', resolution: '720p', fps: 15, onvif: true, active: true },
   { id: 'CAM-004', name: 'Camera 004 / Perimeter', location: 'Belakang Ruko', coordinate: '-6.9391256, 107.6284992', url: 'rtsp://admin:QRT.../av_stream', resolution: '4K', fps: 60, onvif: false, active: true },
 ];
 
-const AddCameraModal = ({ isOpen, onClose }: { isOpen: boolean; onClose: () => void }) => {
+const CameraModal = ({ isOpen, onClose, onSave, editingCamera }: { isOpen: boolean; onClose: () => void; onSave: (camera: any) => void; editingCamera?: any }) => {
   const [formData, setFormData] = useState({
     url: '',
     id: '',
@@ -22,6 +22,26 @@ const AddCameraModal = ({ isOpen, onClose }: { isOpen: boolean; onClose: () => v
     onvif: false
   });
   const [errors, setErrors] = useState<{url?: string, id?: string, name?: string, location?: string}>({});
+
+  React.useEffect(() => {
+    if (editingCamera) {
+      setFormData({
+        url: editingCamera.url || '',
+        id: editingCamera.id || '',
+        name: editingCamera.name || '',
+        location: editingCamera.location || '',
+        coordinates: editingCamera.coordinate || '',
+        fps: editingCamera.fps ? `${editingCamera.fps} FPS` : '30 FPS',
+        resolution: editingCamera.resolution || '1080p',
+        onvif: editingCamera.onvif || false
+      });
+    } else {
+      setFormData({
+        url: '', id: '', name: '', location: '', coordinates: '', fps: '30 FPS', resolution: '1080p', onvif: false
+      });
+    }
+    setErrors({});
+  }, [editingCamera, isOpen]);
 
   const validate = () => {
     let isValid = true;
@@ -38,7 +58,11 @@ const AddCameraModal = ({ isOpen, onClose }: { isOpen: boolean; onClose: () => v
 
   const handleCreate = () => {
     if (validate()) {
-      console.log('Registering camera:', formData);
+      onSave({
+        ...formData,
+        coordinate: formData.coordinates,
+        fps: parseInt(formData.fps),
+      });
       onClose();
     }
   };
@@ -53,7 +77,7 @@ const AddCameraModal = ({ isOpen, onClose }: { isOpen: boolean; onClose: () => v
             <div>
                 <h2 className="text-sm font-black text-gray-900 dark:text-white flex items-center gap-2">
                     <Camera className="text-accent" size={16} />
-                    Register New Camera
+                    {editingCamera ? 'Edit Camera' : 'Register New Camera'}
                 </h2>
                 <p className="text-gray-600 dark:text-gray-400 text-[10px] font-bold mt-1">Configure connection and stream parameters.</p>
             </div>
@@ -204,7 +228,7 @@ const AddCameraModal = ({ isOpen, onClose }: { isOpen: boolean; onClose: () => v
             Cancel
           </button>
           <button onClick={handleCreate} className="bg-accent hover:bg-accent/90 text-black h-[32px] rounded-full text-xs font-bold px-8 transition-colors shadow-[0_0_15px_rgba(82,197,243,0.3)]">
-            Register Camera
+            {editingCamera ? 'Update Camera' : 'Register Camera'}
           </button>
         </div>
       </div>
@@ -214,6 +238,30 @@ const AddCameraModal = ({ isOpen, onClose }: { isOpen: boolean; onClose: () => v
 
 export const CameraManagement = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [cameraList, setCameraList] = useState(initialCameras);
+  const [editingCamera, setEditingCamera] = useState<any>(null);
+
+  const handleCreateOrUpdate = (cam: any) => {
+    if (editingCamera) {
+      setCameraList(prev => prev.map(c => c.id === cam.id ? { ...c, ...cam } : c));
+    } else {
+      setCameraList(prev => [{ ...cam, active: true }, ...prev]);
+    }
+  };
+
+  const handleDelete = (id: string) => {
+    setCameraList(prev => prev.filter(c => c.id !== id));
+  };
+
+  const openNewModal = () => {
+    setEditingCamera(null);
+    setIsModalOpen(true);
+  };
+
+  const openEditModal = (cam: any) => {
+    setEditingCamera(cam);
+    setIsModalOpen(true);
+  };
 
   return (
     <main className="flex-1 overflow-y-auto bg-transparent p-6 lg:p-8 text-gray-800 dark:text-gray-200 transition-colors custom-scrollbar">
@@ -224,7 +272,7 @@ export const CameraManagement = () => {
         </div>
         <div className="flex gap-3 w-full md:w-auto">
           <button 
-            onClick={() => setIsModalOpen(true)}
+            onClick={openNewModal}
             className="flex-1 md:flex-none flex justify-center items-center gap-2 bg-accent hover:bg-accent/90 text-black h-8 rounded-full text-xs font-bold px-5 transition-colors shadow-[0_0_15px_rgba(82,197,243,0.3)] leading-[12px]"
           >
             <Plus size={14} /> New Camera
@@ -232,7 +280,12 @@ export const CameraManagement = () => {
         </div>
       </div>
 
-      <AddCameraModal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} />
+      <CameraModal 
+        isOpen={isModalOpen} 
+        onClose={() => setIsModalOpen(false)} 
+        onSave={handleCreateOrUpdate}
+        editingCamera={editingCamera}
+      />
 
       <div className="bg-white dark:bg-[#1e1e1e] rounded-[11px] border border-gray-200 dark:border-[#222] overflow-hidden shadow-sm">
         <div className="p-5 border-b border-gray-200 dark:border-[#222] flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 bg-gray-50/50 dark:bg-[#1a1a1a]">
@@ -255,10 +308,11 @@ export const CameraManagement = () => {
                 <th className="px-5 py-4 whitespace-nowrap">Location & Coordinates</th>
                 <th className="px-5 py-4 whitespace-nowrap">Stream Info</th>
                 <th className="px-5 py-4 whitespace-nowrap">Features</th>
+                <th className="px-5 py-4 whitespace-nowrap text-right">Actions</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-gray-200 dark:divide-[#222]">
-              {cameras.map((cam) => (
+              {cameraList.map((cam) => (
                 <tr key={cam.id} className="hover:bg-white/5 hover:bg-gray-50 transition-colors group">
                   <td className="px-5 py-4">
                     <div className={cn("inline-flex items-center gap-1.5 px-2 py-1 rounded-md border text-[10px] font-bold", cam.active ? "bg-green-500/10 border-green-500/20 text-green-400" : "bg-red-500/10 border-red-500/20 text-red-400")}>
@@ -286,6 +340,22 @@ export const CameraManagement = () => {
                   <td className="px-5 py-4">
                     <div className="flex items-center gap-2">
                         {cam.onvif && <span className="bg-accent/10 text-accent border border-accent/20 px-1.5 py-0.5 rounded text-[10px] font-bold">ONVIF</span>}
+                    </div>
+                  </td>
+                  <td className="px-5 py-4 text-right">
+                    <div className="flex items-center justify-end gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
+                      <button 
+                        className="bg-[#1c1c1c] border border-gray-700 h-8 text-white rounded-full text-xs font-bold tracking-wide px-4 leading-[12px] hover:bg-[#2a2a2a] transition-colors flex items-center justify-center shadow-sm text-gray-300"
+                        onClick={() => openEditModal(cam)}
+                      >
+                        <Pencil size={12} />
+                      </button>
+                      <button 
+                        className="bg-red-500/10 border border-red-500/20 h-8 text-red-500 rounded-full text-xs font-bold tracking-wide px-4 leading-[12px] hover:bg-red-500/20 transition-colors flex items-center justify-center shadow-sm"
+                        onClick={() => handleDelete(cam.id)}
+                      >
+                        <Trash2 size={12} />
+                      </button>
                     </div>
                   </td>
                 </tr>

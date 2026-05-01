@@ -97,7 +97,7 @@ export const DeployLiveFeedCamera = () => {
         <div className="flex flex-col gap-6">
            
            {/* Toolbar */}
-           <div className="flex flex-col sm:flex-row items-center justify-between gap-4 bg-white dark:bg-[#1e1e1e] border border-gray-200 dark:border-[#222] px-4 h-[55px] rounded-[11px] shadow-sm shrink-0">
+           <div className="flex flex-col sm:flex-row items-center justify-between gap-4 bg-white dark:bg-[#1e1e1e] border border-gray-200 dark:border-[#222] p-[10px] h-[60px] rounded-[11px] shadow-sm shrink-0">
              <div className="flex items-center gap-3 w-full sm:w-auto h-full">
                <div className="bg-gray-50 dark:bg-[#161616] px-3.5 py-1.5 rounded-[11px] border border-gray-200 dark:border-[#222] flex items-center gap-2 w-full sm:w-64 focus-within:border-[#52C5F3]/50 focus-within:ring-1 focus-within:ring-[#52C5F3]/50 transition-all">
                   <Search size={14} className="text-gray-500" />

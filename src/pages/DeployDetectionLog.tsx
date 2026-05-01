@@ -39,7 +39,7 @@ export const DeployDetectionLog = () => {
         <div className="flex flex-col gap-6">
            
            {/* Filters Bar */}
-           <div className="bg-white dark:bg-[#1e1e1e] border border-gray-200 dark:border-[#222] rounded-[11px] h-[55px] px-4 shadow-sm flex flex-col lg:flex-row lg:items-center justify-between gap-4">
+           <div className="bg-white dark:bg-[#1e1e1e] border border-gray-200 dark:border-[#222] rounded-[11px] h-[60px] p-[10px] shadow-sm flex flex-col lg:flex-row lg:items-center justify-between gap-4">
               <div className="flex flex-wrap items-center gap-4">
                  <div className="flex items-center gap-2 pr-4 border-r border-gray-200 dark:border-[#222]">
                    <Filter size={14} className="text-gray-400" />

@@ -85,13 +85,14 @@ export const DeployReport = () => {
            {/* Top Controls */}
            <div className="flex flex-wrap items-center justify-between gap-4 card-glass bg-white dark:bg-[#1e1e1e] p-3 rounded-[11px] border border-gray-100 dark:border-[#222] shadow-sm">
              <div className="flex items-center gap-4">
-               <div className="flex bg-gray-100 dark:bg-[#252525] p-1 rounded-lg">
-                 {['TODAY', 'Daily', 'Weekly', 'Monthly'].map(tab => (
+               <div className="flex items-center bg-gray-100 dark:bg-[#252525] p-1 rounded-lg h-[30px]">
+                 {['TODAY', 'Daily', 'Weekly', 'Monthly'].map((tab, idx) => (
                    <button
                      key={tab}
                      onClick={() => setActiveTab(tab)}
                      className={cn(
-                       "px-4 py-1.5 text-xs font-bold rounded-md transition-colors",
+                       "px-4 h-full flex items-center text-xs font-bold rounded-md transition-colors",
+                       idx === 3 ? "pl-[16px]" : "",
                        activeTab === tab 
                         ? "bg-[#52C5F3]/10 text-[#52C5F3] shadow-sm" 
                         : "text-gray-500 hover:text-gray-900 dark:hover:text-white"
@@ -101,13 +102,13 @@ export const DeployReport = () => {
                    </button>
                  ))}
                </div>
-                              <div className="flex items-center gap-2">
-                 <div className="flex items-center bg-white dark:bg-[#161616] border border-gray-200 dark:border-[#222] rounded-lg px-3 py-1.5 focus-within:ring-1 focus-within:ring-[#52C5F3] transition-all">
+               <div className="flex items-center gap-2">
+                 <div className="flex items-center bg-white dark:bg-[#161616] border border-gray-200 dark:border-[#222] rounded-lg px-3 h-[30px] focus-within:ring-1 focus-within:ring-[#52C5F3] transition-all">
                    <input type="text" className="w-20 bg-transparent text-xs text-gray-900 dark:text-gray-300 outline-none" defaultValue="01/07/2026" />
                    <Calendar size={14} className="ml-2 text-gray-400" />
                  </div>
                  <span className="text-gray-400">—</span>
-                 <div className="flex items-center bg-white dark:bg-[#161616] border border-gray-200 dark:border-[#222] rounded-lg px-3 py-1.5 focus-within:ring-1 focus-within:ring-[#52C5F3] transition-all">
+                 <div className="flex items-center bg-white dark:bg-[#161616] border border-gray-200 dark:border-[#222] rounded-lg px-3 h-[30px] focus-within:ring-1 focus-within:ring-[#52C5F3] transition-all">
                    <input type="text" className="w-20 bg-transparent text-xs text-gray-900 dark:text-gray-300 outline-none" defaultValue="23/07/2026" />
                    <Calendar size={14} className="ml-2 text-gray-400" />
                  </div>
