@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { cn } from '../lib/utils';
-import { Camera, Search, Plus, Maximize2, MoreVertical, LayoutGrid, LayoutList, Signal, SignalHigh, SignalMedium, X, Link as LinkIcon, Server, MapPin, Settings, Power } from 'lucide-react';
+import { Camera, Search, Plus, Maximize2, MoreVertical, LayoutGrid, LayoutList, Signal, SignalHigh, SignalMedium, X, Link as LinkIcon, Server, MapPin, Settings, Power, ArrowUpDown } from 'lucide-react';
 import { toast } from 'sonner';
 import { Button, Input, Card, Badge, Table, TableHeader, TableRow, TableHead, TableBody, TableCell } from '../components/ui';
 
@@ -90,6 +90,15 @@ export const DeployLiveFeedCamera = () => {
   
   const [maximizedCamera, setMaximizedCamera] = useState<any>(null);
   const [selectedCameraForSettings, setSelectedCameraForSettings] = useState<any>(null);
+  const [sortConfig, setSortConfig] = useState<{ key: string, direction: 'asc' | 'desc' } | null>(null);
+
+  const handleSort = (key: string) => {
+    let direction: 'asc' | 'desc' = 'asc';
+    if (sortConfig && sortConfig.key === key && sortConfig.direction === 'asc') {
+      direction = 'desc';
+    }
+    setSortConfig({ key, direction });
+  };
 
   const handleAddCamera = (e: React.FormEvent) => {
     e.preventDefault();
@@ -149,6 +158,14 @@ export const DeployLiveFeedCamera = () => {
      const matchesZone = activeZone === 'All' || cam.zone === activeZone;
      const matchesSearch = cam.name.toLowerCase().includes(searchQuery.toLowerCase()) || cam.ip.includes(searchQuery);
      return matchesZone && matchesSearch;
+  }).sort((a, b) => {
+     if (!sortConfig) return 0;
+     const { key, direction } = sortConfig;
+     const multiplier = direction === 'asc' ? 1 : -1;
+     
+     if (a[key as keyof typeof a] < b[key as keyof typeof b]) return -1 * multiplier;
+     if (a[key as keyof typeof a] > b[key as keyof typeof b]) return 1 * multiplier;
+     return 0;
   });
 
   return (
@@ -234,7 +251,7 @@ export const DeployLiveFeedCamera = () => {
                    <div className="relative aspect-video bg-[#111] overflow-hidden group/video border-b border-[#222]/50">
                       {cam.status === 'online' ? (
                         <>
-                          <img src={cam.image} alt={cam.name} className="w-full h-full object-cover opacity-80 group-hover/video:opacity-100 group-hover/video:scale-[1.02] transition-all duration-700" />
+                          <img src={cam.image} alt={cam.name} className="w-full h-full object-cover opacity-80 group-hover/video:opacity-100 group-hover/video:scale-[1.02] transition-all duration-700 cursor-pointer" onClick={() => setMaximizedCamera(cam)} />
                           <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-black/30 pointer-events-none"></div>
                           
                           {/* Top Badges */}
@@ -275,7 +292,10 @@ export const DeployLiveFeedCamera = () => {
                         <div className="w-full h-full flex flex-col items-center justify-center bg-[#111] relative">
                            <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(255,255,255,0.03)_0%,transparent_100%)] pointer-events-none"></div>
                            <Camera size={28} className="text-[#333] mb-3" />
-                           <span className="text-[10px] font-black tracking-widest text-gray-500 capitalize bg-[#1a1a1a] px-3 py-1.5 rounded-[11px] border border-[#222]">Connection Lost</span>
+                           <span className="text-[10px] font-black tracking-widest text-gray-500 capitalize bg-[#1a1a1a] px-3 py-1.5 rounded-[11px] border border-[#222] mb-3">Connection Lost</span>
+                           <Button variant="outline" className="h-7 px-3 text-[10px] rounded-[6px] border-[#52C5F3]/30 text-[#52C5F3] hover:bg-[#52C5F3]/10" onClick={(e) => { e.stopPropagation(); toggleCameraStatus(cam.id); }}>
+                             Reconnect
+                           </Button>
                         </div>
                       )}
                    </div>
@@ -323,11 +343,21 @@ export const DeployLiveFeedCamera = () => {
                  <Table>
                    <TableHeader>
                      <TableRow>
-                       <TableHead>Camera Name</TableHead>
-                       <TableHead>Node</TableHead>
-                       <TableHead>Zone</TableHead>
-                       <TableHead>Status</TableHead>
-                       <TableHead>FPS</TableHead>
+                       <TableHead className="cursor-pointer hover:text-gray-900 dark:hover:text-white select-none group" onClick={() => handleSort('name')}>
+                         <div className="flex items-center gap-1">Camera Name <ArrowUpDown size={12} className={cn("transition-opacity", sortConfig?.key === 'name' ? "opacity-100 text-[#52C5F3]" : "opacity-0 group-hover:opacity-100 text-gray-400")} /></div>
+                       </TableHead>
+                       <TableHead className="cursor-pointer hover:text-gray-900 dark:hover:text-white select-none group" onClick={() => handleSort('node')}>
+                         <div className="flex items-center gap-1">Node <ArrowUpDown size={12} className={cn("transition-opacity", sortConfig?.key === 'node' ? "opacity-100 text-[#52C5F3]" : "opacity-0 group-hover:opacity-100 text-gray-400")} /></div>
+                       </TableHead>
+                       <TableHead className="cursor-pointer hover:text-gray-900 dark:hover:text-white select-none group" onClick={() => handleSort('zone')}>
+                         <div className="flex items-center gap-1">Zone <ArrowUpDown size={12} className={cn("transition-opacity", sortConfig?.key === 'zone' ? "opacity-100 text-[#52C5F3]" : "opacity-0 group-hover:opacity-100 text-gray-400")} /></div>
+                       </TableHead>
+                       <TableHead className="cursor-pointer hover:text-gray-900 dark:hover:text-white select-none group" onClick={() => handleSort('status')}>
+                         <div className="flex items-center gap-1">Status <ArrowUpDown size={12} className={cn("transition-opacity", sortConfig?.key === 'status' ? "opacity-100 text-[#52C5F3]" : "opacity-0 group-hover:opacity-100 text-gray-400")} /></div>
+                       </TableHead>
+                       <TableHead className="cursor-pointer hover:text-gray-900 dark:hover:text-white select-none group" onClick={() => handleSort('fps')}>
+                         <div className="flex items-center gap-1">FPS <ArrowUpDown size={12} className={cn("transition-opacity", sortConfig?.key === 'fps' ? "opacity-100 text-[#52C5F3]" : "opacity-0 group-hover:opacity-100 text-gray-400")} /></div>
+                       </TableHead>
                        <TableHead className="text-right">Actions</TableHead>
                      </TableRow>
                    </TableHeader>
@@ -335,7 +365,7 @@ export const DeployLiveFeedCamera = () => {
                      {filteredCameras.map((cam) => (
                        <TableRow key={cam.id}>
                          <TableCell>
-                           <div className="flex items-center gap-3">
+                           <div className="flex items-center gap-3 cursor-pointer group" onClick={() => setMaximizedCamera(cam)}>
                              <div className={cn(
                                "w-1.5 h-1.5 rounded-full",
                                cam.status === 'online' ? "bg-green-500 shadow-[0_0_8px_rgba(34,197,94,0.4)]" : "bg-red-500 shadow-[0_0_8px_rgba(239,68,68,0.4)]"
