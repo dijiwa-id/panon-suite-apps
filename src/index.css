@@ -20,18 +20,18 @@
     @apply bg-[#e9e7e7] dark:bg-[#161616];
   }
 
-  /* Refined scrollbar for better visibility */
+  /* Refined scrollbar for better visibility and professional look */
   .custom-scrollbar::-webkit-scrollbar {
-    width: 5px;
-    height: 5px;
+    width: 6px;
+    height: 6px;
   }
 
   .custom-scrollbar::-webkit-scrollbar-track {
-    @apply bg-transparent rounded-full;
+    @apply bg-transparent;
   }
 
   .custom-scrollbar::-webkit-scrollbar-thumb {
-    @apply bg-gray-300 dark:bg-[#333] rounded-full hover:bg-gray-400 dark:hover:bg-[#555];
+    @apply bg-black/15 dark:bg-white/10 rounded-full hover:bg-black/25 dark:hover:bg-white/20 transition-colors;
   }
 }
 
