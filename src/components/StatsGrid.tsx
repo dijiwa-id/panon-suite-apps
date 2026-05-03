@@ -1,6 +1,7 @@
 import React from 'react';
 import { cn } from '../lib/utils';
 import { ArrowDownToLine } from 'lucide-react';
+import { Card } from './ui';
 
 export const StatsGrid = () => {
   const stats = [
@@ -18,7 +19,7 @@ export const StatsGrid = () => {
   ];
 
   return (
-    <div className="card-glass flex flex-col justify-between h-full p-0 shadow-sm border border-gray-200 dark:border-[#222] bg-white dark:bg-[#1e1e1e]">
+    <Card className="flex flex-col justify-between h-full p-0">
       {/* Top Stats */}
       <div className="p-5 pb-4">
         <div className="grid grid-cols-4 gap-4 divide-x divide-gray-200 dark:divide-[#222]/60">
@@ -66,6 +67,7 @@ export const StatsGrid = () => {
           </div>
         </div>
       </div>
-    </div>
+    </Card>
   );
 };
+

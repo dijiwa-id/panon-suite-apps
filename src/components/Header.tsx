@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Search, Bell, Monitor, LogOut, KeySquare, Sun, Moon, User } from 'lucide-react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useTheme } from '../context/ThemeContext';
+import { Input } from './ui';
 
 export const Header = () => {
   const { theme, toggleTheme } = useTheme();
@@ -16,16 +17,16 @@ export const Header = () => {
   return (
     <header className="h-[55px] flex items-center justify-end px-[30px] bg-white/80 dark:bg-[#161616]/80 backdrop-blur-md border-b border-gray-200/50 dark:border-[#2a2a2a]/50 transition-colors shrink-0 z-50">
       <div className="flex items-center gap-4">
-        <div className="bg-gray-100 dark:bg-[#151515] px-3 py-1.5 rounded-xl border border-gray-200 dark:border-[#222] flex items-center gap-2 w-64 focus-within:border-accent/50 focus-within:ring-1 focus-within:ring-accent/50 transition-all">
-          <Search size={14} className="text-gray-500 shrink-0" />
-          <input 
+        <div className="relative group w-64">
+          <Search size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-500 pointer-events-none" />
+          <Input 
             type="text" 
             placeholder="Search..." 
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            className="bg-transparent outline-none text-xs font-medium text-gray-800 dark:text-gray-200 w-full placeholder-gray-600"
+            className="pl-8 pr-8 rounded-xl bg-gray-100 border-gray-200 dark:bg-[#151515] dark:border-[#222]"
           />
-          <div className="text-gray-500 opacity-50 shrink-0 ml-auto">
+          <div className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 opacity-50 pointer-events-none">
             <KeySquare size={14} />
           </div>
         </div>
@@ -56,3 +57,5 @@ export const Header = () => {
     </header>
   );
 };
+
+

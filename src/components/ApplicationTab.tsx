@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { cn } from '../lib/utils';
 import { Activity, Video, Play, Pause, Settings, Box } from 'lucide-react';
+import { Card, Button, Badge, Table, TableHeader, TableBody, TableHead, TableRow, TableCell } from './ui';
 
 const initialApplications = [
   {
@@ -53,12 +54,12 @@ export const ApplicationTab = ({ searchQuery, viewMode }: { searchQuery: string,
     app.status.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
-  const getStatusColor = (status: string) => {
+  const getBadgeVariant = (status: string) => {
     switch(status) {
-      case 'Running': return 'text-green-500 bg-green-500/10 border-green-500/20';
-      case 'Warning': return 'text-yellow-500 bg-yellow-500/10 border-yellow-500/20';
-      case 'Stopped': return 'text-red-500 bg-red-500/10 border-red-500/20';
-      default: return 'text-gray-500 bg-gray-500/10 border-gray-500/20';
+      case 'Running': return 'success';
+      case 'Warning': return 'warning';
+      case 'Stopped': return 'danger';
+      default: return 'ghost';
     }
   };
 
@@ -77,33 +78,33 @@ export const ApplicationTab = ({ searchQuery, viewMode }: { searchQuery: string,
 
   if (viewMode === 'list') {
     return (
-      <div className="bg-white dark:bg-[#1e1e1e] border border-gray-200 dark:border-[#222] rounded-[11px] overflow-hidden shadow-sm">
-        <table className="w-full text-left border-collapse">
-          <thead>
-            <tr className="border-b border-gray-200 dark:border-[#222] bg-gray-50/50 dark:bg-[#1a1a1a]">
-              <th className="py-3 px-5 text-[10px] font-black tracking-widest capitalize text-gray-500">Application</th>
-              <th className="py-3 px-4 text-[10px] font-black tracking-widest capitalize text-gray-500">Status</th>
-              <th className="py-3 px-4 text-[10px] font-black tracking-widest capitalize text-gray-500">Metrics</th>
-              <th className="py-3 px-4 text-[10px] font-black tracking-widest capitalize text-gray-500">Active Models</th>
-              <th className="py-3 px-5 text-right text-[10px] font-black tracking-widest capitalize text-gray-500">Actions</th>
-            </tr>
-          </thead>
-          <tbody className="divide-y divide-gray-200 dark:divide-[#222]">
+      <Card className="rounded-[11px] overflow-hidden shadow-sm">
+        <Table>
+          <TableHeader>
+            <TableRow>
+              <TableHead>Application</TableHead>
+              <TableHead>Status</TableHead>
+              <TableHead>Metrics</TableHead>
+              <TableHead>Active Models</TableHead>
+              <TableHead className="text-right">Actions</TableHead>
+            </TableRow>
+          </TableHeader>
+          <TableBody>
             {filteredApps.map(app => (
-              <tr key={app.id} className="hover:bg-gray-50 dark:hover:bg-[#252525] transition-colors group">
-                <td className="py-4 px-5">
+              <TableRow key={app.id}>
+                <TableCell>
                   <div className="font-bold text-xs text-gray-900 dark:text-white mb-0.5">{app.name}</div>
                   <div className="text-[9px] text-gray-500 font-mono">ID: {app.id}</div>
-                </td>
-                <td className="py-4 px-4">
-                  <span className={cn("inline-flex items-center gap-1.5 px-2 py-0.5 rounded text-[10px] font-bold border", getStatusColor(app.status))}>
+                </TableCell>
+                <TableCell>
+                  <Badge variant={getBadgeVariant(app.status) as any} className="gap-1.5">
                     {app.status === 'Running' && <Activity size={10} />}
                     {app.status === 'Warning' && <Activity size={10} />}
                     {app.status === 'Stopped' && <div className="w-2 h-2 rounded-full bg-red-500" />}
                     {app.status}
-                  </span>
-                </td>
-                <td className="py-4 px-4">
+                  </Badge>
+                </TableCell>
+                <TableCell>
                   <div className="flex gap-4">
                     <div className="flex items-center gap-1.5 text-gray-600 dark:text-gray-400">
                       <Video size={12} />
@@ -113,8 +114,8 @@ export const ApplicationTab = ({ searchQuery, viewMode }: { searchQuery: string,
                       <span className="text-xs text-gray-500 font-medium">Uptime: {app.uptime}</span>
                     </div>
                   </div>
-                </td>
-                <td className="py-4 px-4">
+                </TableCell>
+                <TableCell>
                   <div className="flex flex-wrap gap-1.5 max-w-[200px]">
                     {app.models.slice(0, 2).map((m, i) => (
                       <span key={i} className="inline-flex items-center gap-1 px-1.5 py-0.5 rounded bg-gray-100 dark:bg-white/5 border border-gray-200 dark:border-white/10 text-[9px] font-bold text-gray-600 dark:text-gray-300">
@@ -127,39 +128,39 @@ export const ApplicationTab = ({ searchQuery, viewMode }: { searchQuery: string,
                       </span>
                     )}
                   </div>
-                </td>
-                <td className="py-4 px-5 text-right">
+                </TableCell>
+                <TableCell className="text-right">
                   <div className="flex items-center justify-end gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
-                    <button onClick={(e) => toggleStatus(app.id, e)} className="p-1.5 text-gray-600 dark:text-gray-400 hover:text-accent transition-colors bg-white dark:bg-[#151515] border border-gray-200 dark:border-[#222] rounded shadow-sm">
+                    <Button variant="outline" onClick={(e) => toggleStatus(app.id, e)} className="px-3">
                       {app.status === 'Running' ? <Pause size={12} /> : <Play size={12} />}
-                    </button>
-                    <button className="p-1.5 text-gray-600 dark:text-gray-400 hover:text-accent transition-colors bg-white dark:bg-[#151515] border border-gray-200 dark:border-[#222] rounded shadow-sm">
+                    </Button>
+                    <Button variant="outline" className="px-3">
                       <Settings size={12} />
-                    </button>
+                    </Button>
                   </div>
-                </td>
-              </tr>
+                </TableCell>
+              </TableRow>
             ))}
-          </tbody>
-        </table>
-      </div>
+          </TableBody>
+        </Table>
+      </Card>
     );
   }
 
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
       {filteredApps.map(app => (
-        <div key={app.id} className="bg-white dark:bg-[#1e1e1e] p-5 rounded-[11px] border border-gray-200 dark:border-[#222] shadow-sm flex flex-col group hover:border-gray-300 dark:hover:border-[#333] transition-all">
+        <Card key={app.id} className="p-5 flex flex-col group hover:border-gray-300 dark:hover:border-[#333] transition-all">
           <div className="flex justify-between items-start mb-4">
             <div className="w-10 h-10 rounded-lg bg-gray-100 dark:bg-[#151515] border border-gray-200 dark:border-[#222] flex items-center justify-center text-accent">
               <Activity size={20} />
             </div>
-            <span className={cn("inline-flex items-center gap-1.5 px-2 py-0.5 rounded text-[10px] font-bold border", getStatusColor(app.status))}>
+            <Badge variant={getBadgeVariant(app.status) as any} className="gap-1.5">
               {app.status === 'Running' && <Activity size={10} />}
               {app.status === 'Warning' && <Activity size={10} />}
               {app.status === 'Stopped' && <div className="w-2 h-2 rounded-full bg-red-500" />}
               {app.status}
-            </span>
+            </Badge>
           </div>
 
           <div className="mb-4 flex-1">
@@ -193,16 +194,17 @@ export const ApplicationTab = ({ searchQuery, viewMode }: { searchQuery: string,
           </div>
 
           <div className="flex gap-2 relative z-10">
-            <button onClick={(e) => toggleStatus(app.id, e)} className="flex-1 flex justify-center items-center gap-1.5 bg-gray-50 dark:bg-[#151515] hover:bg-gray-100 dark:hover:bg-[#1a1a1a] border border-gray-200 dark:border-[#222] text-gray-700 dark:text-gray-300 h-8 rounded-lg text-xs font-bold transition-colors">
+            <Button variant="outline" onClick={(e) => toggleStatus(app.id, e)} className="flex-1 gap-1.5">
               {app.status === 'Running' ? <Pause size={12} /> : <Play size={12} />}
               {app.status === 'Running' ? 'Stop' : 'Start'}
-            </button>
-            <button className="flex justify-center items-center gap-1.5 bg-gray-50 dark:bg-[#151515] hover:bg-gray-100 dark:hover:bg-[#1a1a1a] border border-gray-200 dark:border-[#222] text-gray-700 dark:text-gray-300 h-8 px-3 rounded-lg text-xs font-bold transition-colors">
+            </Button>
+            <Button variant="outline" className="px-3">
               <Settings size={12} />
-            </button>
+            </Button>
           </div>
-        </div>
+        </Card>
       ))}
     </div>
   );
 };
+

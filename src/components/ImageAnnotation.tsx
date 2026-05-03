@@ -1,9 +1,10 @@
 import React from 'react';
+import { Card } from './ui';
 
 export const ImageAnnotationDetail = () => {
   return (
-    <div className="card-glass p-0 col-span-3 h-full flex flex-col min-h-[300px] overflow-hidden relative shadow-sm border border-gray-200 dark:border-[#222] bg-white dark:bg-[#1e1e1e]">
-      <div className="p-4 bg-white/5 border-b border-[#222]/40 shrink-0 backdrop-blur-md absolute top-0 z-10 w-full flex justify-between items-center">
+    <Card className="p-0 col-span-3 h-full flex flex-col min-h-[300px] relative">
+      <div className="p-4 border-b border-gray-200/40 dark:border-[#222]/40 shrink-0 backdrop-blur-md absolute top-0 z-10 w-full flex justify-between items-center bg-white/50 dark:bg-black/20">
         <h3 className="text-sm font-bold text-gray-900 dark:text-white tracking-tight leading-none">Live Camera Feed</h3>
         <span className="bg-secondary/20 text-secondary border border-secondary/30 px-2 py-0.5 rounded text-[8px] font-bold animate-pulse">Live</span>
       </div>
@@ -17,9 +18,9 @@ export const ImageAnnotationDetail = () => {
             referrerPolicy="no-referrer"
          />
          
-         <div className="absolute inset-0 bg-gradient-to-t from-[#181818] via-transparent to-black/40 pointer-events-none"></div>
+         <div className="absolute inset-0 bg-gradient-to-t from-white/40 via-transparent to-black/40 dark:from-[#181818] pointer-events-none"></div>
 
-         <div className="absolute bottom-4 left-4 bg-black/60 backdrop-blur-md font-mono border border-white/10 px-3 py-1 rounded text-[10px] font-bold text-gray-700 dark:text-gray-300 tracking-wider">
+         <div className="absolute bottom-4 left-4 bg-white/60 dark:bg-black/60 backdrop-blur-md font-mono border border-gray-200/50 dark:border-white/10 px-3 py-1 rounded text-[10px] font-bold text-gray-700 dark:text-gray-300 tracking-wider">
            REC • 03:00:24
          </div>
 
@@ -61,12 +62,13 @@ export const ImageAnnotationDetail = () => {
          {/* Tooltip on overlay */}
          <div className="absolute bottom-4 right-4 bg-white dark:bg-[#1e1e1e]/90 backdrop-blur-md border border-gray-200 dark:border-[#2a2a2a] px-3 py-1.5 rounded-[11px] shadow-xl flex items-center gap-2 cursor-pointer hover:bg-gray-100 dark:hover:bg-[#252525] transition-colors pointer-events-auto">
             <div className="flex gap-0.5 opacity-60">
-               <div className="w-[3px] h-3 bg-white rounded-full"></div>
-               <div className="w-[3px] h-3 bg-white rounded-full"></div>
+               <div className="w-[3px] h-3 bg-gray-400 dark:bg-white rounded-full"></div>
+               <div className="w-[3px] h-3 bg-gray-400 dark:bg-white rounded-full"></div>
             </div>
             <span className="text-[9px] font-bold text-gray-900 dark:text-white">Disable</span>
          </div>
       </div>
-    </div>
+    </Card>
   );
 };
+

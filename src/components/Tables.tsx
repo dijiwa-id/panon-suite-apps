@@ -1,13 +1,14 @@
 import React, { useState } from 'react';
 import { cn } from '../lib/utils';
 import { Search, X, CheckCircle2, Layout, ArrowUpDown } from 'lucide-react';
+import { Card, Table, TableHeader, TableBody, TableHead, TableRow, TableCell } from './ui';
 
 interface TableCardProps {
   title: string;
   tabs?: string[];
   columns: string[];
   data: any[];
-  className?: string;
+  className?: string;  
 }
 
 export const TableCard = ({ title, tabs, columns, data, className }: TableCardProps) => {
@@ -43,7 +44,7 @@ export const TableCard = ({ title, tabs, columns, data, className }: TableCardPr
   });
 
   return (
-    <div className={cn("card-glass p-5 flex flex-col group/table shadow-sm border border-gray-200 dark:border-[#222] bg-white dark:bg-[#1e1e1e]", className)}>
+    <Card className={cn("p-5 flex flex-col group/table shadow-sm border border-gray-200 dark:border-[#222]", className)}>
       <div className="flex items-center justify-between mb-4 shrink-0">
         <h3 className="text-sm font-bold text-gray-900 dark:text-white tracking-tight leading-none">{title}</h3>
         {tabs && (
@@ -63,11 +64,11 @@ export const TableCard = ({ title, tabs, columns, data, className }: TableCardPr
       </div>
 
       <div className="flex-1 overflow-auto custom-scrollbar relative">
-        <table className="w-full text-left border-collapse">
-          <thead className="sticky top-0 bg-white/95 dark:bg-[#1e1e1e]/95 backdrop-blur-sm z-10">
-            <tr className="border-b border-gray-200 dark:border-[#222] bg-gray-50/50 dark:bg-transparent">
+        <Table>
+          <TableHeader className="bg-white/95 dark:bg-[#1e1e1e]/95 backdrop-blur-sm sticky top-0 z-10">
+            <TableRow className="bg-gray-50/50 dark:bg-transparent">
               {columns.map((col, i) => (
-                <th key={col} className="pb-2 text-[10px] font-black tracking-tight text-gray-600 dark:text-gray-400 dark:text-gray-600 pl-3 whitespace-nowrap select-none">
+                <TableHead key={col} className="pb-2 pl-3">
                   <div 
                     onClick={() => handleSort(col)}
                     className="flex items-center gap-1.5 group/header cursor-pointer hover:text-gray-900 dark:hover:text-gray-300 transition-colors w-fit"
@@ -75,44 +76,44 @@ export const TableCard = ({ title, tabs, columns, data, className }: TableCardPr
                     {col}
                     <ArrowUpDown size={10} className={cn("transition-opacity", sortCol === col ? "text-accent opacity-100" : "opacity-0 group-hover/header:opacity-50")} />
                   </div>
-                </th>
+                </TableHead>
               ))}
-              <th className="pb-2 w-8"></th>
-            </tr>
-          </thead>
-          <tbody className="divide-y divide-gray-200 dark:divide-[#222]">
+              <TableHead className="pb-2 w-8" />
+            </TableRow>
+          </TableHeader>
+          <TableBody>
             {sortedData.map((row, i) => (
-              <tr key={i} className={cn("group hover:bg-gray-50/50 dark:hover:bg-gray-100 dark:hover:bg-[#252525]/30 transition-colors cursor-pointer", row.active ? "bg-accent/5 dark:bg-accent/[0.03] relative" : "")}>
+              <TableRow key={i} className={cn("cursor-pointer", row.active ? "bg-accent/5 dark:bg-accent/[0.03] relative" : "")}>
                 {Object.values(row).map((val: any, j) => {
                   if (typeof val === 'string' || typeof val === 'number') {
                     if (row.active && j === 0) {
                        return (
-                         <td key={j} className="py-2.5 pl-3 text-xs font-medium text-gray-900 dark:text-white flex items-center gap-2 relative">
+                         <TableCell key={j} className="py-2.5 pl-3 text-xs font-medium text-gray-900 dark:text-white flex items-center gap-2 relative">
                             {row.active && <div className="absolute left-0 top-0 bottom-0 w-[2px] bg-accent"></div>}
                             {val}
-                         </td>
+                         </TableCell>
                        )
                     }
                     return (
-                      <td key={j} className={cn("py-2.5 pl-3 text-xs font-medium transition-colors", row.active ? "text-gray-800 dark:text-gray-300" : "text-gray-500 dark:text-[#888] group-hover:text-gray-700 dark:group-hover:text-gray-300")}>
+                      <TableCell key={j} className={cn("py-2.5 pl-3 text-xs font-medium transition-colors", row.active ? "text-gray-800 dark:text-gray-300" : "text-gray-500 dark:text-[#888] group-hover:text-gray-700 dark:group-hover:text-gray-300")}>
                         {row.active && j === 0 && <div className="absolute left-0 top-0 bottom-0 w-[2px] bg-accent"></div>}
                         {val}
-                      </td>
+                      </TableCell>
                     );
                   }
-                  return <td key={j} className="py-2.5 pl-3 text-[12px]">{val}</td>;
+                  return <TableCell key={j} className="py-2.5 pl-3 text-[12px]">{val}</TableCell>;
                 })}
-                <td className="py-2.5 text-right pr-3 shrink-0">
+                <TableCell className="py-2.5 text-right pr-3 shrink-0">
                    <button className="text-gray-600 dark:text-gray-400 hover:text-accent dark:hover:text-accent bg-gray-100 dark:bg-[#1a1a1a] hover:bg-accent/10 border border-transparent hover:border-accent/20 rounded-full p-1 opacity-0 group-hover:opacity-100 transition-all">
                      <X size={10} />
                    </button>
-                </td>
-              </tr>
+                </TableCell>
+              </TableRow>
             ))}
-          </tbody>
-        </table>
+          </TableBody>
+        </Table>
       </div>
-    </div>
+    </Card>
   );
 };
 
@@ -193,7 +194,7 @@ export const RequestList = () => {
   });
 
   return (
-    <div className="card-glass p-5 flex flex-col col-span-2 shadow-sm h-full border border-gray-200 dark:border-[#222] bg-white dark:bg-[#1e1e1e]">
+    <Card className="p-5 flex flex-col col-span-2 shadow-sm h-full border border-gray-200 dark:border-[#222]">
        <div className="flex items-center justify-between mb-4">
           <div className="flex items-center gap-2">
              <div className="w-5 h-5 flex items-center justify-center rounded bg-gray-100 dark:bg-white/5 border border-gray-200 dark:border-white/10">
@@ -220,40 +221,41 @@ export const RequestList = () => {
        </div>
 
        <div className="flex-1 overflow-auto custom-scrollbar relative">
-          <table className="w-full text-left border-collapse">
-            <thead className="sticky top-0 bg-white/95 dark:bg-[#1e1e1e]/95 backdrop-blur-sm z-10">
-              <tr className="border-b border-gray-200 dark:border-[#222] bg-gray-50/50 dark:bg-transparent">
-                 <th className="pb-2 text-[10px] font-black tracking-tight text-gray-600 dark:text-gray-400 dark:text-gray-600 pl-2 whitespace-nowrap">
+          <Table>
+            <TableHeader className="sticky top-0 bg-white/95 dark:bg-[#1e1e1e]/95 backdrop-blur-sm z-10">
+              <TableRow className="bg-gray-50/50 dark:bg-transparent">
+                 <TableHead className="pb-2">
                    <div onClick={() => handleSort('Source')} className="flex items-center gap-1.5 group/header cursor-pointer hover:text-gray-900 dark:hover:text-gray-300 transition-colors w-fit select-none">
                      Source
                      <ArrowUpDown size={10} className={cn("transition-opacity", sortCol === 'Source' ? "text-accent opacity-100" : "opacity-0 group-hover/header:opacity-50")} />
                    </div>
-                 </th>
-                 <th className="pb-2 text-[10px] font-black tracking-tight text-gray-600 dark:text-gray-400 dark:text-gray-600 whitespace-nowrap">
+                 </TableHead>
+                 <TableHead className="pb-2">
                    <div onClick={() => handleSort('Status')} className="flex items-center gap-1.5 group/header cursor-pointer hover:text-gray-900 dark:hover:text-gray-300 transition-colors w-fit select-none">
                      Status
                      <ArrowUpDown size={10} className={cn("transition-opacity", sortCol === 'Status' ? "text-accent opacity-100" : "opacity-0 group-hover/header:opacity-50")} />
                    </div>
-                 </th>
-                 <th className="pb-2 text-[10px] font-black tracking-tight text-gray-600 dark:text-gray-400 dark:text-gray-600 whitespace-nowrap">
+                 </TableHead>
+                 <TableHead className="pb-2">
                    <div onClick={() => handleSort('Timestamp')} className="flex items-center gap-1.5 group/header cursor-pointer hover:text-gray-900 dark:hover:text-gray-300 transition-colors w-fit select-none">
                      Timestamp
                      <ArrowUpDown size={10} className={cn("transition-opacity", sortCol === 'Timestamp' ? "text-accent opacity-100" : "opacity-0 group-hover/header:opacity-50")} />
                    </div>
-                 </th>
-              </tr>
-            </thead>
-            <tbody className="divide-y divide-gray-200 dark:divide-[#222]">
+                 </TableHead>
+              </TableRow>
+            </TableHeader>
+            <TableBody>
                {sortedData.map((row, i) => (
-                  <tr key={i} className="group hover:bg-gray-50/50 dark:hover:bg-[#252525]/50 transition-colors cursor-pointer">
-                     <td className="py-2.5 pl-2 text-xs font-bold text-gray-700 dark:text-gray-300 group-hover:text-gray-900 dark:group-hover:text-white transition-colors">{row.from}</td>
-                     <td className="py-2.5 font-medium text-[12px]">{row.time}</td>
-                     <td className="py-2.5 text-[10px] font-medium text-gray-500 dark:text-[#888] transition-colors uppercase tracking-widest font-black">{row.sum}</td>
-                  </tr>
+                  <TableRow key={i} className="cursor-pointer">
+                     <TableCell className="py-2.5 text-xs font-bold text-gray-700 dark:text-gray-300 group-hover:text-gray-900 dark:group-hover:text-white transition-colors">{row.from}</TableCell>
+                     <TableCell className="py-2.5 font-medium text-[12px]">{row.time}</TableCell>
+                     <TableCell className="py-2.5 text-[10px] font-medium text-gray-500 dark:text-[#888] transition-colors uppercase tracking-widest font-black">{row.sum}</TableCell>
+                  </TableRow>
                ))}
-            </tbody>
-         </table>
+            </TableBody>
+         </Table>
        </div>
-    </div>
+    </Card>
   )
 }
+

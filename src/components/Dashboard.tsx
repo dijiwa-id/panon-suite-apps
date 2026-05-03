@@ -6,6 +6,7 @@ import { ApplicationTab } from './ApplicationTab';
 import { ImageAnnotationDetail } from './ImageAnnotation';
 import { Search, Grid, List, MoreVertical, Activity, X, GripVertical, Plus } from 'lucide-react';
 import { cn } from '../lib/utils';
+import { Button, Input } from './ui';
 
 const initialLayout = [
   { id: '1', name: 'Accuracy Timeline', type: 'chart' },
@@ -123,21 +124,22 @@ export const Dashboard = () => {
 
         {/* Filter Bar */}
         <div className="flex items-center gap-2.5 mb-4">
-          <button 
+          <Button 
+             variant="outline"
              onClick={() => setActiveTab('application')}
-             className="bg-white dark:bg-[#1c1c1c] border border-gray-300 dark:border-gray-700 h-8 text-gray-900 dark:text-white rounded-full text-[11px] font-bold tracking-tight px-5 hover:bg-gray-200 dark:hover:bg-[#2a2a2a] transition-colors leading-[12px]"
+             className="bg-white dark:bg-[#1c1c1c] text-[11px] px-5"
           >
              Type All
-          </button>
-          <button className="bg-transparent border border-gray-300 dark:border-[#2a2a2a] h-8 text-gray-700 dark:text-gray-300 rounded-full text-[11px] font-bold tracking-tight px-4 hover:bg-gray-100 dark:hover:bg-[#1a1a1a] transition-colors leading-[12px]">+ Add Filter</button>
+          </Button>
+          <Button variant="outline" className="text-[11px] px-4">+ Add Filter</Button>
           <div className="relative group ml-1 h-8 w-48 hidden md:block">
             <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-500" size={10} />
-            <input 
+            <Input 
               type="text"
               placeholder="Search data..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="bg-transparent border border-gray-300 dark:border-[#2a2a2a] rounded-full h-full w-full pl-8 pr-3 text-[11px] font-medium text-gray-900 dark:text-white focus:outline-none focus:border-accent/50 dark:focus:border-[#3a3a3a] transition-colors placeholder:text-gray-500 tracking-tight"
+              className="pl-8 text-[11px] rounded-full h-full border-gray-300 dark:border-[#2a2a2a]"
             />
           </div>
         </div>
@@ -233,19 +235,20 @@ export const Dashboard = () => {
                       </select>
                     </div>
                     <div className="flex justify-end gap-2 mt-2">
-                       <button 
+                       <Button 
+                         variant="ghost"
                          onClick={() => setIsAddingCard(false)}
-                         className="px-4 py-1.5 text-xs font-bold text-gray-600 dark:text-gray-400 hover:bg-gray-200 dark:hover:bg-[#2a2a2a] rounded-lg transition-colors"
+                         className="px-4 py-1.5"
                        >
                          Cancel
-                       </button>
-                       <button 
+                       </Button>
+                       <Button 
                          onClick={handleAddCard}
                          disabled={!newCardName.trim()}
-                         className="px-4 py-1.5 text-xs font-bold bg-[#1c1c1c] dark:bg-white text-white dark:text-black rounded-lg transition-colors hover:shadow-md disabled:opacity-50 disabled:cursor-not-allowed"
+                         className="px-4 py-1.5"
                        >
                          Add Card
-                       </button>
+                       </Button>
                     </div>
                   </div>
                 </div>
@@ -289,18 +292,17 @@ export const Dashboard = () => {
             </div>
 
             <div className="p-4 border-t border-gray-100 dark:border-[#222] bg-gray-50/50 dark:bg-[#1a1a1a] flex justify-end gap-3">
-              <button 
+              <Button 
+                variant="ghost"
                 onClick={() => setIsCustomModalOpen(false)}
-                className="px-4 h-8 text-xs font-bold text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-[#252525] rounded-full transition-colors"
               >
                 Cancel
-              </button>
-              <button 
+              </Button>
+              <Button 
                 onClick={() => setIsCustomModalOpen(false)}
-                className="px-6 h-8 text-xs font-bold bg-[#1c1c1c] dark:bg-white text-white dark:text-black rounded-full transition-colors hover:shadow-md"
               >
                 Save Layout
-              </button>
+              </Button>
             </div>
           </div>
         </div>
