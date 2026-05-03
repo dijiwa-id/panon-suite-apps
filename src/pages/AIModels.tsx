@@ -1,6 +1,7 @@
 import React from 'react';
 import { Search, Box, Copy, Download, Info, CheckCircle2, AlertTriangle } from 'lucide-react';
 import { cn } from '../lib/utils';
+import { toast } from 'sonner';
 
 const models = [
   { id: 'MOD-2026-001', name: 'Security-Cam-YoloV8', version: 'v1.4.2', architecture: 'YOLOv8-m', map: 0.824, param: '25.9M', size: '52 MB', status: 'ready', tags: ['Object Detection', 'Security'] },
@@ -80,10 +81,10 @@ export const AIModels = () => {
                     </div>
                   </td>
                   <td className="px-5 py-4 flex justify-end gap-2">
-                      <button onClick={() => console.log('Viewing details for', model.id)} className="p-1.5 bg-gray-100 dark:bg-[#151515] border border-gray-200 dark:border-[#222] hover:bg-gray-200 dark:hover:bg-gray-200 dark:bg-[#2a2a2a] rounded-lg text-gray-600 dark:text-gray-400 transition-colors" title="View details">
+                      <button onClick={() => toast.info(`Viewing details for ${model.name}`)} className="p-1.5 bg-gray-100 dark:bg-[#151515] border border-gray-200 dark:border-[#222] hover:bg-gray-200 dark:hover:bg-gray-200 dark:bg-[#2a2a2a] rounded-lg text-gray-600 dark:text-gray-400 transition-colors" title="View details">
                           <Info size={14} />
                       </button>
-                      <button onClick={() => console.log('Exporting ONNX for', model.id)} className="p-1.5 bg-gray-100 dark:bg-[#151515] border border-gray-200 dark:border-[#222] hover:text-white hover:bg-gray-200 dark:hover:bg-gray-200 dark:bg-[#2a2a2a] rounded-lg text-gray-600 dark:text-gray-400 transition-colors" title="Export ONNX">
+                      <button onClick={() => toast.promise(new Promise(r => setTimeout(r, 1000)), { loading: `Exporting ONNX for ${model.name}...`, success: `Export completed for ${model.name}` })} className="p-1.5 bg-gray-100 dark:bg-[#151515] border border-gray-200 dark:border-[#222] hover:text-white hover:bg-gray-200 dark:hover:bg-gray-200 dark:bg-[#2a2a2a] rounded-lg text-gray-600 dark:text-gray-400 transition-colors" title="Export ONNX">
                           <Download size={14} />
                       </button>
                   </td>

@@ -3,6 +3,7 @@ import { Search, Bell, Monitor, LogOut, KeySquare, Sun, Moon, User } from 'lucid
 import { Link, useNavigate } from 'react-router-dom';
 import { useTheme } from '../context/ThemeContext';
 import { Input } from './ui';
+import { toast } from 'sonner';
 
 export const Header = () => {
   const { theme, toggleTheme } = useTheme();
@@ -12,6 +13,13 @@ export const Header = () => {
   const handleLogout = () => {
     // Basic logout logic
     navigate('/signin');
+  };
+
+  const handleSearch = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === 'Enter' && searchQuery) {
+      toast.info(`Searching for "${searchQuery}"...`);
+      setSearchQuery('');
+    }
   };
 
   return (
@@ -24,6 +32,7 @@ export const Header = () => {
             placeholder="Search..." 
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
+            onKeyDown={handleSearch}
             className="pl-8 pr-8 rounded-xl bg-gray-100 border-gray-200 dark:bg-[#151515] dark:border-[#222]"
           />
           <div className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 opacity-50 pointer-events-none">
@@ -35,10 +44,10 @@ export const Header = () => {
            <button onClick={toggleTheme} className="text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-200 transition-all relative">
              {theme === 'dark' ? <Sun size={18} /> : <Moon size={18} />}
            </button>
-           <button onClick={() => console.log('Bell clicked')} className="text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-200 transition-all relative">
+           <button onClick={() => toast.info('No new notifications')} className="text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-200 transition-all relative">
              <Bell size={18} />
            </button>
-           <button onClick={() => console.log('Monitor clicked')} className="text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-200 transition-all relative">
+           <button onClick={() => navigate('/system-monitoring')} className="text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-200 transition-all relative">
              <Monitor size={18} />
              <span className="absolute top-0 right-0 w-2 h-2 bg-accent rounded-full border border-white dark:border-[#18181b]"></span>
            </button>

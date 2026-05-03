@@ -2,6 +2,8 @@ import React, { useState, useRef, useEffect } from 'react';
 import { cn } from '../lib/utils';
 import { Play, Settings, Save, RefreshCw, Maximize, Video, Activity, Info, StopCircle, Eye, AlertTriangle, ChevronDown } from 'lucide-react';
 import { useParams } from 'react-router-dom';
+import { toast } from 'sonner';
+import { Card, Button, Input, Badge, Table, TableHeader, TableRow, TableHead, TableBody, TableCell } from '../components/ui';
 
 type DetectionLog = {
     id: number;
@@ -72,8 +74,7 @@ export const ChannelManagement = () => {
             capabilities,
             confidence
         };
-        console.log('Saved settings:', settings);
-        alert('Settings saved successfully!');
+        toast.success(`Settings saved for ${channelName}`);
     };
 
     const handleRestart = () => {
@@ -101,12 +102,12 @@ export const ChannelManagement = () => {
                     <p className="text-gray-600 dark:text-gray-400 text-xs font-medium">Manage pipeline, ROIs, and model settings for this video stream.</p>
                 </div>
                 <div className="flex items-center gap-3 w-full lg:w-auto">
-                    <button onClick={handleRestart} className="flex-1 lg:flex-none flex justify-center items-center gap-2 bg-white dark:bg-[#1c1c1c] border border-gray-300 dark:border-gray-700 h-[32px] text-gray-900 dark:text-white rounded-full text-xs font-bold px-5 hover:bg-gray-200 dark:hover:bg-[#2a2a2a] transition-colors leading-[12px]">
+                    <Button variant="outline" onClick={handleRestart} className="flex-1 lg:flex-none gap-2 h-8">
                         <RefreshCw size={14} className={cn(isPlaying ? "animate-spin" : "")} /> Restart Stream
-                    </button>
-                    <button onClick={handleSave} className="flex-1 lg:flex-none flex justify-center items-center gap-2 bg-accent hover:bg-accent/90 text-black h-[32px] rounded-full text-xs font-bold px-5 transition-colors shadow-[0_0_15px_rgba(82,197,243,0.3)] leading-[12px]">
+                    </Button>
+                    <Button variant="primary" onClick={handleSave} className="flex-1 lg:flex-none gap-2 h-8">
                         <Save size={14} /> Save Changes
-                    </button>
+                    </Button>
                 </div>
             </div>
 
@@ -115,7 +116,7 @@ export const ChannelManagement = () => {
                 {/* Left Column - Configuration */}
                 <div className="lg:col-span-4 space-y-5">
                     {/* Basic Settings */}
-                    <div className="bg-white dark:bg-[#1e1e1e] border border-gray-200 dark:border-[#222] rounded-[11px] shadow-sm overflow-hidden">
+                    <Card className="p-0 overflow-hidden">
                         <div className="flex items-center gap-2 p-4 border-b border-gray-200 dark:border-[#222] bg-gray-50/50 dark:bg-[#1a1a1a]">
                             <Settings size={16} className="text-gray-500" />
                             <h2 className="text-sm font-bold text-gray-900 dark:text-white">Stream Source</h2>
@@ -127,7 +128,7 @@ export const ChannelManagement = () => {
                                     <div className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 pointer-events-none">
                                         <ChevronDown size={14} />
                                     </div>
-                                    <select value={sourceCamera} onChange={handleSourceChange} className="w-full bg-gray-100 dark:bg-[#151515] border border-gray-200 dark:border-[#222] rounded-xl pl-4 pr-9 h-[37px] text-[12px] font-medium text-gray-800 dark:text-gray-200 outline-none focus:border-accent/50 focus:ring-1 focus:ring-accent/50 transition-all cursor-pointer appearance-none">
+                                    <select value={sourceCamera} onChange={handleSourceChange} className="w-full bg-gray-50 dark:bg-[#161616] border border-gray-200 dark:border-[#222] rounded-lg pl-4 pr-9 h-[37px] text-[12px] font-medium text-gray-800 dark:text-gray-200 outline-none focus-visible:ring-1 focus-visible:ring-accent/50 transition-all cursor-pointer appearance-none">
                                         <option>CAM-001 (Main Gate)</option>
                                         <option>CAM-002 (Lobby)</option>
                                         <option>Custom RTSP URL</option>
@@ -136,7 +137,7 @@ export const ChannelManagement = () => {
                             </div>
                             <div>
                                 <label className="block text-xs font-semibold text-gray-600 dark:text-gray-400 mb-2">Camera URL</label>
-                                <input disabled={sourceCamera !== 'Custom RTSP URL'} type="text" value={cameraUrl} onChange={(e) => setCameraUrl(e.target.value)} className="w-full bg-white dark:bg-[#1c1c1c] border border-gray-200 dark:border-[#222] rounded-xl px-4 py-2.5 text-[10px] text-gray-500 outline-none uppercase tracking-widest font-black" />
+                                <Input disabled={sourceCamera !== 'Custom RTSP URL'} type="text" value={cameraUrl} onChange={(e) => setCameraUrl(e.target.value)} className="uppercase tracking-widest font-black" />
                             </div>
                             <div className="flex items-center gap-3 pt-2">
                                 <span className={cn("flex w-2.5 h-2.5 rounded-full relative", isPlaying ? "bg-green-500" : "bg-red-500")}>
@@ -145,10 +146,10 @@ export const ChannelManagement = () => {
                                 <span className="text-xs font-semibold text-gray-700 dark:text-gray-300">Connection Status: {isPlaying ? 'Connected & Streaming' : 'Disconnected'}</span>
                             </div>
                         </div>
-                    </div>
+                    </Card>
 
                     {/* Analytics Settings */}
-                    <div className="bg-white dark:bg-[#1e1e1e] border border-gray-200 dark:border-[#222] rounded-[11px] shadow-sm overflow-hidden">
+                    <Card className="p-0 overflow-hidden">
                         <div className="flex items-center gap-2 p-4 border-b border-gray-200 dark:border-[#222] bg-gray-50/50 dark:bg-[#1a1a1a]">
                             <Activity size={16} className="text-gray-500" />
                             <h2 className="text-sm font-bold text-gray-900 dark:text-white">Analytics Engine</h2>
@@ -160,7 +161,7 @@ export const ChannelManagement = () => {
                                     <div className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 pointer-events-none">
                                         <ChevronDown size={14} />
                                     </div>
-                                    <select value={algoPackage} onChange={e => setAlgoPackage(e.target.value)} className="w-full bg-gray-100 dark:bg-[#151515] border border-gray-200 dark:border-[#222] rounded-xl pl-4 pr-9 h-[37px] text-[12px] font-medium text-gray-800 dark:text-gray-200 outline-none focus:border-accent/50 focus:ring-1 focus:ring-accent/50 transition-all cursor-pointer appearance-none">
+                                    <select value={algoPackage} onChange={e => setAlgoPackage(e.target.value)} className="w-full bg-gray-50 dark:bg-[#161616] border border-gray-200 dark:border-[#222] rounded-lg pl-4 pr-9 h-[37px] text-[12px] font-medium text-gray-800 dark:text-gray-200 outline-none focus-visible:ring-1 focus-visible:ring-accent/50 transition-all cursor-pointer appearance-none">
                                         <option>Security & Intrusion</option>
                                         <option>Workplace Safety (PPE)</option>
                                         <option>Traffic Monitoring</option>
@@ -215,22 +216,22 @@ export const ChannelManagement = () => {
                                 </div>
                             </div>
                         </div>
-                    </div>
+                    </Card>
                 </div>
 
                 {/* Right Column - Preview & Regions */}
                 <div className="lg:col-span-8 flex flex-col gap-4">
                     {/* Live Preview */}
-                    <div className="bg-white dark:bg-[#1e1e1e] border border-gray-200 dark:border-[#222] rounded-[11px] shadow-sm overflow-hidden flex flex-col">
+                    <Card className="p-0 overflow-hidden flex flex-col">
                         <div className="flex items-center justify-between p-4 border-b border-gray-200 dark:border-[#222] bg-gray-50/50 dark:bg-[#1a1a1a]">
                             <div className="flex items-center gap-2">
                                 <Eye size={16} className="text-gray-500" />
                                 <h2 className="text-sm font-bold text-gray-900 dark:text-white">Live AI Preview</h2>
                             </div>
                             <div className="flex items-center gap-2">
-                                <button onClick={handleFullscreen} className="p-1.5 text-gray-600 dark:text-gray-400 hover:text-white transition-colors bg-gray-100 dark:bg-[#151515] border border-gray-200 dark:border-[#222] rounded-lg title='Maximize'">
+                                <Button variant="outline" onClick={handleFullscreen} className="p-1.5 h-auto rounded-lg" title="Maximize">
                                     <Maximize size={14} />
-                                </button>
+                                </Button>
                             </div>
                         </div>
                         
@@ -280,32 +281,32 @@ export const ChannelManagement = () => {
                             <Info size={14} className="text-accent flex-shrink-0" />
                             <p className="text-[11px] text-gray-600 dark:text-gray-400 font-medium">Draw ROI (Region of Interest) by clicking and dragging on the video feed while streaming is paused.</p>
                         </div>
-                    </div>
+                    </Card>
                     
                     {/* Insights & Logs */}
-                    <div className="bg-white dark:bg-[#1e1e1e] border border-gray-200 dark:border-[#222] rounded-[11px] shadow-sm overflow-hidden flex-1 flex flex-col">
+                    <Card className="p-0 overflow-hidden flex-1 flex flex-col">
                         <div className="flex items-center gap-2 p-4 border-b border-gray-200 dark:border-[#222] bg-gray-50/50 dark:bg-[#1a1a1a]">
                             <AlertTriangle size={16} className="text-gray-500" />
                             <h2 className="text-sm font-bold text-gray-900 dark:text-white">Real-Time Detections</h2>
                         </div>
                         <div className="p-0 overflow-y-auto max-h-48 min-h-[140px] bg-gray-50 dark:bg-[#161616]">
-                            <table className="w-full text-left text-xs">
-                                <thead>
-                <tr className="border-b border-gray-200 dark:border-[#222] bg-gray-50/50 dark:bg-transparent">
-                                        <th className="px-5 py-3 whitespace-nowrap">Timestamp</th>
-                                        <th className="px-5 py-3 whitespace-nowrap">Class</th>
-                                        <th className="px-5 py-3 whitespace-nowrap">Confidence</th>
-                                        <th className="px-5 py-3 whitespace-nowrap">Status</th>
-                                    </tr>
-                                </thead>
-                                <tbody className="divide-y divide-gray-200 dark:divide-[#222]">
+                            <Table>
+                                <TableHeader>
+                                  <TableRow>
+                                        <TableHead>Timestamp</TableHead>
+                                        <TableHead>Class</TableHead>
+                                        <TableHead>Confidence</TableHead>
+                                        <TableHead>Status</TableHead>
+                                    </TableRow>
+                                </TableHeader>
+                                <TableBody>
                                     {isPlaying ? (
                                         logs.map(log => (
-                                            <tr key={log.id} className="hover:bg-white/5 transition-colors animate-in fade-in slide-in-from-top-2 duration-300">
-                                                <td className="px-5 py-2.5 font-mono text-gray-600 dark:text-gray-400 text-xs">{log.timestamp}</td>
-                                                <td className="px-5 py-2.5 font-semibold text-gray-900 dark:text-white">{log.objectClass}</td>
-                                                <td className={cn("px-5 py-2.5 font-mono text-xs", log.confidence >= 0.8 ? "text-green-500" : "text-orange-500")}>{log.confidence}</td>
-                                                <td className="px-5 py-2.5">
+                                            <TableRow key={log.id} className="animate-in fade-in slide-in-from-top-2 duration-300">
+                                                <TableCell className="font-mono text-gray-600 dark:text-gray-400 text-xs">{log.timestamp}</TableCell>
+                                                <TableCell className="font-semibold text-gray-900 dark:text-white">{log.objectClass}</TableCell>
+                                                <TableCell className={cn("font-mono text-xs", log.confidence >= 0.8 ? "text-green-500" : "text-orange-500")}>{log.confidence}</TableCell>
+                                                <TableCell>
                                                     <span className={cn(
                                                         "font-medium",
                                                         log.status === 'Tracked' ? 'text-green-400' :
@@ -313,20 +314,20 @@ export const ChannelManagement = () => {
                                                     )}>
                                                         {log.status}
                                                     </span>
-                                                </td>
-                                            </tr>
+                                                </TableCell>
+                                            </TableRow>
                                         ))
                                     ) : (
-                                        <tr>
-                                            <td colSpan={4} className="px-5 py-10 text-center text-gray-500 font-medium">
+                                        <TableRow>
+                                            <TableCell colSpan={4} className="py-10 text-center text-gray-500 font-medium">
                                                 Start the stream to view real-time detections.
-                                            </td>
-                                        </tr>
+                                            </TableCell>
+                                        </TableRow>
                                     )}
-                                </tbody>
-                            </table>
+                                </TableBody>
+                            </Table>
                         </div>
-                    </div>
+                    </Card>
 
                 </div>
             </div>

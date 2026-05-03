@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Search, Plus, HardDrive, Filter, Clock, CheckCircle2, X, ChevronDown } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { cn } from '../lib/utils';
+import { Card, Button, Input, Badge, Table, TableHeader, TableRow, TableHead, TableBody, TableCell } from '../components/ui';
 
 const initialDatasets = [
   { id: 'DS-2026-001', name: 'Main Gate Vehicles', type: 'Object Detection', samples: 12500, annotations: 45000, size: '4.2 GB', lastUpdated: '2 hours ago', status: 'ready' },
@@ -68,15 +69,16 @@ export const DataSet = () => {
           <p className="text-gray-600 dark:text-gray-400 text-xs font-medium">Manage and organize data collections for model training.</p>
         </div>
         <div className="flex gap-3 w-full md:w-auto">
-          <button className="flex items-center gap-2 bg-white dark:bg-[#1c1c1c] border border-gray-300 dark:border-gray-700 h-8 text-gray-900 dark:text-white rounded-full text-xs font-bold px-5 hover:bg-gray-200 dark:hover:bg-[#2a2a2a] transition-colors leading-[12px]">
+          <Button variant="outline" className="gap-2 w-full md:w-auto">
             <Filter size={14} /> Filter
-          </button>
-          <button 
+          </Button>
+          <Button 
+             variant="primary"
              onClick={() => setIsModalOpen(true)}
-             className="flex-1 md:flex-none flex justify-center items-center gap-2 bg-accent hover:bg-accent/90 text-black h-8 rounded-full text-xs font-bold px-5 transition-colors shadow-[0_0_15px_rgba(82,197,243,0.3)] leading-[12px]"
+             className="gap-2 w-full md:w-auto"
           >
             <Plus size={14} /> New Data Set
-          </button>
+          </Button>
         </div>
       </div>
 
@@ -87,7 +89,7 @@ export const DataSet = () => {
           { label: 'Annotated', value: formatNumber(totalAnnotated), icon: <CheckCircle2 size={20} className="text-green-500" /> },
           { label: 'Storage Used', value: totalStorageStr, icon: <Clock size={20} className="text-purple-400" /> },
         ].map((stat, idx) => (
-          <div key={idx} className="bg-white dark:bg-[#1e1e1e] p-4 rounded-[11px] border border-gray-200 dark:border-[#222] shadow-sm flex items-center justify-between">
+          <Card key={idx} className="p-4 flex items-center justify-between">
             <div>
               <p className="text-[10px] text-gray-500 font-black tracking-widest uppercase mb-1">{stat.label}</p>
               <h3 className="text-[18px] font-black text-gray-900 dark:text-white tracking-tight">{stat.value}</h3>
@@ -95,56 +97,56 @@ export const DataSet = () => {
             <div className="w-10 h-10 rounded-xl bg-gray-100 dark:bg-[#151515] border border-gray-200 dark:border-[#222] flex items-center justify-center shrink-0">
               {stat.icon}
             </div>
-          </div>
+          </Card>
         ))}
       </div>
 
-      <div className="bg-white dark:bg-[#1e1e1e] rounded-[11px] border border-gray-200 dark:border-[#222] overflow-hidden shadow-sm">
+      <Card className="p-0 overflow-hidden">
         <div className="p-5 border-b border-gray-200 dark:border-[#222] flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 bg-gray-50/50 dark:bg-[#1a1a1a]">
           <h2 className="text-sm font-bold text-gray-900 dark:text-white flex items-center gap-2">
             Dataset Overview
           </h2>
           <div className="flex w-full sm:w-auto">
-             <div className="bg-gray-100 dark:bg-[#151515] px-4 py-2 rounded-xl border border-gray-200 dark:border-[#222] flex items-center gap-2 flex-1 sm:flex-none focus-within:border-accent/50 focus-within:ring-1 focus-within:ring-accent/50 transition-all">
-                <Search className="text-gray-600 dark:text-gray-400" size={16} />
-                <input 
+             <div className="relative w-full sm:w-64">
+                <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-500 pointer-events-none" size={14} />
+                <Input 
                   type="text" 
                   placeholder="Search datasets..." 
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
-                  className="bg-transparent outline-none text-xs font-medium text-gray-800 dark:text-gray-200 w-full sm:w-64 placeholder-gray-600" 
+                  className="pl-8" 
                 />
              </div>
           </div>
         </div>
         <div className="overflow-x-auto">
-          <table className="w-full text-left text-xs">
-            <thead>
-                <tr className="border-b border-gray-200 dark:border-[#222] bg-gray-50/50 dark:bg-transparent">
-                <th className="px-5 py-4 whitespace-nowrap">Dataset Name</th>
-                <th className="px-5 py-4 whitespace-nowrap">Task Type</th>
-                <th className="px-5 py-4 whitespace-nowrap">Size & Volume</th>
-                <th className="px-5 py-4 whitespace-nowrap">Status</th>
-                <th className="px-5 py-4 whitespace-nowrap text-right">Actions</th>
-              </tr>
-            </thead>
-            <tbody className="divide-y divide-gray-200 dark:divide-[#222]">
+          <Table>
+            <TableHeader>
+                <TableRow>
+                <TableHead>Dataset Name</TableHead>
+                <TableHead>Task Type</TableHead>
+                <TableHead>Size & Volume</TableHead>
+                <TableHead>Status</TableHead>
+                <TableHead className="text-right">Actions</TableHead>
+              </TableRow>
+            </TableHeader>
+            <TableBody>
               {filteredDatasets.map((ds) => (
-                <tr 
+                <TableRow 
                   key={ds.id} 
-                  className="hover:bg-white/5 hover:bg-gray-50 transition-colors group cursor-pointer"
+                  className="group cursor-pointer"
                   onClick={() => navigate('/train/image-annotation')}
                 >
-                  <td className="px-5 py-4">
+                  <TableCell>
                       <div className="font-semibold text-gray-900 dark:text-white text-xs mb-0.5">{ds.name}</div>
                       <div className="text-[10px] text-gray-500 font-mono tracking-wide uppercase tracking-widest font-black">{ds.id} • {ds.lastUpdated}</div>
-                  </td>
-                  <td className="px-5 py-4 text-gray-700 dark:text-gray-300">
+                  </TableCell>
+                  <TableCell className="text-gray-700 dark:text-gray-300">
                     <span className="bg-gray-100 dark:bg-[#151515] border border-gray-200 dark:border-[#222] px-2 py-1 rounded text-[10px] font-medium tracking-wide">
                         {ds.type}
                     </span>
-                  </td>
-                  <td className="px-5 py-4">
+                  </TableCell>
+                  <TableCell>
                     <div className="flex gap-4">
                         <div>
                             <div className="text-gray-900 dark:text-white font-medium">{ds.samples.toLocaleString()} items</div>
@@ -152,33 +154,30 @@ export const DataSet = () => {
                         </div>
                         <div className="font-mono text-gray-600 dark:text-gray-400 text-xs tracking-wider border-l border-gray-200 dark:border-[#222] pl-4">{ds.size}</div>
                     </div>
-                  </td>
-                  <td className="px-5 py-4">
-                    <div className={cn("inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md border text-[10px] font-bold", 
-                        ds.status === 'ready' ? "bg-green-500/10 border-green-500/20 text-green-400" : 
-                        ds.status === 'annotating' ? "bg-accent/10 border-accent/20 text-accent" :
-                        "bg-orange-500/10 border-orange-500/20 text-orange-400"
-                    )}>
-                        {ds.status}
-                    </div>
-                  </td>
-                  <td className="px-5 py-4 flex gap-2 justify-end">
-                    <button 
+                  </TableCell>
+                  <TableCell>
+                    {ds.status === 'ready' && <Badge variant="success">ready</Badge>}
+                    {ds.status === 'annotating' && <Badge className="bg-accent/10 border-accent/20 text-accent hover:bg-accent/20">annotating</Badge>}
+                    {ds.status === 'uploading' && <Badge variant="warning">uploading</Badge>}
+                  </TableCell>
+                  <TableCell className="text-right">
+                    <Button 
+                      variant="outline"
                       onClick={(e) => {
                         e.stopPropagation();
                         navigate('/train/image-annotation');
                       }}
-                      className="px-3 py-1.5 text-black bg-white hover:bg-gray-200 transition-colors border border-gray-200 dark:border-[#222] rounded-lg text-[10px] font-bold"
+                      className="px-3"
                     >
                       View
-                    </button>
-                  </td>
-                </tr>
+                    </Button>
+                  </TableCell>
+                </TableRow>
               ))}
-            </tbody>
-          </table>
+            </TableBody>
+          </Table>
         </div>
-      </div>
+      </Card>
 
       {/* New Dataset Modal */}
       {isModalOpen && (
@@ -204,12 +203,11 @@ export const DataSet = () => {
             <div className="p-6 space-y-4">
                <div>
                   <label className="block text-xs font-semibold text-gray-700 dark:text-gray-300 mb-1.5">Dataset Name</label>
-                  <input 
+                  <Input 
                       type="text" 
                       placeholder="e.g. Lobby Entrance Validation"
                       value={newDataset.name}
                       onChange={(e) => setNewDataset({ ...newDataset, name: e.target.value })}
-                      className="w-full bg-gray-100 dark:bg-[#151515] border border-gray-200 dark:border-[#222] rounded-xl px-4 py-2.5 text-xs text-gray-900 dark:text-white focus:border-accent/50 focus:ring-1 focus:ring-accent/50 outline-none transition-all placeholder-gray-600 font-medium"
                   />
                </div>
                <div>
@@ -221,7 +219,7 @@ export const DataSet = () => {
                       <select 
                           value={newDataset.type}
                           onChange={(e) => setNewDataset({ ...newDataset, type: e.target.value })}
-                          className="w-full bg-gray-100 dark:bg-[#151515] border border-gray-200 dark:border-[#222] rounded-xl pl-4 pr-9 h-[37px] text-[12px] text-gray-900 dark:text-white focus:border-accent/50 focus:ring-1 focus:ring-accent/50 outline-none transition-all font-medium appearance-none cursor-pointer"
+                          className="w-full bg-gray-50 dark:bg-[#161616] border border-gray-200 dark:border-[#222] rounded-lg pl-4 pr-9 h-[37px] text-[12px] text-gray-900 dark:text-white focus:border-accent/50 focus:ring-1 focus:ring-accent/50 outline-none transition-all font-medium appearance-none cursor-pointer"
                       >
                           <option value="Object Detection">Object Detection</option>
                           <option value="Face Recognition">Face Recognition</option>
@@ -237,25 +235,25 @@ export const DataSet = () => {
                       placeholder="Brief description of this dataset..."
                       value={newDataset.description}
                       onChange={(e) => setNewDataset({ ...newDataset, description: e.target.value })}
-                      className="w-full h-20 bg-gray-100 dark:bg-[#151515] border border-gray-200 dark:border-[#222] rounded-xl px-4 py-2.5 text-xs text-gray-900 dark:text-white focus:border-accent/50 focus:ring-1 focus:ring-accent/50 outline-none transition-all placeholder-gray-600 resize-none font-medium"
+                      className="w-full h-20 bg-gray-50 dark:bg-[#161616] border border-gray-200 dark:border-[#222] rounded-lg px-4 py-2.5 text-xs text-gray-900 dark:text-white focus:border-accent/50 focus:ring-1 focus:ring-accent/50 outline-none transition-all placeholder-gray-600 resize-none font-medium"
                   ></textarea>
                </div>
             </div>
 
             <div className="p-5 border-t border-gray-200 dark:border-[#222] bg-gray-50/50 dark:bg-[#1a1a1a] flex justify-end gap-3">
-               <button 
+               <Button 
+                  variant="ghost"
                   onClick={() => setIsModalOpen(false)}
-                  className="px-5 py-2 rounded-full border border-gray-200 dark:border-[#222] text-gray-600 dark:text-gray-400 hover:text-white hover:bg-gray-100 dark:hover:bg-[#202020] transition-colors text-xs font-bold"
                 >
                   Cancel
-               </button>
-               <button 
+               </Button>
+               <Button 
+                 variant="primary"
                  onClick={handleCreate}
                  disabled={!newDataset.name.trim()}
-                 className="flex items-center gap-2 bg-accent hover:bg-accent/90 text-black h-8 rounded-full text-xs font-bold px-6 transition-colors shadow-[0_0_15px_rgba(82,197,243,0.3)] disabled:opacity-50 disabled:cursor-not-allowed"
                >
                  Create Dataset
-               </button>
+               </Button>
             </div>
           </div>
         </div>

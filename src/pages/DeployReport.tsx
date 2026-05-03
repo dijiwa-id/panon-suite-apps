@@ -2,6 +2,8 @@ import React, { useState } from 'react';
 import { useTheme } from '../context/ThemeContext';
 import { cn } from '../lib/utils';
 import { FileText, Download, Calendar } from 'lucide-react';
+import { Card, Button, Input } from '../components/ui';
+import { toast } from 'sonner';
 import { 
   LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip as RechartsTooltip, Legend, ResponsiveContainer,
   PieChart, Pie, Cell,
@@ -44,6 +46,14 @@ export const DeployReport = () => {
   const [activeTab, setActiveTab] = useState('Today');
   const { theme } = useTheme();
   const isDark = theme === 'dark';
+
+  const handleExport = () => {
+    toast.promise(new Promise(resolve => setTimeout(resolve, 1500)), {
+      loading: 'Generating PDF Report...',
+      success: 'Report downloaded successfully!',
+      error: 'Failed to generate report'
+    });
+  };
 
   const CustomTooltip = ({ active, payload, label }: any) => {
     if (active && payload && payload.length) {
@@ -103,22 +113,26 @@ export const DeployReport = () => {
                  ))}
                </div>
                <div className="flex items-center gap-2">
-                 <div className="flex items-center bg-white dark:bg-[#161616] border border-gray-200 dark:border-[#222] rounded-lg px-3 h-[30px] focus-within:ring-1 focus-within:ring-[#52C5F3] transition-all">
-                   <input type="text" className="w-20 bg-transparent text-xs text-gray-900 dark:text-gray-300 outline-none" defaultValue="01/07/2026" />
-                   <Calendar size={14} className="ml-2 text-gray-400" />
+                 <div className="relative">
+                   <div className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 pointer-events-none">
+                     <Calendar size={14} />
+                   </div>
+                   <Input type="text" className="w-[120px] h-[30px] pr-8" defaultValue="01/07/2026" />
                  </div>
                  <span className="text-gray-400">—</span>
-                 <div className="flex items-center bg-white dark:bg-[#161616] border border-gray-200 dark:border-[#222] rounded-lg px-3 h-[30px] focus-within:ring-1 focus-within:ring-[#52C5F3] transition-all">
-                   <input type="text" className="w-20 bg-transparent text-xs text-gray-900 dark:text-gray-300 outline-none" defaultValue="23/07/2026" />
-                   <Calendar size={14} className="ml-2 text-gray-400" />
+                 <div className="relative">
+                   <div className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 pointer-events-none">
+                     <Calendar size={14} />
+                   </div>
+                   <Input type="text" className="w-[120px] h-[30px] pr-8" defaultValue="23/07/2026" />
                  </div>
                </div>
              </div>
              
-             <button className="bg-[#1c1c1c] border border-gray-700 h-8 text-white rounded-full text-xs font-bold tracking-wide px-6 leading-[12px] hover:bg-[#2a2a2a] transition-colors flex items-center justify-center gap-2 shadow-sm">
+             <Button variant="primary" className="gap-2 h-8" onClick={handleExport}>
                <Download size={14} />
                Export PDF
-             </button>
+             </Button>
            </div>
            
            {/* Document Preview Section */}

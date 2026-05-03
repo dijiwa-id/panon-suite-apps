@@ -2,6 +2,8 @@
 import React, { useState } from 'react';
 import { Search, Plus, Check, X, Camera, MapPin, Hash, Link as LinkIcon, Settings, Activity, ChevronDown, Pencil, Trash2 } from 'lucide-react';
 import { cn } from '../lib/utils';
+import { toast } from 'sonner';
+import { Card, Button, Input, Badge, Table, TableHeader, TableRow, TableHead, TableBody, TableCell } from '../components/ui';
 
 const initialCameras = [
   { id: 'CAM-001', name: 'Camera 001 / Main Gate', location: 'Perempatan Jalan', coordinate: '-6.9391256, 107.6284992', url: 'rtsp://admin:QRT.../av_stream', resolution: '1080p', fps: 15, onvif: true, active: false },
@@ -91,47 +93,47 @@ const CameraModal = ({ isOpen, onClose, onSave, editingCamera }: { isOpen: boole
                 <div className="space-y-6">
                     <div>
                         <label className="block text-[10px] font-black text-gray-500 mb-2 flex items-center gap-2 uppercase tracking-widest"><LinkIcon size={12}/> Camera URL (RTSP/HTTP)</label>
-                        <input 
+                        <Input 
                             type="text" 
                             value={formData.url}
                             onChange={(e) => setFormData({...formData, url: e.target.value})}
                             placeholder="rtsp://user:pass@192.168.1.100:554/stream" 
-                            className={cn("w-full bg-gray-50 dark:bg-[#161616] border rounded-lg px-4 py-2.5 text-xs text-gray-800 dark:text-gray-200 outline-none focus:border-accent/50 focus:ring-1 focus:ring-accent/50 transition-all font-mono placeholder:text-gray-700", errors.url ? "border-red-500 focus:border-red-500 focus:ring-red-500/20" : "border-gray-200 dark:border-[#222]")} 
+                            className={cn("font-mono", errors.url ? "border-red-500 focus-visible:ring-red-500/20" : "")} 
                         />
                         {errors.url && <p className="text-red-500 text-[10px] mt-1 font-medium">{errors.url}</p>}
                     </div>
                     <div className="grid grid-cols-2 gap-4">
                         <div>
                             <label className="block text-[10px] font-black text-gray-500 mb-2 flex items-center gap-2 uppercase tracking-widest"><Hash size={12}/> Camera ID</label>
-                            <input 
+                            <Input 
                                 type="text" 
                                 value={formData.id}
                                 onChange={(e) => setFormData({...formData, id: e.target.value})}
                                 placeholder="CAM-005" 
-                                className={cn("w-full bg-gray-50 dark:bg-[#161616] border rounded-lg px-4 py-2.5 text-xs text-gray-800 dark:text-gray-200 outline-none focus:border-accent/50 focus:ring-1 focus:ring-accent/50 transition-all placeholder:text-gray-700", errors.id ? "border-red-500 focus:border-red-500 focus:ring-red-500/20" : "border-gray-200 dark:border-[#222]")} 
+                                className={cn("", errors.id ? "border-red-500 focus-visible:ring-red-500/20" : "")} 
                             />
                             {errors.id && <p className="text-red-500 text-[10px] mt-1 font-medium">{errors.id}</p>}
                         </div>
                         <div>
                             <label className="block text-[10px] font-black text-gray-500 mb-2 flex items-center gap-2 uppercase tracking-widest"><Camera size={12}/> Camera Name</label>
-                            <input 
+                            <Input 
                                 type="text" 
                                 value={formData.name}
                                 onChange={(e) => setFormData({...formData, name: e.target.value})}
                                 placeholder="e.g. Main Entrance" 
-                                className={cn("w-full bg-gray-50 dark:bg-[#161616] border rounded-lg px-4 py-2.5 text-xs text-gray-800 dark:text-gray-200 outline-none focus:border-accent/50 focus:ring-1 focus:ring-accent/50 transition-all placeholder:text-gray-700", errors.name ? "border-red-500 focus:border-red-500 focus:ring-red-500/20" : "border-gray-200 dark:border-[#222]")} 
+                                className={cn("", errors.name ? "border-red-500 focus-visible:ring-red-500/20" : "")} 
                             />
                             {errors.name && <p className="text-red-500 text-[10px] mt-1 font-medium">{errors.name}</p>}
                         </div>
                     </div>
                     <div>
                         <label className="block text-[10px] font-black text-gray-500 mb-2 flex items-center gap-2 uppercase tracking-widest"><MapPin size={12}/> Location Details</label>
-                        <input 
+                        <Input 
                             type="text" 
                             value={formData.location}
                             onChange={(e) => setFormData({...formData, location: e.target.value})}
                             placeholder="e.g. Building A Northwest" 
-                            className={cn("w-full bg-gray-50 dark:bg-[#161616] border rounded-lg px-4 py-2.5 text-xs text-gray-800 dark:text-gray-200 outline-none focus:border-accent/50 focus:ring-1 focus:ring-accent/50 transition-all placeholder:text-gray-700", errors.location ? "border-red-500 focus:border-red-500 focus:ring-red-500/20" : "border-gray-200 dark:border-[#222]")} 
+                            className={cn("", errors.location ? "border-red-500 focus-visible:ring-red-500/20" : "")} 
                         />
                         {errors.location && <p className="text-red-500 text-[10px] mt-1 font-medium">{errors.location}</p>}
                     </div>
@@ -140,12 +142,12 @@ const CameraModal = ({ isOpen, onClose, onSave, editingCamera }: { isOpen: boole
                 <div className="space-y-6">
                     <div>
                         <label className="block text-[10px] font-black text-gray-500 mb-2 flex items-center gap-2 uppercase tracking-widest"><MapPin size={12}/> Geo Coordinates</label>
-                        <input 
+                        <Input 
                             type="text" 
                             value={formData.coordinates}
                             onChange={(e) => setFormData({...formData, coordinates: e.target.value})}
                             placeholder="-6.9391, 107.6284" 
-                            className="w-full bg-gray-50 dark:bg-[#161616] border border-gray-200 dark:border-[#222] rounded-lg px-4 py-2.5 text-xs text-gray-800 dark:text-gray-200 outline-none focus:border-accent/50 focus:ring-1 focus:ring-accent/50 transition-all font-mono placeholder:text-gray-700" 
+                            className="font-mono" 
                         />
                     </div>
                     <div className="grid grid-cols-2 gap-4">
@@ -216,7 +218,7 @@ const CameraModal = ({ isOpen, onClose, onSave, editingCamera }: { isOpen: boole
                 <div className="flex flex-col justify-center">
                     <h3 className="text-xs font-black text-gray-900 dark:text-white mb-2">Connection Test</h3>
                     <p className="text-[11px] text-gray-500 leading-relaxed mb-4 font-medium">Test current RTSP stream reachability before finalizing registration.</p>
-                    <button onClick={() => console.log('Testing connection...')} className="self-start bg-white dark:bg-[#1e1e1e] border border-gray-200 dark:border-[#222] hover:bg-gray-100 dark:hover:bg-[#252525] text-gray-700 dark:text-gray-300 h-[32px] px-6 rounded-[11px]-full text-[10px] font-black transition-all">
+                    <button onClick={() => toast.promise(new Promise(r => setTimeout(r, 1000)), { loading: 'Testing connection...', success: 'Connection successful' })} className="self-start bg-white dark:bg-[#1e1e1e] border border-gray-200 dark:border-[#222] hover:bg-gray-100 dark:hover:bg-[#252525] text-gray-700 dark:text-gray-300 h-[32px] px-6 rounded-[11px]-full text-[10px] font-black transition-all">
                         Run Diagnostics
                     </button>
                 </div>
@@ -224,12 +226,12 @@ const CameraModal = ({ isOpen, onClose, onSave, editingCamera }: { isOpen: boole
         </div>
 
         <div className="p-6 border-t border-gray-200 dark:border-[#222] bg-gray-50/50 dark:bg-[#1a1a1a] flex justify-between items-center">
-          <button onClick={onClose} className="text-gray-500 hover:text-white font-black text-[10px] transition-colors uppercase tracking-widest">
+          <Button variant="ghost" onClick={onClose} className="uppercase tracking-widest">
             Cancel
-          </button>
-          <button onClick={handleCreate} className="bg-accent hover:bg-accent/90 text-black h-[32px] rounded-full text-xs font-bold px-8 transition-colors shadow-[0_0_15px_rgba(82,197,243,0.3)]">
+          </Button>
+          <Button variant="primary" onClick={handleCreate}>
             {editingCamera ? 'Update Camera' : 'Register Camera'}
-          </button>
+          </Button>
         </div>
       </div>
     </div>
@@ -271,12 +273,9 @@ export const CameraManagement = () => {
           <p className="text-gray-600 dark:text-gray-400 text-xs font-medium">Manage and configure connected physical devices.</p>
         </div>
         <div className="flex gap-3 w-full md:w-auto">
-          <button 
-            onClick={openNewModal}
-            className="flex-1 md:flex-none flex justify-center items-center gap-2 bg-accent hover:bg-accent/90 text-black h-8 rounded-full text-xs font-bold px-5 transition-colors shadow-[0_0_15px_rgba(82,197,243,0.3)] leading-[12px]"
-          >
+          <Button variant="primary" onClick={openNewModal} className="w-full md:w-auto gap-2">
             <Plus size={14} /> New Camera
-          </button>
+          </Button>
         </div>
       </div>
 
@@ -287,83 +286,78 @@ export const CameraManagement = () => {
         editingCamera={editingCamera}
       />
 
-      <div className="bg-white dark:bg-[#1e1e1e] rounded-[11px] border border-gray-200 dark:border-[#222] overflow-hidden shadow-sm">
+      <Card className="p-0 overflow-hidden">
         <div className="p-5 border-b border-gray-200 dark:border-[#222] flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 bg-gray-50/50 dark:bg-[#1a1a1a]">
           <h2 className="text-sm font-bold text-gray-900 dark:text-white flex items-center gap-2">
             <Camera size={16} className="text-gray-500" /> Camera Inventory
           </h2>
           <div className="flex gap-3 w-full sm:w-auto">
-             <div className="bg-gray-100 dark:bg-[#151515] px-4 py-2 rounded-xl border border-gray-200 dark:border-[#222] flex items-center gap-2 flex-1 sm:flex-none focus-within:border-accent/50 focus-within:ring-1 focus-within:ring-accent/50 transition-all">
-                <Search className="text-gray-600 dark:text-gray-400" size={16} />
-                <input type="text" placeholder="Search by name, ID..." className="bg-transparent outline-none text-xs font-medium text-gray-800 dark:text-gray-200 w-full sm:w-64 placeholder-gray-600" />
+             <div className="relative w-full sm:w-64">
+                <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-500 pointer-events-none" size={14} />
+                <Input type="text" placeholder="Search by name, ID..." className="pl-8" />
              </div>
           </div>
         </div>
         <div className="overflow-x-auto">
-          <table className="w-full text-left text-xs">
-            <thead>
-                <tr className="border-b border-gray-200 dark:border-[#222] bg-gray-50/50 dark:bg-transparent">
-                <th className="px-5 py-4 whitespace-nowrap">Status</th>
-                <th className="px-5 py-4 whitespace-nowrap">Camera Details</th>
-                <th className="px-5 py-4 whitespace-nowrap">Location & Coordinates</th>
-                <th className="px-5 py-4 whitespace-nowrap">Stream Info</th>
-                <th className="px-5 py-4 whitespace-nowrap">Features</th>
-                <th className="px-5 py-4 whitespace-nowrap text-right">Actions</th>
-              </tr>
-            </thead>
-            <tbody className="divide-y divide-gray-200 dark:divide-[#222]">
+          <Table>
+            <TableHeader>
+                <TableRow>
+                <TableHead>Status</TableHead>
+                <TableHead>Camera Details</TableHead>
+                <TableHead>Location & Coordinates</TableHead>
+                <TableHead>Stream Info</TableHead>
+                <TableHead>Features</TableHead>
+                <TableHead className="text-right">Actions</TableHead>
+              </TableRow>
+            </TableHeader>
+            <TableBody>
               {cameraList.map((cam) => (
-                <tr key={cam.id} className="hover:bg-white/5 hover:bg-gray-50 transition-colors group">
-                  <td className="px-5 py-4">
-                    <div className={cn("inline-flex items-center gap-1.5 px-2 py-1 rounded-md border text-[10px] font-bold", cam.active ? "bg-green-500/10 border-green-500/20 text-green-400" : "bg-red-500/10 border-red-500/20 text-red-400")}>
-                        <span className={cn("w-1.5 h-1.5 rounded-full", cam.active ? "bg-green-500" : "bg-red-500")} />
-                        {cam.active ? "Online" : "Offline"}
-                    </div>
-                  </td>
-                  <td className="px-5 py-4">
+                <TableRow key={cam.id} className="group">
+                  <TableCell>
+                    {cam.active ? (
+                        <Badge variant="success">Online</Badge>
+                    ) : (
+                        <Badge variant="danger">Offline</Badge>
+                    )}
+                  </TableCell>
+                  <TableCell>
                     <div className="font-semibold text-gray-900 dark:text-white text-xs mb-0.5">{cam.name}</div>
                     <div className="text-[11px] text-gray-500 font-mono">{cam.id}</div>
-                  </td>
-                  <td className="px-5 py-4">
+                  </TableCell>
+                  <TableCell>
                     <div className="text-gray-700 dark:text-gray-300 font-medium mb-0.5">{cam.location}</div>
                     <div className="text-[11px] text-gray-500 font-mono flex items-center gap-1">
                         <MapPin size={10} /> {cam.coordinate}
                     </div>
-                  </td>
-                  <td className="px-5 py-4">
+                  </TableCell>
+                  <TableCell>
                     <div className="flex gap-2 mb-1">
                         <span className="bg-gray-100 dark:bg-[#151515] border border-gray-200 dark:border-[#222] px-1.5 py-0.5 rounded text-[10px] font-bold text-gray-700 dark:text-gray-300">{cam.resolution}</span>
                         <span className="bg-gray-100 dark:bg-[#151515] border border-gray-200 dark:border-[#222] px-1.5 py-0.5 rounded text-[10px] font-bold text-gray-700 dark:text-gray-300">{cam.fps} FPS</span>
                     </div>
                     <div className="text-[10px] text-gray-500 font-mono truncate max-w-[150px] uppercase tracking-widest font-black">{cam.url}</div>
-                  </td>
-                  <td className="px-5 py-4">
+                  </TableCell>
+                  <TableCell>
                     <div className="flex items-center gap-2">
-                        {cam.onvif && <span className="bg-accent/10 text-accent border border-accent/20 px-1.5 py-0.5 rounded text-[10px] font-bold">ONVIF</span>}
+                        {cam.onvif && <span className="bg-[#52C5F3]/10 text-[#52C5F3] border border-[#52C5F3]/20 px-1.5 py-0.5 rounded text-[10px] font-bold">ONVIF</span>}
                     </div>
-                  </td>
-                  <td className="px-5 py-4 text-right">
+                  </TableCell>
+                  <TableCell className="text-right">
                     <div className="flex items-center justify-end gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
-                      <button 
-                        className="bg-[#1c1c1c] border border-gray-700 h-8 text-white rounded-full text-xs font-bold tracking-wide px-4 leading-[12px] hover:bg-[#2a2a2a] transition-colors flex items-center justify-center shadow-sm text-gray-300"
-                        onClick={() => openEditModal(cam)}
-                      >
+                      <Button variant="outline" className="px-3" onClick={() => openEditModal(cam)}>
                         <Pencil size={12} />
-                      </button>
-                      <button 
-                        className="bg-red-500/10 border border-red-500/20 h-8 text-red-500 rounded-full text-xs font-bold tracking-wide px-4 leading-[12px] hover:bg-red-500/20 transition-colors flex items-center justify-center shadow-sm"
-                        onClick={() => handleDelete(cam.id)}
-                      >
+                      </Button>
+                      <Button variant="danger" className="px-3" onClick={() => handleDelete(cam.id)}>
                         <Trash2 size={12} />
-                      </button>
+                      </Button>
                     </div>
-                  </td>
-                </tr>
+                  </TableCell>
+                </TableRow>
               ))}
-            </tbody>
-          </table>
+            </TableBody>
+          </Table>
         </div>
-      </div>
+      </Card>
     </main>
   );
 };

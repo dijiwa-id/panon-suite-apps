@@ -1,6 +1,8 @@
 import React, { useState, useRef } from 'react';
 import { Layers, Video, BrainCircuit, ShieldCheck, Zap, Server, Code, Upload, X, Settings, Book, Activity, CheckCircle2, Play, Lock } from 'lucide-react';
 import { cn } from '../lib/utils';
+import { toast } from 'sonner';
+import { Card, Button, Input, Badge } from '../components/ui';
 
 export const BuildingBlocks = () => {
   const [isImportModalOpen, setIsImportModalOpen] = useState(false);
@@ -80,11 +82,13 @@ export const BuildingBlocks = () => {
           <p className="text-gray-600 dark:text-gray-400 text-xs font-medium">Modular components for the vision AI pipeline</p>
         </div>
         <div className="flex gap-3 w-full md:w-auto">
-          <button 
+          <Button 
+            variant="outline"
             onClick={() => setIsImportModalOpen(true)}
-            className="flex-1 md:flex-none flex justify-center items-center gap-2 bg-white dark:bg-[#1c1c1c] hover:bg-gray-50 dark:hover:bg-[#2a2a2a] border border-gray-200 dark:border-[#222] text-gray-900 dark:text-white h-9 rounded-lg text-xs font-bold px-5 transition-colors shadow-sm">
+            className="flex-1 md:flex-none gap-2 h-9"
+          >
             <Upload size={14} /> <span>Import Custom Node</span>
-          </button>
+          </Button>
         </div>
       </div>
 
@@ -133,10 +137,10 @@ export const BuildingBlocks = () => {
             
             {!importSuccess && (
               <div className="p-5 border-t border-gray-200 dark:border-[#222] flex gap-3 justify-end items-center bg-gray-50 dark:bg-[#1a1a1a]">
-                  <button disabled={isImporting} onClick={() => setIsImportModalOpen(false)} className="px-4 py-2 text-xs font-bold text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white transition-colors disabled:opacity-50">Cancel</button>
-                  <button disabled={isImporting} onClick={handleImport} className="bg-[#52C5F3] hover:bg-[#3baee0] text-gray-900 disabled:opacity-50 disabled:hover:bg-[#52C5F3] h-9 rounded-lg text-xs font-bold px-6 transition-colors shadow-sm flex items-center gap-2">
+                  <Button variant="ghost" disabled={isImporting} onClick={() => setIsImportModalOpen(false)}>Cancel</Button>
+                  <Button variant="primary" disabled={isImporting} onClick={handleImport} className="gap-2 h-9">
                     {isImporting ? 'Importing...' : 'Select File'}
-                  </button>
+                  </Button>
               </div>
             )}
           </div>
@@ -321,10 +325,10 @@ export const BuildingBlocks = () => {
 
               {/* Footer */}
               <div className="p-5 border-t border-gray-200 dark:border-[#222] flex gap-3 justify-end items-center bg-gray-50 dark:bg-[#1a1a1a]">
-                 <button onClick={() => setActiveNode(null)} className="px-4 py-2 text-xs font-bold text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white transition-colors">Cancel</button>
-                 <button onClick={() => { console.log('Saving config...'); setActiveNode(null); }} className="bg-[#52C5F3] hover:bg-[#3baee0] text-gray-900 h-9 rounded-lg text-xs font-bold px-6 transition-colors shadow-sm flex items-center gap-2">
+                 <Button variant="ghost" onClick={() => setActiveNode(null)}>Cancel</Button>
+                 <Button variant="primary" onClick={() => { toast.success('Configuration applied'); setActiveNode(null); }} className="gap-2 h-9">
                     <Play size={14} /> <span>Apply Configuration</span>
-                 </button>
+                 </Button>
               </div>
 
            </div>
@@ -343,7 +347,7 @@ export const BuildingBlocks = () => {
              
              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
                 {cat.blocks.map(block => (
-                    <div 
+                    <Card
                       key={block.name} 
                       onClick={() => {
                         setActiveNode({
@@ -353,20 +357,20 @@ export const BuildingBlocks = () => {
                         });
                         setActiveTab('config');
                       }}
-                      className="bg-white dark:bg-[#1e1e1e] border border-gray-200 dark:border-[#222] rounded-xl p-5 hover:border-[#52C5F3]/50 hover:shadow-md transition-all group flex flex-col h-full cursor-pointer relative overflow-hidden"
+                      className="p-5 hover:border-accent/50 hover:shadow-md transition-all group flex flex-col h-full cursor-pointer relative overflow-hidden"
                     >
                         <div className="absolute inset-0 bg-gradient-to-br from-[#52C5F3]/0 to-[#52C5F3]/5 opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none"></div>
                         <div className="flex justify-between items-start mb-3 relative z-10">
-                            <h3 className="text-sm font-bold text-gray-900 dark:text-white group-hover:text-[#52C5F3] transition-colors">{block.name}</h3>
+                            <h3 className="text-sm font-bold text-gray-900 dark:text-white group-hover:text-accent transition-colors">{block.name}</h3>
                             <span className="text-[9px] font-mono font-bold bg-gray-100 dark:bg-[#2a2a2a] text-gray-500 px-1.5 py-0.5 rounded border border-gray-200 dark:border-[#222]">v{block.version}</span>
                         </div>
                         <p className="text-xs text-gray-500 dark:text-gray-400 leading-relaxed mb-4 flex-1 relative z-10">{block.desc}</p>
                         <div className="flex items-center justify-between border-t border-gray-100 dark:border-[#222] pt-4 mt-auto relative z-10">
-                            <span className="text-[10px] font-bold text-gray-400 group-hover:text-[#52C5F3] transition-colors flex items-center gap-1.5 capitalize tracking-widest">
+                            <span className="text-[10px] font-bold text-gray-400 group-hover:text-accent transition-colors flex items-center gap-1.5 capitalize tracking-widest">
                                 <Settings size={12} /> Configure
                             </span>
                         </div>
-                    </div>
+                    </Card>
                 ))}
              </div>
           </div>

@@ -1,9 +1,11 @@
 import React, { useState } from 'react';
 import { cn } from '../lib/utils';
-import { Camera, Search, Plus, Maximize2, MoreVertical, LayoutGrid, LayoutList, Signal, SignalHigh, SignalMedium } from 'lucide-react';
+import { Camera, Search, Plus, Maximize2, MoreVertical, LayoutGrid, LayoutList, Signal, SignalHigh, SignalMedium, X, Link as LinkIcon, Server, MapPin } from 'lucide-react';
+import { toast } from 'sonner';
+import { Button, Input, Card, Badge, Table, TableHeader, TableRow, TableHead, TableBody, TableCell } from '../components/ui';
 
 // Dummy data for camera feeds
-const MOCK_CAMERAS = [
+const INITIAL_CAMERAS = [
   {
     id: 'cam-01',
     name: 'Gate 1 - Main Entrance',
@@ -79,8 +81,49 @@ const MOCK_CAMERAS = [
 ];
 
 export const DeployLiveFeedCamera = () => {
+  const [cameras, setCameras] = useState(INITIAL_CAMERAS);
   const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid');
   const [activeZone, setActiveZone] = useState('All');
+  const [searchQuery, setSearchQuery] = useState('');
+  const [isAddCameraModalOpen, setIsAddCameraModalOpen] = useState(false);
+  const [newCamera, setNewCamera] = useState({ name: '', url: '', zone: '', node: '' });
+
+  const handleAddCamera = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!newCamera.name || !newCamera.url) {
+      toast.error('Please fill required fields');
+      return;
+    }
+    const newId = `cam-${Date.now()}`;
+    const addedCamera = {
+      id: newId,
+      name: newCamera.name,
+      ip: newCamera.url.replace('rtsp://', '').split('/')[0] || '127.0.0.1',
+      zone: newCamera.zone || 'Unassigned',
+      status: 'online',
+      fps: 30,
+      node: newCamera.node || 'Agent Node',
+      image: 'https://images.unsplash.com/photo-1549880338-65dd4bd82f28?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80',
+      stats: { violations: 0, detections: 0 },
+      signal: 'excellent'
+    };
+
+    setCameras([addedCamera, ...cameras]);
+
+    toast.promise(new Promise(resolve => setTimeout(resolve, 1500)), {
+      loading: 'Adding camera...',
+      success: `${newCamera.name} added and connected successfully`,
+      error: 'Failed to add camera',
+    });
+    setIsAddCameraModalOpen(false);
+    setNewCamera({ name: '', url: '', zone: '', node: '' });
+  };
+
+  const filteredCameras = cameras.filter(cam => {
+     const matchesZone = activeZone === 'All' || cam.zone === activeZone;
+     const matchesSearch = cam.name.toLowerCase().includes(searchQuery.toLowerCase()) || cam.ip.includes(searchQuery);
+     return matchesZone && matchesSearch;
+  });
 
   return (
     <main className="flex-1 overflow-y-auto bg-transparent p-6 lg:p-8 text-gray-800 dark:text-gray-200 transition-colors custom-scrollbar">
@@ -97,22 +140,24 @@ export const DeployLiveFeedCamera = () => {
         <div className="flex flex-col gap-6">
            
            {/* Toolbar */}
-           <div className="flex flex-col sm:flex-row items-center justify-between gap-4 bg-white dark:bg-[#1e1e1e] border border-gray-200 dark:border-[#222] p-[10px] h-[60px] rounded-[11px] shadow-sm shrink-0">
+           <Card className="flex flex-col sm:flex-row items-center justify-between gap-4 p-[10px] h-auto md:h-[60px] shrink-0">
              <div className="flex items-center gap-3 w-full sm:w-auto h-full">
-               <div className="bg-gray-50 dark:bg-[#161616] px-3.5 py-1.5 rounded-[11px] border border-gray-200 dark:border-[#222] flex items-center gap-2 w-full sm:w-64 focus-within:border-[#52C5F3]/50 focus-within:ring-1 focus-within:ring-[#52C5F3]/50 transition-all">
-                  <Search size={14} className="text-gray-500" />
-                  <input 
+               <div className="relative w-full sm:w-64">
+                  <Search size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-500 pointer-events-none" />
+                  <Input 
                     type="text" 
                     placeholder="Search camera..." 
-                    className="bg-transparent outline-none text-xs font-medium text-gray-800 dark:text-gray-200 w-full placeholder-gray-500"
+                    value={searchQuery}
+                    onChange={(e) => setSearchQuery(e.target.value)}
+                    className="pl-8"
                   />
                </div>
-               <div className="hidden sm:flex items-center bg-gray-50 dark:bg-[#161616] border border-gray-200 dark:border-[#222] rounded-[11px] p-0.5">
+               <div className="hidden sm:flex items-center bg-gray-50 dark:bg-[#151515] border border-gray-200 dark:border-[#222] rounded-xl p-0.5">
                   <button 
                     onClick={() => setViewMode('grid')}
                     className={cn(
                       "p-1.5 rounded-[8px] transition-colors",
-                      viewMode === 'grid' ? "bg-white dark:bg-[#252525] text-gray-900 dark:text-white shadow-sm" : "text-gray-400 hover:text-gray-700 dark:hover:text-gray-300"
+                      viewMode === 'grid' ? "bg-white dark:bg-[#2a2a2a] text-gray-900 dark:text-white shadow-sm" : "text-gray-400 hover:text-gray-700 dark:hover:text-gray-300"
                     )}
                   >
                     <LayoutGrid size={14} />
@@ -121,7 +166,7 @@ export const DeployLiveFeedCamera = () => {
                     onClick={() => setViewMode('list')}
                     className={cn(
                       "p-1.5 rounded-[8px] transition-colors",
-                      viewMode === 'list' ? "bg-white dark:bg-[#252525] text-gray-900 dark:text-white shadow-sm" : "text-gray-400 hover:text-gray-700 dark:hover:text-gray-300"
+                      viewMode === 'list' ? "bg-white dark:bg-[#2a2a2a] text-gray-900 dark:text-white shadow-sm" : "text-gray-400 hover:text-gray-700 dark:hover:text-gray-300"
                     )}
                   >
                     <LayoutList size={14} />
@@ -147,17 +192,17 @@ export const DeployLiveFeedCamera = () => {
                   ))}
                </div>
                <div className="w-px h-5 bg-gray-200 dark:bg-[#2a2a2a] hidden sm:block"></div>
-               <button className="bg-[#1c1c1c] border border-gray-700 h-8 text-white rounded-full text-xs font-bold tracking-wide px-6 leading-[12px] hover:bg-[#2a2a2a] transition-colors flex items-center justify-center gap-1.5 shrink-0">
+               <Button onClick={() => setIsAddCameraModalOpen(true)} className="gap-1.5">
                   <Plus size={14} />
                   Add Camera
-               </button>
+               </Button>
              </div>
-           </div>
+           </Card>
 
            {/* Camera Grid View */}
            {viewMode === 'grid' && (
              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4 gap-4">
-               {MOCK_CAMERAS.map((cam) => (
+               {filteredCameras.map((cam) => (
                  <div key={cam.id} className="bg-white dark:bg-[#1e1e1e] border border-gray-200 dark:border-[#222] rounded-[11px] overflow-hidden shadow-sm group flex flex-col relative w-full transition-all hover:border-[#52C5F3]/30 hover:shadow-md">
                    {/* Video Container */}
                    <div className="relative aspect-video bg-[#111] overflow-hidden group/video border-b border-[#222]/50">
@@ -220,10 +265,10 @@ export const DeployLiveFeedCamera = () => {
                            <h4 className="text-xs font-bold text-gray-900 dark:text-white tracking-tight leading-none group-hover:text-[#52C5F3] transition-colors truncate" title={cam.name}>{cam.name}</h4>
                          </div>
                          <div className="flex items-center gap-1 shrink-0">
-                            <button className="p-1 rounded-[6px] text-gray-400 hover:text-gray-900 dark:hover:text-white hover:bg-gray-100 dark:hover:bg-[#2a2a2a] transition-all">
+                            <button onClick={() => toast.info(`Maximizing ${cam.name}...`)} className="p-1 rounded-[6px] text-gray-400 hover:text-gray-900 dark:hover:text-white hover:bg-gray-100 dark:hover:bg-[#2a2a2a] transition-all">
                                <Maximize2 size={12} />
                             </button>
-                            <button className="p-1 rounded-[6px] text-gray-400 hover:text-gray-900 dark:hover:text-white hover:bg-gray-100 dark:hover:bg-[#2a2a2a] transition-all">
+                            <button onClick={() => toast.info(`Settings for ${cam.name}...`)} className="p-1 rounded-[6px] text-gray-400 hover:text-gray-900 dark:hover:text-white hover:bg-gray-100 dark:hover:bg-[#2a2a2a] transition-all">
                                <MoreVertical size={14} />
                             </button>
                          </div>
@@ -247,23 +292,23 @@ export const DeployLiveFeedCamera = () => {
 
            {/* List View */}
            {viewMode === 'list' && (
-             <div className="bg-white dark:bg-[#1e1e1e] border border-gray-200 dark:border-[#222] rounded-[11px] shadow-sm overflow-hidden">
+             <Card className="p-0 overflow-hidden">
                <div className="overflow-x-auto">
-                 <table className="w-full text-left border-collapse">
-                   <thead>
-                     <tr className="border-b border-gray-100 dark:border-[#222] bg-gray-50/50 dark:bg-[#1a1a1a]">
-                       <th className="px-5 py-3 text-[10px] font-black tracking-widest capitalize text-gray-500">Camera Name</th>
-                       <th className="px-5 py-3 text-[10px] font-black tracking-widest capitalize text-gray-500">Node</th>
-                       <th className="px-5 py-3 text-[10px] font-black tracking-widest capitalize text-gray-500">Zone</th>
-                       <th className="px-5 py-3 text-[10px] font-black tracking-widest capitalize text-gray-500">Status</th>
-                       <th className="px-5 py-3 text-[10px] font-black tracking-widest capitalize text-gray-500">FPS</th>
-                       <th className="px-5 py-3 text-[10px] font-black tracking-widest capitalize text-gray-500 text-right">Actions</th>
-                     </tr>
-                   </thead>
-                   <tbody className="divide-y divide-gray-100 dark:divide-[#222]">
-                     {MOCK_CAMERAS.map((cam) => (
-                       <tr key={cam.id} className="hover:bg-gray-50/50 dark:hover:bg-[#252525]/30 transition-colors group">
-                         <td className="px-5 py-3.5">
+                 <Table>
+                   <TableHeader>
+                     <TableRow>
+                       <TableHead>Camera Name</TableHead>
+                       <TableHead>Node</TableHead>
+                       <TableHead>Zone</TableHead>
+                       <TableHead>Status</TableHead>
+                       <TableHead>FPS</TableHead>
+                       <TableHead className="text-right">Actions</TableHead>
+                     </TableRow>
+                   </TableHeader>
+                   <TableBody>
+                     {filteredCameras.map((cam) => (
+                       <TableRow key={cam.id}>
+                         <TableCell>
                            <div className="flex items-center gap-3">
                              <div className={cn(
                                "w-1.5 h-1.5 rounded-full",
@@ -274,40 +319,139 @@ export const DeployLiveFeedCamera = () => {
                                <span className="text-xs text-gray-500">{cam.ip}</span>
                              </div>
                            </div>
-                         </td>
-                         <td className="px-5 py-3.5 text-xs text-gray-600 dark:text-gray-400 font-medium">{cam.node}</td>
-                         <td className="px-5 py-3.5">
+                         </TableCell>
+                         <TableCell>{cam.node}</TableCell>
+                         <TableCell>
                            <span className="bg-gray-50 dark:bg-[#252525] text-gray-600 dark:text-gray-300 px-2 py-1 rounded-[6px] text-[10px] font-black tracking-widest uppercase border border-gray-200 dark:border-[#2a2a2a]">{cam.zone}</span>
-                         </td>
-                         <td className="px-5 py-3.5">
+                         </TableCell>
+                         <TableCell>
                            {cam.status === 'online' ? (
-                             <span className="text-[10px] font-black tracking-widest uppercase text-green-500 bg-green-500/10 px-2 py-1 rounded-[6px] border border-green-500/20">Live</span>
+                             <Badge variant="success">Live</Badge>
                            ) : (
-                             <span className="text-[10px] font-black tracking-widest uppercase text-red-500 bg-red-500/10 px-2 py-1 rounded-[6px] border border-red-500/20">Offline</span>
+                             <Badge variant="danger">Offline</Badge>
                            )}
-                         </td>
-                         <td className="px-5 py-3.5 text-xs text-gray-600 dark:text-gray-400 font-medium">{cam.fps > 0 ? `${cam.fps} FPS` : '-'}</td>
-                         <td className="px-5 py-3.5 text-right">
+                         </TableCell>
+                         <TableCell>{cam.fps > 0 ? `${cam.fps} FPS` : '-'}</TableCell>
+                         <TableCell className="text-right">
                            <div className="flex items-center justify-end gap-1">
-                             <button className="p-1.5 rounded-[6px] hover:bg-gray-100 dark:hover:bg-[#2a2a2a] text-gray-400 hover:text-gray-900 dark:hover:text-white transition-colors">
+                             <Button variant="ghost" className="px-2" onClick={() => toast.info(`Maximizing ${cam.name}...`)}>
                                <Maximize2 size={14} />
-                             </button>
-                             <button className="p-1.5 rounded-[6px] hover:bg-gray-100 dark:hover:bg-[#2a2a2a] text-gray-400 hover:text-gray-900 dark:hover:text-white transition-colors">
+                             </Button>
+                             <Button variant="ghost" className="px-2" onClick={() => toast.info(`Settings for ${cam.name}...`)}>
                                <MoreVertical size={14} />
-                             </button>
+                             </Button>
                            </div>
-                         </td>
-                       </tr>
+                         </TableCell>
+                       </TableRow>
                      ))}
-                   </tbody>
-                 </table>
+                   </TableBody>
+                 </Table>
                </div>
-             </div>
+             </Card>
            )}
 
         </div>
 
       </div>
+
+      {/* Add Camera Modal */}
+      {isAddCameraModalOpen && (
+        <div className="fixed inset-0 z-[100] flex items-center justify-center bg-black/60 backdrop-blur-sm p-4">
+          <div className="bg-white dark:bg-[#161616] w-full max-w-md rounded-[11px] border border-gray-200 dark:border-[#222] shadow-2xl flex flex-col overflow-hidden animate-in fade-in zoom-in-95 duration-200">
+            <div className="flex items-center justify-between p-5 border-b border-gray-200 dark:border-[#222]">
+              <div className="flex items-center gap-3">
+                <div className="w-8 h-8 rounded bg-gray-100 dark:bg-[#1e1e1e] border border-gray-200 dark:border-[#2a2a2a] flex items-center justify-center">
+                  <Camera size={16} className="text-gray-700 dark:text-gray-300" />
+                </div>
+                <div>
+                  <h2 className="text-sm font-bold text-gray-900 dark:text-white tracking-tight leading-none mb-1">Add Camera</h2>
+                  <p className="text-[10px] font-medium text-gray-500">Register a new live feed stream.</p>
+                </div>
+              </div>
+              <button 
+                onClick={() => setIsAddCameraModalOpen(false)}
+                className="text-gray-400 hover:text-gray-900 dark:hover:text-white transition-colors p-1 rounded-md hover:bg-gray-100 dark:hover:bg-[#252525]"
+              >
+                <X size={18} />
+              </button>
+            </div>
+            
+            <form onSubmit={handleAddCamera} className="p-6 space-y-5">
+              <div>
+                <label className="block text-[10px] font-black text-gray-500 mb-2 uppercase tracking-widest">Camera Name *</label>
+                <Input 
+                  type="text" 
+                  value={newCamera.name}
+                  onChange={e => setNewCamera({...newCamera, name: e.target.value})}
+                  placeholder="e.g. Main Gate Camera"
+                  required
+                />
+              </div>
+              
+              <div>
+                <label className="block text-[10px] font-black text-gray-500 mb-2 uppercase tracking-widest">Stream URL *</label>
+                <div className="relative">
+                  <LinkIcon size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
+                  <Input 
+                    type="text" 
+                    value={newCamera.url}
+                    onChange={e => setNewCamera({...newCamera, url: e.target.value})}
+                    className="pl-9"
+                    placeholder="rtsp://..."
+                    required
+                  />
+                </div>
+              </div>
+
+              <div className="grid grid-cols-2 gap-4">
+                <div>
+                  <label className="block text-[10px] font-black text-gray-500 mb-2 uppercase tracking-widest">Processing Node</label>
+                  <div className="relative">
+                    <Server size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
+                    <Input 
+                      type="text" 
+                      value={newCamera.node}
+                      onChange={e => setNewCamera({...newCamera, node: e.target.value})}
+                      className="pl-9"
+                      placeholder="e.g. Node 01"
+                    />
+                  </div>
+                </div>
+
+                <div>
+                  <label className="block text-[10px] font-black text-gray-500 mb-2 uppercase tracking-widest">Zone</label>
+                  <div className="relative">
+                    <MapPin size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
+                    <Input 
+                      type="text" 
+                      value={newCamera.zone}
+                      onChange={e => setNewCamera({...newCamera, zone: e.target.value})}
+                      className="pl-9"
+                      placeholder="e.g. Zone A"
+                    />
+                  </div>
+                </div>
+              </div>
+
+              <div className="pt-4 flex justify-end gap-3 border-t border-gray-200 dark:border-[#222]">
+                <Button 
+                  type="button"
+                  onClick={() => setIsAddCameraModalOpen(false)}
+                  variant="ghost"
+                >
+                  Cancel
+                </Button>
+                <Button 
+                  type="submit"
+                  variant="default"
+                >
+                  Confirm Registration
+                </Button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
     </main>
   );
 };

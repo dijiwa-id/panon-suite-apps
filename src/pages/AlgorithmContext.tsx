@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
-import { Search, Plus, X, ChevronDown } from 'lucide-react';;
+import { Search, Plus, X, ChevronDown } from 'lucide-react';
+import { toast } from 'sonner';
 
 const algorithmContexts = [
   { id: 'PARKIR_LIAR', name: 'Parkir Liar', algorithm: 'Lingering', model: 'Model-2026-Security-80-001', class: 'Vehicle' },
@@ -21,7 +22,7 @@ const AddContextModal = ({ isOpen, onClose }: { isOpen: boolean; onClose: () => 
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    console.log('Submitting context...', formData);
+    toast.success(`Context ${formData.name || formData.id} created successfully`);
     onClose();
   };
 

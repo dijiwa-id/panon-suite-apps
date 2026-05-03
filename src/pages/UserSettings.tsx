@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { User, Shield, Save, Camera, Bell, Monitor, Globe, LogOut } from 'lucide-react';
 import { cn } from '../lib/utils';
+import { Card, Button, Input } from '../components/ui';
 
 export const UserSettings = () => {
   const [activeTab, setActiveTab] = useState('Profile');
@@ -19,14 +20,14 @@ export const UserSettings = () => {
           </div>
           
           <div className="flex items-center gap-3 shrink-0 mb-3">
-             <button className="flex items-center gap-2 bg-white dark:bg-[#1e1e1e] border border-gray-200 dark:border-[#222] px-4 py-2 rounded-lg text-xs font-bold text-gray-700 dark:text-gray-300 hover:text-red-500 hover:border-red-500/30 dark:hover:text-red-400 dark:hover:border-red-500/30 transition-colors shadow-sm">
+             <Button variant="outline" className="gap-2 text-red-500 hover:text-red-500 hover:bg-red-500/10 border-red-200 dark:border-red-500/20">
                <LogOut size={14} />
                <span>Log Out</span>
-             </button>
-             <button className="bg-[#52C5F3] hover:bg-[#3baee0] text-gray-900 transition-colors px-4 py-2 rounded-lg text-xs font-bold flex items-center gap-2 shadow-sm">
+             </Button>
+             <Button variant="primary" className="gap-2">
                <Save size={14} />
                <span>Save Changes</span>
-             </button>
+             </Button>
           </div>
         </div>
 
@@ -34,7 +35,7 @@ export const UserSettings = () => {
         <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
            {/* Sidebar Navigation */}
            <div className="hidden lg:block lg:col-span-1">
-             <div className="bg-white dark:bg-[#1e1e1e] border border-gray-200 dark:border-[#222] rounded-xl p-4 shadow-sm flex flex-col gap-1">
+             <Card className="p-4 flex flex-col gap-1">
                <button onClick={() => setActiveTab('Profile')} className={cn("flex items-center gap-3 px-3 py-2.5 rounded-lg text-xs font-bold transition-colors w-full text-left", activeTab === 'Profile' ? "bg-gray-100 dark:bg-[#2a2a2a] text-gray-900 dark:text-white" : "text-gray-500 hover:bg-gray-50 dark:hover:bg-[#222] hover:text-gray-900 dark:hover:text-gray-300")}>
                  <User size={16} />
                  <span>Public Profile</span>
@@ -51,14 +52,14 @@ export const UserSettings = () => {
                  <Bell size={16} />
                  <span>Notifications</span>
                </button>
-             </div>
+             </Card>
            </div>
 
            {/* Panels */}
            <div className="lg:col-span-3 flex flex-col gap-6">
               
               {activeTab === 'Profile' && (
-                <div className="bg-white dark:bg-[#1e1e1e] border border-gray-200 dark:border-[#222] rounded-xl shadow-sm overflow-hidden animate-in fade-in slide-in-from-bottom-2 duration-300">
+                <Card className="p-0 overflow-hidden animate-in fade-in slide-in-from-bottom-2 duration-300">
                   <div className="p-6 border-b border-gray-100 dark:border-[#222]">
                     <h3 className="text-sm font-bold text-gray-900 dark:text-white tracking-tight">Public Profile</h3>
                     <p className="text-[11px] text-gray-500 mt-1">Manage how your profile appears to other users.</p>
@@ -86,20 +87,18 @@ export const UserSettings = () => {
                      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                        <div className="space-y-2">
                          <label className="text-[10px] font-black text-gray-500 tracking-widest uppercase ml-1">Full Name</label>
-                         <input 
+                         <Input 
                            type="text" 
                            value={name} 
                            onChange={(e) => setName(e.target.value)} 
-                           className="w-full bg-gray-50 dark:bg-[#161616] border border-gray-200 dark:border-[#222] rounded-lg px-4 py-2.5 text-xs text-gray-900 dark:text-white focus:border-[#52C5F3]/50 focus:ring-1 focus:ring-[#52C5F3]/50 outline-none transition-all" 
                          />
                        </div>
                        <div className="space-y-2">
                          <label className="text-[10px] font-black text-gray-500 tracking-widest uppercase ml-1">Email Address</label>
-                         <input 
+                         <Input 
                            type="email" 
                            value={email} 
                            onChange={(e) => setEmail(e.target.value)} 
-                           className="w-full bg-gray-50 dark:bg-[#161616] border border-gray-200 dark:border-[#222] rounded-lg px-4 py-2.5 text-xs text-gray-900 dark:text-white focus:border-[#52C5F3]/50 focus:ring-1 focus:ring-[#52C5F3]/50 outline-none transition-all" 
                          />
                        </div>
                      </div>
@@ -113,11 +112,11 @@ export const UserSettings = () => {
                          ></textarea>
                      </div>
                   </div>
-                </div>
+                </Card>
               )}
 
               {activeTab === 'Preferences' && (
-                <div className="bg-white dark:bg-[#1e1e1e] border border-gray-200 dark:border-[#222] rounded-xl shadow-sm overflow-hidden animate-in fade-in slide-in-from-bottom-2 duration-300">
+                <Card className="p-0 overflow-hidden animate-in fade-in slide-in-from-bottom-2 duration-300">
                   <div className="p-6 border-b border-gray-100 dark:border-[#222]">
                     <h3 className="text-sm font-bold text-gray-900 dark:text-white tracking-tight">System Preferences</h3>
                     <p className="text-[11px] text-gray-500 mt-1">Customize your platform experience.</p>
@@ -146,18 +145,18 @@ export const UserSettings = () => {
                           <p className="text-[10px] font-medium text-gray-500 mt-1">System default (Auto Dark/Light).</p>
                         </div>
                       </div>
-                      <select className="bg-white dark:bg-[#1e1e1e] border border-gray-200 dark:border-[#222] text-xs font-bold text-gray-700 dark:text-gray-300 rounded-lg px-3 py-1.5 focus:outline-none">
+                      <select className="bg-white dark:bg-[#1e1e1e] border border-gray-200 dark:border-[#222] text-xs font-bold text-gray-700 dark:text-gray-300 rounded-lg px-3 py-1.5 focus:outline-none focus:ring-1 focus:ring-accent/50">
                         <option>System Default</option>
                         <option>Dark Mode</option>
                         <option>Light Mode</option>
                       </select>
                     </div>
                   </div>
-                </div>
+                </Card>
               )}
 
               {activeTab === 'Security' && (
-                <div className="bg-white dark:bg-[#1e1e1e] border border-gray-200 dark:border-[#222] rounded-xl shadow-sm overflow-hidden animate-in fade-in slide-in-from-bottom-2 duration-300">
+                <Card className="p-0 overflow-hidden animate-in fade-in slide-in-from-bottom-2 duration-300">
                   <div className="p-6 border-b border-gray-100 dark:border-[#222]">
                     <h3 className="text-sm font-bold text-gray-900 dark:text-white tracking-tight">Security & Password</h3>
                     <p className="text-[11px] text-gray-500 mt-1">Keep your account safe and secure.</p>
@@ -181,28 +180,26 @@ export const UserSettings = () => {
                       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                         <div className="space-y-2">
                           <label className="text-[10px] font-black text-gray-500 tracking-widest uppercase ml-1">Current Password</label>
-                          <input 
+                          <Input 
                             type="password" 
                             placeholder="••••••••••••"
-                            className="w-full bg-gray-50 dark:bg-[#161616] border border-gray-200 dark:border-[#222] rounded-lg px-4 py-2.5 text-xs text-gray-900 dark:text-white focus:border-[#52C5F3]/50 focus:ring-1 focus:ring-[#52C5F3]/50 outline-none transition-all" 
                           />
                         </div>
                         <div className="space-y-2">
                           <label className="text-[10px] font-black text-gray-500 tracking-widest uppercase ml-1">New Password</label>
-                          <input 
+                          <Input 
                             type="password" 
                             placeholder="••••••••••••"
-                            className="w-full bg-gray-50 dark:bg-[#161616] border border-gray-200 dark:border-[#222] rounded-lg px-4 py-2.5 text-xs text-gray-900 dark:text-white focus:border-[#52C5F3]/50 focus:ring-1 focus:ring-[#52C5F3]/50 outline-none transition-all" 
                           />
                         </div>
                       </div>
                     </div>
                   </div>
-                </div>
+                </Card>
               )}
 
               {activeTab === 'Notifications' && (
-                <div className="bg-white dark:bg-[#1e1e1e] border border-gray-200 dark:border-[#222] rounded-xl shadow-sm overflow-hidden animate-in fade-in slide-in-from-bottom-2 duration-300">
+                <Card className="p-0 overflow-hidden animate-in fade-in slide-in-from-bottom-2 duration-300">
                   <div className="p-6 border-b border-gray-100 dark:border-[#222]">
                     <h3 className="text-sm font-bold text-gray-900 dark:text-white tracking-tight">Notification Alerts</h3>
                     <p className="text-[11px] text-gray-500 mt-1">Choose what you get notified about.</p>
@@ -226,7 +223,7 @@ export const UserSettings = () => {
                         </div>
                      ))}
                   </div>
-                </div>
+                </Card>
               )}
 
            </div>

@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Search, Plus, Play, ExternalLink, Activity, Server, ShieldCheck, Pause, Settings, X, Video, Cpu, Activity as ActivityIcon, ChevronDown } from 'lucide-react';
 import { cn } from '../lib/utils';
+import { toast } from 'sonner';
 
 const apps = [
   { id: 'APP-01', name: 'Main Gate Security Tracker', status: 'running', type: 'Intrusion Detection', nodes: 3, uptime: '14d 2h', endpoint: '/api/v1/gate-alerts' },
@@ -32,8 +33,12 @@ export const Applications = () => {
 
   const handleDeploy = () => {
     if (validate()) {
-      console.log('Deploying App:', { appName, appDesc, inputStream, visionPipeline, computeTarget });
-      // Proceed with deployment logic
+      // simulate deployment
+      toast.promise(new Promise(resolve => setTimeout(resolve, 1500)), {
+        loading: 'Deploying application...',
+        success: `${appName} deployed successfully to ${computeTarget}`,
+        error: 'Deployment failed',
+      });
       setIsNewAppModalOpen(false);
       setAppName('');
       setAppDesc('');

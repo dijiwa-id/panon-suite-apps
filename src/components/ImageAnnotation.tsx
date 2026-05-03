@@ -1,7 +1,11 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Card } from './ui';
+import { toast } from 'sonner';
+import { cn } from '../lib/utils';
 
 export const ImageAnnotationDetail = () => {
+  const [isDisabled, setIsDisabled] = useState(false);
+
   return (
     <Card className="p-0 col-span-3 h-full flex flex-col min-h-[300px] relative">
       <div className="p-4 border-b border-gray-200/40 dark:border-[#222]/40 shrink-0 backdrop-blur-md absolute top-0 z-10 w-full flex justify-between items-center bg-white/50 dark:bg-black/20">
@@ -25,8 +29,9 @@ export const ImageAnnotationDetail = () => {
          </div>
 
          {/* Tracking Line & Points */}
-         <div className="absolute inset-0 pointer-events-none">
-            <svg className="w-full h-full">
+         {!isDisabled && (
+           <div className="absolute inset-0 pointer-events-none">
+              <svg className="w-full h-full">
               <polyline 
                 points="10%,90% 30%,70% 60%,50%" 
                 fill="none" 
@@ -56,16 +61,23 @@ export const ImageAnnotationDetail = () => {
             {/* Target Box 3 */}
             <div className="absolute left-[80%] top-[40%] -translate-x-1/2 -translate-y-1/2 border border-accent bg-accent/10 w-10 h-8 rounded-sm flex flex-col justify-end">
                <div className="bg-accent text-black text-[7px] font-bold px-1 m-[-1px] rounded-tl-sm rounded-br-sm w-fit">V-904</div>
-            </div>
-         </div>
+           </div>
+        </div>
+         )}
 
          {/* Tooltip on overlay */}
-         <div className="absolute bottom-4 right-4 bg-white dark:bg-[#1e1e1e]/90 backdrop-blur-md border border-gray-200 dark:border-[#2a2a2a] px-3 py-1.5 rounded-[11px] shadow-xl flex items-center gap-2 cursor-pointer hover:bg-gray-100 dark:hover:bg-[#252525] transition-colors pointer-events-auto">
-            <div className="flex gap-0.5 opacity-60">
+         <div 
+           onClick={() => {
+             setIsDisabled(!isDisabled);
+             toast.info(isDisabled ? 'Annotations enabled' : 'Annotations disabled');
+           }}
+           className="absolute bottom-4 right-4 bg-white dark:bg-[#1e1e1e]/90 backdrop-blur-md border border-gray-200 dark:border-[#2a2a2a] px-3 py-1.5 rounded-[11px] shadow-xl flex items-center gap-2 cursor-pointer hover:bg-gray-100 dark:hover:bg-[#252525] transition-colors pointer-events-auto"
+         >
+            <div className={cn("flex gap-0.5 opacity-60", isDisabled && "opacity-30")}>
                <div className="w-[3px] h-3 bg-gray-400 dark:bg-white rounded-full"></div>
                <div className="w-[3px] h-3 bg-gray-400 dark:bg-white rounded-full"></div>
             </div>
-            <span className="text-[9px] font-bold text-gray-900 dark:text-white">Disable</span>
+            <span className="text-[9px] font-bold text-gray-900 dark:text-white">{isDisabled ? 'Enable' : 'Disable'}</span>
          </div>
       </div>
     </Card>

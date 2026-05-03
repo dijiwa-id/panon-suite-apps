@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
 import { ChevronDown, ChevronUp, Save, Bell, Settings, Link, Server } from 'lucide-react';
 import { cn } from '../lib/utils';
+import { toast } from 'sonner';
+import { Card, Button, Input } from '../components/ui';
 
 export const Configuration = () => {
   const [openSection, setOpenSection] = useState<string>('System Parameter');
@@ -52,7 +54,7 @@ export const Configuration = () => {
     if (openSection === 'Alert Configuration' && !validate()) {
        return;
     }
-    console.log('Saving config for', openSection);
+    toast.success(`Configuration saved for ${openSection}`);
   };
 
   const toggleSection = (section: string) => {
@@ -105,7 +107,7 @@ export const Configuration = () => {
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div>
                     <label className={labelClass}>System Name</label>
-                    <input type="text" value={systemParams.systemName} onChange={(e) => setSystemParams({...systemParams, systemName: e.target.value})} className={inputClass} />
+                    <Input type="text" value={systemParams.systemName} onChange={(e) => setSystemParams({...systemParams, systemName: e.target.value})} />
                   </div>
                   <div>
                     <label className={labelClass}>Timezone</label>
@@ -121,12 +123,12 @@ export const Configuration = () => {
                   </div>
                   <div>
                     <label className={labelClass}>Data Retention (Days)</label>
-                    <input type="number" value={systemParams.retentionDays} onChange={(e) => setSystemParams({...systemParams, retentionDays: e.target.value})} className={inputClass} />
+                    <Input type="number" value={systemParams.retentionDays} onChange={(e) => setSystemParams({...systemParams, retentionDays: e.target.value})} />
                     <p className="text-[10px] text-gray-500 mt-1 font-medium capitalize tracking-widest font-black">Metadata older than this period will be physically deleted.</p>
                   </div>
                   <div>
                     <label className={labelClass}>Global Confidence Threshold (%)</label>
-                    <input type="number" value={systemParams.confidenceThreshold} onChange={(e) => setSystemParams({...systemParams, confidenceThreshold: e.target.value})} className={inputClass} />
+                    <Input type="number" value={systemParams.confidenceThreshold} onChange={(e) => setSystemParams({...systemParams, confidenceThreshold: e.target.value})} />
                   </div>
                   
                   <div className="md:col-span-2 pt-2 flex items-center gap-3">
@@ -143,10 +145,10 @@ export const Configuration = () => {
                 </div>
 
                 <div className="mt-8 flex justify-end">
-                   <button onClick={handleSave} className="bg-[#1c1c1c] border border-gray-700 h-8 text-white rounded-full text-xs font-bold tracking-wide px-6 leading-[12px] hover:bg-[#2a2a2a] transition-colors flex items-center gap-1.5">
+                   <Button onClick={handleSave} className="gap-1.5 cursor-pointer">
                      <Save size={14} />
                      Save Parameters
-                   </button>
+                   </Button>
                 </div>
               </div>
             )}
@@ -189,16 +191,16 @@ export const Configuration = () => {
                     </div>
                     <div>
                       <label className={labelClass}>Endpoint Host / IP</label>
-                      <input type="text" placeholder="https://192.168.1.100:8080" value={integrationSettings.vmsHost} onChange={(e) => setIntegrationSettings({...integrationSettings, vmsHost: e.target.value})} className={inputClass} />
+                      <Input type="text" placeholder="https://192.168.1.100:8080" value={integrationSettings.vmsHost} onChange={(e) => setIntegrationSettings({...integrationSettings, vmsHost: e.target.value})} />
                     </div>
                     <div>
                       <label className={labelClass}>API Username / Token</label>
-                      <input type="text" value={integrationSettings.vmsUser} onChange={(e) => setIntegrationSettings({...integrationSettings, vmsUser: e.target.value})} className={inputClass} />
+                      <Input type="text" value={integrationSettings.vmsUser} onChange={(e) => setIntegrationSettings({...integrationSettings, vmsUser: e.target.value})} />
                     </div>
                     <div className="flex items-end mb-1">
-                      <button className="h-9 px-4 rounded-lg bg-gray-100 dark:bg-[#252525] border border-gray-200 dark:border-[#222] text-xs font-bold text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-[#2a2a2a] transition-colors">
+                      <Button variant="outline" className="h-[37px] rounded-lg cursor-pointer">
                         Test Connection
-                      </button>
+                      </Button>
                     </div>
                   </div>
                 </div>
@@ -211,20 +213,20 @@ export const Configuration = () => {
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div>
                       <label className={labelClass}>Webhook URL</label>
-                      <input type="text" placeholder="https://..." value={integrationSettings.acsUrl} onChange={(e) => setIntegrationSettings({...integrationSettings, acsUrl: e.target.value})} className={inputClass} />
+                      <Input type="text" placeholder="https://..." value={integrationSettings.acsUrl} onChange={(e) => setIntegrationSettings({...integrationSettings, acsUrl: e.target.value})} />
                     </div>
                     <div>
                       <label className={labelClass}>Auth Key / Secret</label>
-                      <input type="password" value={integrationSettings.acsKey} onChange={(e) => setIntegrationSettings({...integrationSettings, acsKey: e.target.value})} className={inputClass} />
+                      <Input type="password" value={integrationSettings.acsKey} onChange={(e) => setIntegrationSettings({...integrationSettings, acsKey: e.target.value})} />
                     </div>
                   </div>
                 </div>
 
                 <div className="pt-2 flex justify-end">
-                   <button onClick={handleSave} className="bg-[#1c1c1c] border border-gray-700 h-8 text-white rounded-full text-xs font-bold tracking-wide px-6 leading-[12px] hover:bg-[#2a2a2a] transition-colors flex items-center gap-1.5">
+                   <Button onClick={handleSave} className="gap-1.5 cursor-pointer">
                      <Save size={14} />
                      Save Integrations
-                   </button>
+                   </Button>
                 </div>
               </div>
             )}
@@ -302,40 +304,40 @@ export const Configuration = () => {
                           </div>
                        </div>
 
-                       <div className="space-y-4">
+                        <div className="space-y-4">
                           <div>
                             <label className={labelClass}>SMTP Domain</label>
-                            <input type="text" placeholder="domain.com" value={emailConfig.smtpDomain} onChange={(e) => setEmailConfig({...emailConfig, smtpDomain: e.target.value})} className={cn(inputClass, errors.smtpDomain && "border-red-500")} />
+                            <Input type="text" placeholder="domain.com" value={emailConfig.smtpDomain} onChange={(e) => setEmailConfig({...emailConfig, smtpDomain: e.target.value})} className={cn(errors.smtpDomain && "border-red-500 focus-visible:ring-red-500/20")} />
                             {errors.smtpDomain && <p className="text-red-500 text-[10px] mt-1 font-medium">{errors.smtpDomain}</p>}
                           </div>
                           <div className="flex gap-4">
                             <div className="flex-1">
                               <label className={labelClass}>SMTP Server</label>
-                              <input type="text" placeholder="smtp.domain.com" value={emailConfig.smtpServer} onChange={(e) => setEmailConfig({...emailConfig, smtpServer: e.target.value})} className={cn(inputClass, errors.smtpServer && "border-red-500")} />
+                              <Input type="text" placeholder="smtp.domain.com" value={emailConfig.smtpServer} onChange={(e) => setEmailConfig({...emailConfig, smtpServer: e.target.value})} className={cn(errors.smtpServer && "border-red-500 focus-visible:ring-red-500/20")} />
                             </div>
                             <div className="w-24">
                               <label className={labelClass}>Port</label>
-                              <input type="text" placeholder="587" value={emailConfig.smtpPort} onChange={(e) => setEmailConfig({...emailConfig, smtpPort: e.target.value})} className={cn(inputClass, errors.smtpPort && "border-red-500")} />
+                              <Input type="text" placeholder="587" value={emailConfig.smtpPort} onChange={(e) => setEmailConfig({...emailConfig, smtpPort: e.target.value})} className={cn(errors.smtpPort && "border-red-500 focus-visible:ring-red-500/20")} />
                             </div>
                           </div>
                           <div>
                             <label className={labelClass}>SMTP Username</label>
-                            <input type="text" placeholder="Username" value={emailConfig.smtpUsername} onChange={(e) => setEmailConfig({...emailConfig, smtpUsername: e.target.value})} className={cn(inputClass, errors.smtpUsername && "border-red-500")} />
+                            <Input type="text" placeholder="Username" value={emailConfig.smtpUsername} onChange={(e) => setEmailConfig({...emailConfig, smtpUsername: e.target.value})} className={cn(errors.smtpUsername && "border-red-500 focus-visible:ring-red-500/20")} />
                           </div>
                           <div>
                             <label className={labelClass}>SMTP Password</label>
-                            <input type="password" placeholder="Password" value={emailConfig.smtpPassword} onChange={(e) => setEmailConfig({...emailConfig, smtpPassword: e.target.value})} className={cn(inputClass, errors.smtpPassword && "border-red-500")} />
+                            <Input type="password" placeholder="Password" value={emailConfig.smtpPassword} onChange={(e) => setEmailConfig({...emailConfig, smtpPassword: e.target.value})} className={cn(errors.smtpPassword && "border-red-500 focus-visible:ring-red-500/20")} />
                           </div>
                        </div>
 
                        <div className="md:col-span-2 pt-6 flex items-center justify-end gap-4 border-t border-gray-200 dark:border-[#222]">
-                          <button className="text-xs font-bold text-accent hover:text-accent/80 transition-colors">
+                          <Button variant="ghost" className="text-accent hover:text-accent/80 cursor-pointer">
                             Send a test email
-                          </button>
-                          <button onClick={handleSave} className="bg-[#1c1c1c] border border-gray-700 h-8 text-white rounded-full text-xs font-bold tracking-wide px-6 leading-[12px] hover:bg-[#2a2a2a] transition-colors flex items-center gap-1.5">
+                          </Button>
+                          <Button onClick={handleSave} className="gap-1.5 cursor-pointer">
                             <Save size={14} />
                             Save Email Config
-                          </button>
+                          </Button>
                        </div>
                      </div>
                    )}

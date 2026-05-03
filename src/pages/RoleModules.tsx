@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
 import { Search, Plus, Filter, MoreVertical, LayoutGrid, CheckCircle2, Circle } from 'lucide-react';
 import { cn } from '../lib/utils';
+import { toast } from 'sonner';
+import { Card, Button } from '../components/ui';
 
 const initialRoleModules = [
   { 
@@ -51,8 +53,7 @@ export const RoleModules = () => {
   };
 
   const handleSave = () => {
-    console.log('Saved modules for:', activeRole, activeRoleData?.modules);
-    alert(`Permissions saved for ${activeRole}!`);
+    toast.success(`Permissions saved for ${activeRole}!`);
   };
 
   return (
@@ -93,15 +94,15 @@ export const RoleModules = () => {
            </div>
 
            {/* Modules Checklist */}
-           <div className="flex-1 bg-white dark:bg-[#1e1e1e] border border-gray-200 dark:border-[#222] shadow-sm rounded-[11px] flex flex-col overflow-hidden">
+           <Card className="flex-1 p-0 flex flex-col overflow-hidden">
                <div className="p-4 border-b border-gray-200 dark:border-[#222] bg-gray-50/50 dark:bg-[#1a1a1a]/50 flex justify-between items-center">
                   <div className="flex items-center gap-2 text-gray-900 dark:text-white">
                      <LayoutGrid size={14} className="text-gray-500" />
                      <h2 className="text-[12px] font-bold tracking-wide">Access For: <span className="text-accent">{activeRole}</span></h2>
                   </div>
-                  <button onClick={handleSave} className="bg-[#1c1c1c] border border-gray-700 h-8 text-white rounded-full text-xs font-bold tracking-wide px-6 leading-[12px] hover:bg-[#2a2a2a] transition-colors flex items-center justify-center">
+                  <Button variant="primary" onClick={handleSave} className="h-8">
                     Save Changes
-                  </button>
+                  </Button>
                </div>
 
                <div className="flex-1 overflow-y-auto p-5 custom-scrollbar">
@@ -140,7 +141,7 @@ export const RoleModules = () => {
                      })}
                   </div>
                </div>
-           </div>
+           </Card>
         </div>
       </div>
     </main>

@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { Search, Plus, X, ChevronDown } from 'lucide-react';
+import { toast } from 'sonner';
 
 const packages = [
   { id: 'SECURITY', name: 'Security', context: 'Parkir Liar' },
@@ -19,7 +20,7 @@ const AddPackageModal = ({ isOpen, onClose }: { isOpen: boolean; onClose: () => 
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    console.log('Submitting package...', formData);
+    toast.success(`Package ${formData.name || formData.id} created successfully`);
     onClose();
   };
 

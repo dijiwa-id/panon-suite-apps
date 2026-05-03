@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
 import { Search, Plus, Filter, Database, Play, Pause, MoreVertical, UploadCloud, Image as ImageIcon, X, ChevronDown } from 'lucide-react';
 import { cn } from '../lib/utils';
+import { toast } from 'sonner';
+import { Card, Button, Input, Badge, Table, TableHeader, TableRow, TableHead, TableBody, TableCell } from '../components/ui';
 
 const datasets = [
   { id: '1', name: 'Traffic Intersection A', source: 'CAM-001', collected: 15420, annotated: 12000, status: 'Collecting', type: 'Continuous' },
@@ -21,14 +23,17 @@ const NewTaskModal = ({ isOpen, onClose }: { isOpen: boolean; onClose: () => voi
           </button>
         </div>
         
-        <form onSubmit={(e) => { e.preventDefault(); onClose(); }} className="p-6 space-y-5">
+        <form onSubmit={(e) => { 
+          e.preventDefault(); 
+          toast.success('Collection task created successfully');
+          onClose(); 
+        }} className="p-6 space-y-5">
           <div>
             <label className="block text-[10px] font-black text-gray-500 mb-2 uppercase tracking-widest">Task Name</label>
-            <input 
+            <Input 
               type="text" 
               required
               placeholder="e.g. Morning Traffic Flow" 
-              className="w-full bg-gray-50 dark:bg-[#161616] border border-gray-200 dark:border-[#222] rounded-lg px-4 py-2.5 text-xs text-gray-800 dark:text-gray-200 outline-none focus:border-accent/50 focus:ring-1 focus:ring-accent/50 transition-all placeholder:text-gray-700" 
             />
           </div>
           
@@ -39,7 +44,7 @@ const NewTaskModal = ({ isOpen, onClose }: { isOpen: boolean; onClose: () => voi
                 <div className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 pointer-events-none">
                   <ChevronDown size={14} />
                 </div>
-                <select className="w-full bg-gray-100 dark:bg-[#151515] border border-gray-200 dark:border-[#222] rounded-xl pl-4 pr-9 h-[37px] text-[12px] font-bold text-gray-700 dark:text-gray-300 outline-none focus:border-accent/50 focus:ring-1 focus:ring-accent/50 transition-all appearance-none cursor-pointer">
+                <select className="w-full bg-gray-50 dark:bg-[#161616] border border-gray-200 dark:border-[#222] rounded-lg pl-4 pr-9 h-[37px] text-[12px] font-bold text-gray-700 dark:text-gray-300 outline-none focus-visible:ring-1 focus-visible:ring-accent/50 transition-all appearance-none cursor-pointer">
                   <option>Select camera...</option>
                   <option>CAM-001</option>
                   <option>CAM-042</option>
@@ -52,7 +57,7 @@ const NewTaskModal = ({ isOpen, onClose }: { isOpen: boolean; onClose: () => voi
                 <div className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 pointer-events-none">
                   <ChevronDown size={14} />
                 </div>
-                <select className="w-full bg-gray-100 dark:bg-[#151515] border border-gray-200 dark:border-[#222] rounded-xl pl-4 pr-9 h-[37px] text-[12px] font-bold text-gray-700 dark:text-gray-300 outline-none focus:border-accent/50 focus:ring-1 focus:ring-accent/50 transition-all appearance-none cursor-pointer">
+                <select className="w-full bg-gray-50 dark:bg-[#161616] border border-gray-200 dark:border-[#222] rounded-lg pl-4 pr-9 h-[37px] text-[12px] font-bold text-gray-700 dark:text-gray-300 outline-none focus-visible:ring-1 focus-visible:ring-accent/50 transition-all appearance-none cursor-pointer">
                   <option>Continuous</option>
                   <option>Scheduled</option>
                   <option>Batch</option>
@@ -63,27 +68,19 @@ const NewTaskModal = ({ isOpen, onClose }: { isOpen: boolean; onClose: () => voi
 
           <div>
             <label className="block text-[10px] font-black text-gray-500 mb-2 uppercase tracking-widest">Target Volume (Images)</label>
-            <input 
+            <Input 
               type="number" 
               placeholder="10000" 
-              className="w-full bg-gray-50 dark:bg-[#161616] border border-gray-200 dark:border-[#222] rounded-lg px-4 py-2.5 text-xs text-gray-800 dark:text-gray-200 outline-none focus:border-accent/50 focus:ring-1 focus:ring-accent/50 transition-all placeholder:text-gray-700" 
             />
           </div>
 
           <div className="flex justify-between mt-8 pt-4 border-t border-gray-200 dark:border-[#222] items-center">
-            <button 
-              type="button"
-              onClick={onClose} 
-              className="text-gray-500 hover:text-white font-black text-[10px] transition-colors uppercase tracking-widest"
-            >
+            <Button variant="ghost" type="button" onClick={onClose}>
               Cancel
-            </button>
-            <button 
-              type="submit"
-              className="bg-accent hover:bg-accent/90 text-black h-[32px] rounded-full text-xs font-bold px-8 transition-colors shadow-[0_0_15px_rgba(82,197,243,0.3)] leading-[12px]"
-            >
+            </Button>
+            <Button variant="primary" type="submit" className="h-8">
               Create Task
-            </button>
+            </Button>
           </div>
         </form>
       </div>
@@ -106,10 +103,9 @@ const UploadDatasetModal = ({ isOpen, onClose }: { isOpen: boolean; onClose: () 
         <div className="p-8 space-y-6">
           <div>
             <label className="block text-[10px] font-black text-gray-500 mb-2 uppercase tracking-widest">Dataset Name</label>
-            <input 
+            <Input 
               type="text" 
               placeholder="e.g. Training Set July" 
-              className="w-full bg-gray-50 dark:bg-[#161616] border border-gray-200 dark:border-[#222] rounded-lg px-4 py-2.5 text-xs text-gray-800 dark:text-gray-200 outline-none focus:border-accent/50 focus:ring-1 focus:ring-accent/50 transition-all placeholder:text-gray-700" 
             />
           </div>
           
@@ -126,19 +122,21 @@ const UploadDatasetModal = ({ isOpen, onClose }: { isOpen: boolean; onClose: () 
         </div>
 
         <div className="p-6 border-t border-gray-200 dark:border-[#222] flex gap-3 justify-between items-center bg-gray-50/50 dark:bg-[#1a1a1a]">
-          <button 
-            type="button"
-            onClick={onClose} 
-            className="text-gray-500 hover:text-white font-black text-[10px] transition-colors uppercase tracking-widest"
-          >
-            Cancel
-          </button>
-          <button 
-            onClick={() => { console.log('Uploading dataset...'); onClose(); }} 
-            className="bg-accent hover:bg-accent/90 text-black h-[32px] rounded-full text-xs font-bold px-8 transition-colors shadow-[0_0_15px_rgba(82,197,243,0.3)] leading-[12px]"
-          >
-            Start Upload
-          </button>
+           <Button variant="ghost" type="button" onClick={onClose}>
+             Cancel
+           </Button>
+           <Button variant="primary" onClick={() => { 
+                toast.promise(new Promise(resolve => setTimeout(resolve, 2000)), {
+                  loading: 'Uploading dataset...',
+                  success: 'Dataset uploaded successfully',
+                  error: 'Upload failed',
+                });
+                onClose(); 
+              }} 
+             className="h-8"
+           >
+             Start Upload
+           </Button>
         </div>
       </div>
     </div>
@@ -157,12 +155,12 @@ export const DataCollection = () => {
           <p className="text-gray-600 dark:text-gray-400 text-xs font-medium">Manage datasets, collection tasks, and annotation progress.</p>
         </div>
         <div className="flex gap-3">
-          <button onClick={() => setIsUploadModalOpen(true)} className="flex items-center gap-2 bg-white dark:bg-[#1c1c1c] border border-gray-300 dark:border-gray-700 h-8 text-gray-900 dark:text-white rounded-full text-xs font-bold px-5 hover:bg-gray-200 dark:hover:bg-[#2a2a2a] transition-colors leading-[12px]">
+          <Button variant="outline" onClick={() => setIsUploadModalOpen(true)} className="gap-2 h-8 rounded-full">
             <UploadCloud size={14} /> Upload Dataset
-          </button>
-          <button onClick={() => setIsTaskModalOpen(true)} className="flex items-center gap-2 bg-accent hover:bg-accent/90 text-black h-8 rounded-full text-xs font-bold px-5 transition-colors shadow-[0_0_15px_rgba(82,197,243,0.3)] leading-[12px]">
+          </Button>
+          <Button variant="primary" onClick={() => setIsTaskModalOpen(true)} className="gap-2 h-8 rounded-full">
             <Plus size={14} /> New Collection Task
-          </button>
+          </Button>
         </div>
       </div>
 
@@ -173,7 +171,7 @@ export const DataCollection = () => {
           { label: 'Active Tasks', value: '8', icon: <Play className="text-accent" size={20} /> },
           { label: 'Pending Annotation', value: '45.2K', icon: <Filter className="text-orange-400" size={20} /> },
         ].map((stat, idx) => (
-          <div key={idx} className="bg-white dark:bg-[#1e1e1e] p-4 rounded-[11px] border border-gray-200 dark:border-[#222] shadow-sm flex items-center justify-between">
+          <Card key={idx} className="p-4 flex items-center justify-between">
             <div>
               <div className="text-[10px] font-black text-gray-500 mb-1 uppercase tracking-widest">{stat.label}</div>
               <div className="text-[18px] font-bold text-gray-900 dark:text-white tracking-tight">{stat.value}</div>
@@ -181,47 +179,47 @@ export const DataCollection = () => {
             <div className="h-10 w-10 rounded-xl bg-gray-100 dark:bg-[#151515] border border-gray-200 dark:border-[#222] flex items-center justify-center">
               {stat.icon}
             </div>
-          </div>
+          </Card>
         ))}
       </div>
 
-      <div className="bg-white dark:bg-[#1e1e1e] rounded-[11px] border border-gray-200 dark:border-[#222] overflow-hidden shadow-sm">
+      <Card className="p-0 overflow-hidden flex flex-col">
         <div className="p-5 border-b border-gray-200 dark:border-[#222] flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 bg-gray-50/50 dark:bg-[#1a1a1a]">
           <h2 className="text-sm font-bold text-gray-900 dark:text-white">Active Datasets</h2>
           <div className="flex gap-3 w-full sm:w-auto">
-             <div className="bg-gray-100 dark:bg-[#151515] px-4 py-2 rounded-xl border border-gray-200 dark:border-[#222] flex items-center gap-2 flex-1 sm:flex-none focus-within:border-accent/50 focus-within:ring-1 focus-within:ring-accent/50 transition-all">
-                <Search className="text-gray-600 dark:text-gray-400" size={16} />
-                <input type="text" placeholder="Search datasets..." className="bg-transparent outline-none text-xs font-medium text-gray-800 dark:text-gray-200 w-full sm:w-64 placeholder-gray-600" />
+             <div className="relative flex-1 sm:flex-none">
+                <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-500 pointer-events-none" size={16} />
+                <Input type="text" placeholder="Search datasets..." className="pl-9 w-full sm:w-64" />
              </div>
-             <button className="bg-gray-100 dark:bg-[#151515] p-3 rounded-xl border border-gray-200 dark:border-[#222] text-gray-600 dark:text-gray-400 hover:text-white transition-colors flex items-center justify-center">
+             <Button variant="outline" className="p-0 w-[38px] h-[38px] flex items-center justify-center shrink-0">
                 <Filter size={16} />
-             </button>
+             </Button>
           </div>
         </div>
         <div className="overflow-x-auto">
-          <table className="w-full text-left text-xs">
-            <thead>
-                <tr className="border-b border-gray-200 dark:border-[#222] bg-gray-50/50 dark:bg-transparent">
-                <th className="px-5 py-4 whitespace-nowrap">Dataset Name</th>
-                <th className="px-5 py-4 whitespace-nowrap">Source</th>
-                <th className="px-5 py-4 whitespace-nowrap">Type</th>
-                <th className="px-5 py-4 whitespace-nowrap">Progress / Volume</th>
-                <th className="px-5 py-4 whitespace-nowrap">Status</th>
-                <th className="px-5 py-4 text-right whitespace-nowrap">Actions</th>
-              </tr>
-            </thead>
-            <tbody className="divide-y divide-gray-200 dark:divide-[#222]">
+          <Table>
+            <TableHeader>
+                <TableRow>
+                <TableHead className="pl-5">Dataset Name</TableHead>
+                <TableHead>Source</TableHead>
+                <TableHead>Type</TableHead>
+                <TableHead>Progress / Volume</TableHead>
+                <TableHead>Status</TableHead>
+                <TableHead className="pr-5 text-right">Actions</TableHead>
+              </TableRow>
+            </TableHeader>
+            <TableBody>
               {datasets.map((ds) => (
-                <tr key={ds.id} className="hover:bg-white/5 hover:bg-gray-50 transition-colors group">
-                  <td className="px-5 py-4">
+                <TableRow key={ds.id} className="group cursor-pointer">
+                  <TableCell className="pl-5">
                     <div className="font-semibold text-gray-900 dark:text-white text-xs mb-0.5">{ds.name}</div>
                     <div className="text-gray-500 text-[11px] font-medium">ID: DS-{ds.id.padStart(4, '0')}</div>
-                  </td>
-                  <td className="px-5 py-4 font-mono text-gray-600 dark:text-gray-400 text-xs">{ds.source}</td>
-                  <td className="px-5 py-4">
-                    <span className="px-2.5 py-1 rounded bg-white dark:bg-[#1c1c1c] border border-gray-800 text-gray-700 dark:text-gray-300 font-medium text-xs">{ds.type}</span>
-                  </td>
-                  <td className="px-5 py-4 min-w-[200px]">
+                  </TableCell>
+                  <TableCell className="font-mono text-gray-600 dark:text-gray-400 text-xs">{ds.source}</TableCell>
+                  <TableCell>
+                    <span className="px-2.5 py-1 rounded bg-white dark:bg-[#1c1c1c] border border-gray-200 dark:border-gray-800 text-gray-700 dark:text-gray-300 font-medium text-xs">{ds.type}</span>
+                  </TableCell>
+                  <TableCell className="min-w-[200px]">
                     <div className="flex justify-between text-[11px] mb-2 font-semibold">
                       <span className="text-accent">{ds.annotated.toLocaleString()} Annotated</span>
                       <span className="text-gray-500">{ds.collected.toLocaleString()} Total</span>
@@ -229,35 +227,31 @@ export const DataCollection = () => {
                     <div className="w-full bg-gray-100 dark:bg-[#151515] rounded-full h-1.5 overflow-hidden border border-gray-200 dark:border-[#222]">
                       <div className="bg-accent h-1.5 rounded-full" style={{ width: `${(ds.annotated / ds.collected) * 100 || 0}%` }}></div>
                     </div>
-                  </td>
-                  <td className="px-5 py-4">
-                    <span className={cn(
-                      "px-3 py-1 rounded-full text-xs font-semibold border",
-                      ds.status === 'Collecting' ? "bg-green-500/10 text-green-400 border-green-500/20" :
-                      ds.status === 'Completed' ? "bg-blue-500/10 text-blue-400 border-blue-500/20" :
-                      ds.status === 'Annotating' ? "bg-orange-500/10 text-orange-400 border-orange-500/20" :
-                      "bg-gray-500/10 text-gray-600 dark:text-gray-400 border-gray-500/20"
-                    )}>
-                      {ds.status}
-                    </span>
-                  </td>
-                  <td className="px-5 py-4">
+                  </TableCell>
+                  <TableCell>
+                    {ds.status === 'Collecting' ? <Badge variant="success">Collecting</Badge> : 
+                     ds.status === 'Completed' ? <Badge variant="primary" className="bg-blue-500 hover:bg-blue-600 text-white border-transparent">Completed</Badge> :
+                     ds.status === 'Annotating' ? <Badge variant="secondary" className="bg-orange-500/20 text-orange-500 border-transparent dark:bg-orange-500/10">Annotating</Badge> :
+                     <Badge variant="secondary">Paused</Badge>
+                    }
+                  </TableCell>
+                  <TableCell className="pr-5">
                     <div className="flex justify-end gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
                       {ds.status === 'Collecting' ? (
-                          <button className="p-1.5 text-gray-600 dark:text-gray-400 hover:text-yellow-400 transition-colors bg-gray-100 dark:bg-[#151515] border border-gray-200 dark:border-[#222] rounded-lg"><Pause size={14} /></button>
+                          <Button variant="outline" className="px-2.5"><Pause size={14} className="text-yellow-500" /></Button>
                       ) : ds.status === 'Paused' ? (
-                          <button className="p-1.5 text-gray-600 dark:text-gray-400 hover:text-green-400 transition-colors bg-gray-100 dark:bg-[#151515] border border-gray-200 dark:border-[#222] rounded-lg"><Play size={14} /></button>
+                          <Button variant="outline" className="px-2.5"><Play size={14} className="text-green-500" /></Button>
                       ) : null}
-                      <button className="p-1.5 text-gray-600 dark:text-gray-400 hover:text-accent transition-colors bg-gray-100 dark:bg-[#151515] border border-gray-200 dark:border-[#222] rounded-lg"><Database size={14} /></button>
-                      <button className="p-1.5 text-gray-600 dark:text-gray-400 hover:text-white transition-colors bg-gray-100 dark:bg-[#151515] border border-gray-200 dark:border-[#222] rounded-lg"><MoreVertical size={14} /></button>
+                      <Button variant="outline" className="px-2.5 text-accent hover:text-accent/90"><Database size={14} /></Button>
+                      <Button variant="outline" className="px-2.5"><MoreVertical size={14} /></Button>
                     </div>
-                  </td>
-                </tr>
+                  </TableCell>
+                </TableRow>
               ))}
-            </tbody>
-          </table>
+            </TableBody>
+          </Table>
         </div>
-      </div>
+      </Card>
       <NewTaskModal isOpen={isTaskModalOpen} onClose={() => setIsTaskModalOpen(false)} />
       <UploadDatasetModal isOpen={isUploadModalOpen} onClose={() => setIsUploadModalOpen(false)} />
     </main>

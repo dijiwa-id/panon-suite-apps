@@ -39,6 +39,7 @@ import { DeployDashboard } from './pages/DeployDashboard';
 import { DeployLiveFeedCamera } from './pages/DeployLiveFeedCamera';
 import { DeployDetectionLog } from './pages/DeployDetectionLog';
 import { DeployReport } from './pages/DeployReport';
+import { Toaster } from 'sonner';
 
 const AppLayout = ({ children }: { children: React.ReactNode }) => {
   const [isSidebarCollapsed, setIsSidebarCollapsed] = React.useState(false);
@@ -97,6 +98,7 @@ export default function App() {
           <Route path="*" element={<Navigate to="/dashboard" replace />} />
         </Routes>
       </BrowserRouter>
+      <Toaster position="top-right" richColors />
     </ThemeProvider>
   );
 }

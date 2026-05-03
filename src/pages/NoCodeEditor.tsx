@@ -1,7 +1,8 @@
 import React, { useState, useCallback, useRef } from 'react';
-import { Play, Save, Settings, Video, BrainCircuit, Server, Search, X } from 'lucide-react';
+import { Play, Save, Settings as SettingsIcon, Video, BrainCircuit, Server, Search, X } from 'lucide-react';
 import { cn } from '../lib/utils';
 import { useTheme } from '../context/ThemeContext';
+import { Button, Input } from '../components/ui';
 import {
   ReactFlow,
   Background,
@@ -34,7 +35,7 @@ const CustomNode = ({ data, type, selected }: { data: any, type: string, selecte
            <span className="text-[11px] font-bold text-gray-800 dark:text-white flex items-center gap-2">
                <div className={`w-2 h-2 rounded-full ${colorClass}`}></div> {data.label}
            </span>
-           <Settings size={12} className="text-gray-400 cursor-pointer hover:text-gray-900 dark:hover:text-white transition-colors opacity-0 group-hover:opacity-100" />
+           <SettingsIcon size={12} className="text-gray-400 cursor-pointer hover:text-gray-900 dark:hover:text-white transition-colors opacity-0 group-hover:opacity-100" />
        </div>
        <div className="p-3 bg-white dark:bg-[#1a1a1a] rounded-b-xl flex-1 flex flex-col justify-center gap-0.5">
            {data.subLabel && <div className="text-[10px] text-gray-500 dark:text-gray-500 font-mono truncate uppercase tracking-widest font-black mb-1">{data.subLabel}</div>}
@@ -134,14 +135,14 @@ export const NoCodeEditor = () => {
       <>
         <div className="space-y-3">
            <label className="text-[10px] font-black text-gray-500 uppercase tracking-widest block">Block Name</label>
-           <input type="text" value={data.label || ''} onChange={(e) => updateNodeData('label', e.target.value)} className="w-full bg-white dark:bg-[#111] border border-gray-200 dark:border-[#333] rounded-[8px] px-3 py-2 text-xs text-gray-900 dark:text-white outline-none focus:border-[#52C5F3] dark:focus:border-[#52C5F3] transition-colors shadow-sm" />
+           <Input type="text" value={data.label || ''} onChange={(e) => updateNodeData('label', e.target.value)} />
         </div>
 
         {type === 'sourceNode' && (
           <>
             <div className="space-y-3">
                <label className="text-[10px] font-black text-gray-500 uppercase tracking-widest block">Stream URL / Path</label>
-               <input type="text" value={data.url || data.subLabel || ''} onChange={(e) => updateNodeData('url', e.target.value)} placeholder="rtsp://..." className="w-full bg-white dark:bg-[#111] border border-gray-200 dark:border-[#333] rounded-[8px] px-3 py-2 text-xs text-gray-900 dark:text-white outline-none focus:border-[#52C5F3] dark:focus:border-[#52C5F3] transition-colors shadow-sm font-mono" />
+               <Input type="text" value={data.url || data.subLabel || ''} onChange={(e) => updateNodeData('url', e.target.value)} placeholder="rtsp://..." className="font-mono" />
             </div>
             <div className="grid grid-cols-2 gap-4">
                <div className="space-y-3">
@@ -168,7 +169,7 @@ export const NoCodeEditor = () => {
           <>
             <div className="space-y-3">
                <label className="text-[10px] font-black text-gray-500 uppercase tracking-widest block">Model Selection/Path</label>
-               <input type="text" value={data.modelPath || ''} onChange={(e) => updateNodeData('modelPath', e.target.value)} placeholder="e.g. models/yolov8_custom.pt" className="w-full bg-white dark:bg-[#111] border border-gray-200 dark:border-[#333] rounded-[8px] px-3 py-2 text-xs text-gray-900 dark:text-white outline-none focus:border-[#52C5F3] dark:focus:border-[#52C5F3] transition-colors shadow-sm" />
+               <Input type="text" value={data.modelPath || ''} onChange={(e) => updateNodeData('modelPath', e.target.value)} placeholder="e.g. models/yolov8_custom.pt" />
             </div>
             <div className="space-y-3">
                <div className="flex justify-between items-center bg-gray-50 dark:bg-[#111] border border-gray-100 dark:border-[#222] p-3 rounded-[8px]">
@@ -179,7 +180,7 @@ export const NoCodeEditor = () => {
             </div>
             <div className="space-y-3">
                <label className="text-[10px] font-black text-gray-500 uppercase tracking-widest block">Target Classes</label>
-               <input type="text" value={data.classes || ''} onChange={(e) => updateNodeData('classes', e.target.value)} placeholder="person, car, truck..." className="w-full bg-white dark:bg-[#111] border border-gray-200 dark:border-[#333] rounded-[8px] px-3 py-2 text-xs text-gray-900 dark:text-white outline-none focus:border-[#52C5F3] dark:focus:border-[#52C5F3] transition-colors shadow-sm" />
+               <Input type="text" value={data.classes || ''} onChange={(e) => updateNodeData('classes', e.target.value)} placeholder="person, car, truck..." />
                <p className="text-[10px] text-gray-400">Leave empty to use all model default classes.</p>
             </div>
           </>
@@ -197,7 +198,7 @@ export const NoCodeEditor = () => {
             </div>
             <div className="space-y-3">
                <label className="text-[10px] font-black text-gray-500 uppercase tracking-widest block">Endpoint / Topic URL</label>
-               <input type="text" value={data.endpoint || ''} onChange={(e) => updateNodeData('endpoint', e.target.value)} placeholder="https://..." className="w-full bg-white dark:bg-[#111] border border-gray-200 dark:border-[#333] rounded-[8px] px-3 py-2 text-xs text-gray-900 dark:text-white outline-none focus:border-[#52C5F3] dark:focus:border-[#52C5F3] transition-colors shadow-sm font-mono" />
+               <Input type="text" value={data.endpoint || ''} onChange={(e) => updateNodeData('endpoint', e.target.value)} placeholder="https://..." className="font-mono" />
             </div>
           </>
         )}
@@ -214,7 +215,7 @@ export const NoCodeEditor = () => {
             </div>
             <div className="space-y-3">
                <label className="text-[10px] font-black text-gray-500 uppercase tracking-widest block">Zone Coordinates</label>
-               <input type="text" value={data.coordinates || ''} onChange={(e) => updateNodeData('coordinates', e.target.value)} placeholder="[[x1, y1], [x2, y2]...]" className="w-full bg-white dark:bg-[#111] border border-gray-200 dark:border-[#333] rounded-[8px] px-3 py-2 text-xs text-gray-900 dark:text-white outline-none focus:border-[#52C5F3] dark:focus:border-[#52C5F3] transition-colors shadow-sm font-mono" />
+               <Input type="text" value={data.coordinates || ''} onChange={(e) => updateNodeData('coordinates', e.target.value)} placeholder="[[x1, y1], [x2, y2]...]" className="font-mono" />
             </div>
            </>
         )}
@@ -281,12 +282,12 @@ export const NoCodeEditor = () => {
         </div>
 
         <div className="flex gap-3 items-center">
-          <button className="flex items-center gap-2 bg-white dark:bg-[#1a1a1a] hover:bg-gray-50 dark:hover:bg-[#202020] text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white border border-gray-200 dark:border-[#222] h-[32px] rounded-lg text-xs font-bold px-4 transition-colors shadow-sm">
+          <Button variant="outline" className="gap-2 h-8 rounded-lg px-4">
             <Save size={14} /> Save Pipeline
-          </button>
-          <button className="flex items-center gap-2 bg-accent hover:bg-accent/90 text-black h-[32px] rounded-lg text-xs font-bold px-5 transition-colors shadow-[0_0_15px_rgba(82,197,243,0.3)]">
+          </Button>
+          <Button variant="primary" className="gap-2 h-8 rounded-lg px-5">
             <Play size={14} className="fill-black" /> Deploy
-          </button>
+          </Button>
         </div>
       </div>
 
@@ -294,9 +295,9 @@ export const NoCodeEditor = () => {
         {/* Left Sidebar - Nodes Palette */}
         <div className="w-64 border-r border-gray-200 dark:border-[#222] bg-white dark:bg-[#161616] flex flex-col shrink-0 z-10">
           <div className="p-4 border-b border-gray-200 dark:border-[#222]">
-             <div className="bg-white dark:bg-[#151515] px-4 py-2 rounded-xl border border-gray-200 dark:border-[#222] flex items-center gap-2 focus-within:border-accent/50 focus-within:ring-1 focus-within:ring-accent/50 transition-all shadow-sm">
-                <Search className="text-gray-400 dark:text-gray-400" size={16} />
-                <input type="text" placeholder="Search blocks..." className="bg-transparent outline-none text-xs font-medium text-gray-800 dark:text-gray-200 w-full placeholder-gray-400 dark:placeholder-gray-600" />
+             <div className="relative">
+                <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 dark:text-gray-400" size={16} />
+                <Input type="text" placeholder="Search blocks..." className="pl-9" />
              </div>
           </div>
           <div className="flex-1 overflow-y-auto p-4 space-y-6 custom-scrollbar">
@@ -397,9 +398,9 @@ export const NoCodeEditor = () => {
             
             {/* Footer */}
             <div className="px-5 py-4 border-t border-gray-100 dark:border-[#222] bg-gray-50/50 dark:bg-[#161616] flex justify-end shrink-0">
-               <button onClick={() => setSelectedNodeId(null)} className="bg-[#1c1c1c] border border-gray-700 h-8 flex items-center text-white rounded-full text-xs font-bold tracking-wide px-6 hover:bg-[#2a2a2a] transition-colors shadow-sm">
+               <Button variant="primary" onClick={() => setSelectedNodeId(null)} className="h-8">
                   Apply Changes
-               </button>
+               </Button>
             </div>
           </div>
         </div>
