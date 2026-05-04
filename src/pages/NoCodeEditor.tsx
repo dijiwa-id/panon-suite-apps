@@ -378,7 +378,7 @@ export const NoCodeEditor = () => {
                    )}>
                        {selectedNode.type === 'sourceNode' ? <Video size={16} /> :
                         selectedNode.type === 'processorNode' ? <BrainCircuit size={16} /> :
-                        selectedNode.type === 'logicNode' ? <Settings size={16} /> :
+                        selectedNode.type === 'logicNode' ? <SettingsIcon size={16} /> :
                         <Server size={16} />}
                    </div>
                    <div>

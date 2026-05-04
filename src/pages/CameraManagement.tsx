@@ -88,7 +88,7 @@ const CameraModal = ({ isOpen, onClose, onSave, editingCamera }: { isOpen: boole
             </button>
         </div>
 
-        <div className="p-8 overflow-y-auto max-h-[70vh] bg-white dark:bg-[#1e1e1e]">
+        <div className="p-8 overflow-y-auto max-h-[70vh] bg-white dark:bg-[#1e1e1e] custom-scrollbar">
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 mb-4">
                 <div className="space-y-6">
                     <div>

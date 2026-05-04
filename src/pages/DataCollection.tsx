@@ -230,9 +230,9 @@ export const DataCollection = () => {
                   </TableCell>
                   <TableCell>
                     {ds.status === 'Collecting' ? <Badge variant="success">Collecting</Badge> : 
-                     ds.status === 'Completed' ? <Badge variant="primary" className="bg-blue-500 hover:bg-blue-600 text-white border-transparent">Completed</Badge> :
-                     ds.status === 'Annotating' ? <Badge variant="secondary" className="bg-orange-500/20 text-orange-500 border-transparent dark:bg-orange-500/10">Annotating</Badge> :
-                     <Badge variant="secondary">Paused</Badge>
+                     ds.status === 'Completed' ? <Badge variant="default" className="bg-blue-500 hover:bg-blue-600 text-white border-transparent">Completed</Badge> :
+                     ds.status === 'Annotating' ? <Badge variant="default" className="bg-orange-500/20 text-orange-500 border-transparent dark:bg-orange-500/10">Annotating</Badge> :
+                     <Badge variant="default">Paused</Badge>
                     }
                   </TableCell>
                   <TableCell className="pr-5">
