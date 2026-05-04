@@ -325,7 +325,7 @@ export const CameraManagement = () => {
                     <div className="text-[11px] text-gray-500 font-mono">{cam.id}</div>
                   </TableCell>
                   <TableCell>
-                    <div className="text-gray-700 dark:text-gray-300 font-medium mb-0.5">{cam.location}</div>
+                    <div className="text-gray-700 dark:text-gray-300 font-medium mb-0.5 text-xs">{cam.location}</div>
                     <div className="text-[11px] text-gray-500 font-mono flex items-center gap-1">
                         <MapPin size={10} /> {cam.coordinate}
                     </div>
