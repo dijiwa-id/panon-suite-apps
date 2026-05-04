@@ -1,5 +1,5 @@
 import React from 'react';
-import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
+import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
 import { cn } from '../lib/utils';
 import { HardDrive, Activity, Monitor, Network, ShieldCheck, ChevronDown } from 'lucide-react';
 import { useTheme } from '../context/ThemeContext';
@@ -36,10 +36,11 @@ export const SystemMonitoring = () => {
     if (active && payload && payload.length) {
       const entry = payload[0];
       return (
-        <div className="bg-[#1e1e1e] border border-[#222] text-white text-[10px] px-2.5 py-1.5 rounded shadow-md font-bold z-50 relative">
-          {label && <div className="text-gray-400 mb-0.5">{label}</div>}
-          <div style={{ color: entry.payload?.fill || entry.color || '#fff' }}>
-            {entry.name}: {entry.value}%
+        <div className="bg-white dark:bg-[#1e1e1e] border border-gray-100 dark:border-[#222] text-gray-900 dark:text-white text-[11px] px-3 py-2 rounded shadow-lg font-bold z-50 relative flex flex-col gap-1 items-start min-w-[120px]">
+          {label && <div className="text-gray-500 font-medium">{label}</div>}
+          <div className="flex items-center gap-2" style={{ color: entry.payload?.fill || entry.color || '#fff' }}>
+            <span className="w-2 h-2 rounded-full" style={{ backgroundColor: entry.color }}></span>
+            <span>{entry.name}: <span className="font-black">{entry.value}%</span></span>
           </div>
         </div>
       );
@@ -133,13 +134,19 @@ export const SystemMonitoring = () => {
           </div>
           <div className="h-48 pb-2 flex-1 w-full mt-2">
             <ResponsiveContainer width="100%" height="100%" minWidth={0} minHeight={0}>
-              <LineChart data={memoryData} margin={{ top: 10, right: 0, left: -25, bottom: 0 }}>
+              <AreaChart data={memoryData} margin={{ top: 10, right: 0, left: -25, bottom: 0 }}>
+                <defs>
+                  <linearGradient id="colorMemory" x1="0" y1="0" x2="0" y2="1">
+                    <stop offset="5%" stopColor="#52C5F3" stopOpacity={0.3}/>
+                    <stop offset="95%" stopColor="#52C5F3" stopOpacity={0}/>
+                  </linearGradient>
+                </defs>
                 <CartesianGrid strokeDasharray="3 3" stroke={isDark ? '#2a2a2a' : '#e5e7eb'} vertical={false} />
                 <XAxis dataKey="time" axisLine={false} tickLine={false} tick={{fontSize: 10, fill: '#888', fontWeight: 600}} dy={10} />
                 <YAxis axisLine={false} tickLine={false} tick={{fontSize: 10, fill: '#888', fontWeight: 600}} />
-                <Tooltip cursor={{ stroke: isDark ? '#333' : '#e5e7eb', strokeWidth: 1, strokeDasharray: '3 3' }} content={<CustomTooltip />} />
-                <Line type="monotone" name="Memory Usage" dataKey="value" stroke="#52C5F3" strokeWidth={2} dot={false} activeDot={{ r: 4 }} animationDuration={1000} />
-              </LineChart>
+                <Tooltip cursor={{ stroke: isDark ? '#333' : '#cecece', strokeWidth: 1, strokeDasharray: '3 3' }} content={<CustomTooltip />} />
+                <Area type="monotone" name="Memory Usage" dataKey="value" stroke="#52C5F3" strokeWidth={3} fillOpacity={1} fill="url(#colorMemory)" activeDot={{ r: 5, strokeWidth: 0, fill: "#52C5F3" }} animationDuration={1000} />
+              </AreaChart>
             </ResponsiveContainer>
           </div>
         </div>
@@ -158,13 +165,19 @@ export const SystemMonitoring = () => {
           </div>
           <div className="h-48 pb-2 flex-1 w-full mt-2">
             <ResponsiveContainer width="100%" height="100%" minWidth={0} minHeight={0}>
-              <LineChart data={diskData} margin={{ top: 10, right: 0, left: -25, bottom: 0 }}>
+              <AreaChart data={diskData} margin={{ top: 10, right: 0, left: -25, bottom: 0 }}>
+                <defs>
+                  <linearGradient id="colorDisk" x1="0" y1="0" x2="0" y2="1">
+                    <stop offset="5%" stopColor="#EC3292" stopOpacity={0.3}/>
+                    <stop offset="95%" stopColor="#EC3292" stopOpacity={0}/>
+                  </linearGradient>
+                </defs>
                 <CartesianGrid strokeDasharray="3 3" stroke={isDark ? '#2a2a2a' : '#e5e7eb'} vertical={false} />
                 <XAxis dataKey="time" axisLine={false} tickLine={false} tick={{fontSize: 10, fill: '#888', fontWeight: 600}} dy={10} />
                 <YAxis axisLine={false} tickLine={false} tick={{fontSize: 10, fill: '#888', fontWeight: 600}} />
-                <Tooltip cursor={{ stroke: isDark ? '#333' : '#e5e7eb', strokeWidth: 1, strokeDasharray: '3 3' }} content={<CustomTooltip />} />
-                <Line type="monotone" name="Disk Usage" dataKey="value" stroke="#EC3292" strokeWidth={2} dot={false} activeDot={{ r: 4 }} animationDuration={1000} />
-              </LineChart>
+                <Tooltip cursor={{ stroke: isDark ? '#333' : '#cecece', strokeWidth: 1, strokeDasharray: '3 3' }} content={<CustomTooltip />} />
+                <Area type="monotone" name="Disk Usage" dataKey="value" stroke="#EC3292" strokeWidth={3} fillOpacity={1} fill="url(#colorDisk)" activeDot={{ r: 5, strokeWidth: 0, fill: "#EC3292" }} animationDuration={1000} />
+              </AreaChart>
             </ResponsiveContainer>
           </div>
         </div>

@@ -9,9 +9,10 @@ interface TableCardProps {
   columns: string[];
   data: any[];
   className?: string;  
+  isLoading?: boolean;
 }
 
-export const TableCard = ({ title, tabs, columns, data, className }: TableCardProps) => {
+export const TableCard = ({ title, tabs, columns, data, className, isLoading }: TableCardProps) => {
   const [activeTab, setActiveTab] = useState(tabs?.[0] || '');
   const [sortCol, setSortCol] = useState(columns[0]);
   const [sortAsc, setSortAsc] = useState(true);
@@ -42,6 +43,8 @@ export const TableCard = ({ title, tabs, columns, data, className }: TableCardPr
     const compare = String(aVal).localeCompare(String(bVal), undefined, {numeric: true});
     return sortAsc ? compare : -compare;
   });
+
+  const showLoading = isLoading || data.length === 0;
 
   return (
     <Card className={cn("p-5 flex flex-col group/table shadow-sm border border-gray-200 dark:border-[#222]", className)}>
@@ -82,7 +85,23 @@ export const TableCard = ({ title, tabs, columns, data, className }: TableCardPr
             </TableRow>
           </TableHeader>
           <TableBody>
-            {sortedData.map((row, i) => (
+            {showLoading ? (
+               Array.from({ length: Math.max(3, data.length || 4) }).map((_, rowIndex) => (
+                <TableRow key={`skeleton-${rowIndex}`} className="cursor-default">
+                  {columns.map((_, colIndex) => (
+                    <TableCell key={`skeleton-col-${colIndex}`} className="py-3 pl-3">
+                      <div className={cn(
+                        "h-3.5 bg-gray-200 dark:bg-[#2a2a2a] rounded animate-pulse w-full",
+                        colIndex === 0 && "w-3/4 max-w-[120px]",
+                        colIndex === 1 && "w-1/2 max-w-[80px]",
+                        colIndex === columns.length - 1 && "w-1/3 max-w-[60px]"
+                      )}></div>
+                    </TableCell>
+                  ))}
+                  <TableCell className="w-8"></TableCell>
+                </TableRow>
+              ))
+            ) : sortedData.map((row, i) => (
               <TableRow key={i} className={cn("cursor-pointer", row.active ? "bg-accent/5 dark:bg-accent/[0.03] relative" : "")}>
                 {Object.values(row).map((val: any, j) => {
                   if (typeof val === 'string' || typeof val === 'number') {

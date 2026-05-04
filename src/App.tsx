@@ -63,42 +63,48 @@ const AppLayout = ({ children }: { children: React.ReactNode }) => {
   );
 };
 
+const suspenseWrapper = (
+  <div className="flex items-center justify-center h-full w-full opacity-50">
+    <div className="w-6 h-6 border-2 border-accent border-t-transparent rounded-full animate-spin"></div>
+  </div>
+);
+
 export default function App() {
   return (
     <ThemeProvider>
       <BrowserRouter>
         <Routes>
-          <Route path="/signin" element={<React.Suspense fallback={<div className="flex items-center justify-center h-full w-full opacity-50"><div className="w-6 h-6 border-2 border-accent border-t-transparent rounded-full animate-spin"></div></div>}><SignIn /></React.Suspense>} />
-          <Route path="/signup" element={<React.Suspense fallback={<div className="flex items-center justify-center h-full w-full opacity-50"><div className="w-6 h-6 border-2 border-accent border-t-transparent rounded-full animate-spin"></div></div>}><SignUp /></React.Suspense>} />
-          <Route path="/notifications" element={<AppLayout><React.Suspense fallback={<div className="flex items-center justify-center h-full w-full opacity-50"><div className="w-6 h-6 border-2 border-accent border-t-transparent rounded-full animate-spin"></div></div>}><Notifications /></React.Suspense></AppLayout>} />
-          <Route path="/dashboard" element={<AppLayout><React.Suspense fallback={<div className="flex items-center justify-center h-full w-full opacity-50"><div className="w-6 h-6 border-2 border-accent border-t-transparent rounded-full animate-spin"></div></div>}><Dashboard /></React.Suspense></AppLayout>} />
-          <Route path="/system-admin/dashboard" element={<AppLayout><React.Suspense fallback={<div className="flex items-center justify-center h-full w-full opacity-50"><div className="w-6 h-6 border-2 border-accent border-t-transparent rounded-full animate-spin"></div></div>}><SystemAdminDashboard /></React.Suspense></AppLayout>} />
-          <Route path="/system-admin/system-monitoring" element={<AppLayout><React.Suspense fallback={<div className="flex items-center justify-center h-full w-full opacity-50"><div className="w-6 h-6 border-2 border-accent border-t-transparent rounded-full animate-spin"></div></div>}><SystemMonitoring /></React.Suspense></AppLayout>} />
-          <Route path="/system-admin/network-management" element={<AppLayout><React.Suspense fallback={<div className="flex items-center justify-center h-full w-full opacity-50"><div className="w-6 h-6 border-2 border-accent border-t-transparent rounded-full animate-spin"></div></div>}><NetworkManagement /></React.Suspense></AppLayout>} />
-          <Route path="/system-admin/workstation-management" element={<AppLayout><React.Suspense fallback={<div className="flex items-center justify-center h-full w-full opacity-50"><div className="w-6 h-6 border-2 border-accent border-t-transparent rounded-full animate-spin"></div></div>}><WorkstationManagement /></React.Suspense></AppLayout>} />
-          <Route path="/system-admin/camera-management" element={<AppLayout><React.Suspense fallback={<div className="flex items-center justify-center h-full w-full opacity-50"><div className="w-6 h-6 border-2 border-accent border-t-transparent rounded-full animate-spin"></div></div>}><CameraManagement /></React.Suspense></AppLayout>} />
-          <Route path="/system-admin/model-management" element={<AppLayout><React.Suspense fallback={<div className="flex items-center justify-center h-full w-full opacity-50"><div className="w-6 h-6 border-2 border-accent border-t-transparent rounded-full animate-spin"></div></div>}><ModelManagement /></React.Suspense></AppLayout>} />
-          <Route path="/system-admin/model-deployment" element={<AppLayout><React.Suspense fallback={<div className="flex items-center justify-center h-full w-full opacity-50"><div className="w-6 h-6 border-2 border-accent border-t-transparent rounded-full animate-spin"></div></div>}><ModelDeployment /></React.Suspense></AppLayout>} />
-          <Route path="/train/data-collection" element={<AppLayout><React.Suspense fallback={<div className="flex items-center justify-center h-full w-full opacity-50"><div className="w-6 h-6 border-2 border-accent border-t-transparent rounded-full animate-spin"></div></div>}><DataCollection /></React.Suspense></AppLayout>} />
-          <Route path="/train/data-set" element={<AppLayout><React.Suspense fallback={<div className="flex items-center justify-center h-full w-full opacity-50"><div className="w-6 h-6 border-2 border-accent border-t-transparent rounded-full animate-spin"></div></div>}><DataSet /></React.Suspense></AppLayout>} />
-          <Route path="/train/image-annotation" element={<AppLayout><React.Suspense fallback={<div className="flex items-center justify-center h-full w-full opacity-50"><div className="w-6 h-6 border-2 border-accent border-t-transparent rounded-full animate-spin"></div></div>}><ImageAnnotation /></React.Suspense></AppLayout>} />
-          <Route path="/train/model-training" element={<AppLayout><React.Suspense fallback={<div className="flex items-center justify-center h-full w-full opacity-50"><div className="w-6 h-6 border-2 border-accent border-t-transparent rounded-full animate-spin"></div></div>}><ModelTraining /></React.Suspense></AppLayout>} />
-          <Route path="/train/ai-models" element={<AppLayout><React.Suspense fallback={<div className="flex items-center justify-center h-full w-full opacity-50"><div className="w-6 h-6 border-2 border-accent border-t-transparent rounded-full animate-spin"></div></div>}><AIModels /></React.Suspense></AppLayout>} />
-          <Route path="/develop/building-blocks" element={<AppLayout><React.Suspense fallback={<div className="flex items-center justify-center h-full w-full opacity-50"><div className="w-6 h-6 border-2 border-accent border-t-transparent rounded-full animate-spin"></div></div>}><BuildingBlocks /></React.Suspense></AppLayout>} />
-          <Route path="/develop/no-code-editor" element={<AppLayout><React.Suspense fallback={<div className="flex items-center justify-center h-full w-full opacity-50"><div className="w-6 h-6 border-2 border-accent border-t-transparent rounded-full animate-spin"></div></div>}><NoCodeEditor /></React.Suspense></AppLayout>} />
-          <Route path="/develop/applications" element={<AppLayout><React.Suspense fallback={<div className="flex items-center justify-center h-full w-full opacity-50"><div className="w-6 h-6 border-2 border-accent border-t-transparent rounded-full animate-spin"></div></div>}><Applications /></React.Suspense></AppLayout>} />
-          <Route path="/deploy/dashboard" element={<AppLayout><React.Suspense fallback={<div className="flex items-center justify-center h-full w-full opacity-50"><div className="w-6 h-6 border-2 border-accent border-t-transparent rounded-full animate-spin"></div></div>}><DeployDashboard /></React.Suspense></AppLayout>} />
-          <Route path="/deploy/live-feed-camera" element={<AppLayout><React.Suspense fallback={<div className="flex items-center justify-center h-full w-full opacity-50"><div className="w-6 h-6 border-2 border-accent border-t-transparent rounded-full animate-spin"></div></div>}><DeployLiveFeedCamera /></React.Suspense></AppLayout>} />
-          <Route path="/deploy/detection-log" element={<AppLayout><React.Suspense fallback={<div className="flex items-center justify-center h-full w-full opacity-50"><div className="w-6 h-6 border-2 border-accent border-t-transparent rounded-full animate-spin"></div></div>}><DeployDetectionLog /></React.Suspense></AppLayout>} />
-          <Route path="/deploy/report" element={<AppLayout><React.Suspense fallback={<div className="flex items-center justify-center h-full w-full opacity-50"><div className="w-6 h-6 border-2 border-accent border-t-transparent rounded-full animate-spin"></div></div>}><DeployReport /></React.Suspense></AppLayout>} />
-          <Route path="/system-admin/channel-management/*" element={<AppLayout><React.Suspense fallback={<div className="flex items-center justify-center h-full w-full opacity-50"><div className="w-6 h-6 border-2 border-accent border-t-transparent rounded-full animate-spin"></div></div>}><ChannelManagement /></React.Suspense></AppLayout>} />
-          <Route path="/system-admin/algorithm-context" element={<AppLayout><React.Suspense fallback={<div className="flex items-center justify-center h-full w-full opacity-50"><div className="w-6 h-6 border-2 border-accent border-t-transparent rounded-full animate-spin"></div></div>}><AlgorithmContext /></React.Suspense></AppLayout>} />
-          <Route path="/system-admin/package-management" element={<AppLayout><React.Suspense fallback={<div className="flex items-center justify-center h-full w-full opacity-50"><div className="w-6 h-6 border-2 border-accent border-t-transparent rounded-full animate-spin"></div></div>}><PackageManagement /></React.Suspense></AppLayout>} />
-          <Route path="/system-admin/roles" element={<AppLayout><React.Suspense fallback={<div className="flex items-center justify-center h-full w-full opacity-50"><div className="w-6 h-6 border-2 border-accent border-t-transparent rounded-full animate-spin"></div></div>}><Roles /></React.Suspense></AppLayout>} />
-          <Route path="/system-admin/users" element={<AppLayout><React.Suspense fallback={<div className="flex items-center justify-center h-full w-full opacity-50"><div className="w-6 h-6 border-2 border-accent border-t-transparent rounded-full animate-spin"></div></div>}><Users /></React.Suspense></AppLayout>} />
-          <Route path="/system-admin/role-modules" element={<AppLayout><React.Suspense fallback={<div className="flex items-center justify-center h-full w-full opacity-50"><div className="w-6 h-6 border-2 border-accent border-t-transparent rounded-full animate-spin"></div></div>}><RoleModules /></React.Suspense></AppLayout>} />
-          <Route path="/user-settings" element={<AppLayout><React.Suspense fallback={<div className="flex items-center justify-center h-full w-full opacity-50"><div className="w-6 h-6 border-2 border-accent border-t-transparent rounded-full animate-spin"></div></div>}><UserSettings /></React.Suspense></AppLayout>} />
-          <Route path="/system-admin/configuration" element={<AppLayout><React.Suspense fallback={<div className="flex items-center justify-center h-full w-full opacity-50"><div className="w-6 h-6 border-2 border-accent border-t-transparent rounded-full animate-spin"></div></div>}><Configuration /></React.Suspense></AppLayout>} />
+          <Route path="/signin" element={<React.Suspense fallback={suspenseWrapper}><SignIn /></React.Suspense>} />
+          <Route path="/signup" element={<React.Suspense fallback={suspenseWrapper}><SignUp /></React.Suspense>} />
+          <Route path="/notifications" element={<AppLayout><React.Suspense fallback={suspenseWrapper}><Notifications /></React.Suspense></AppLayout>} />
+          <Route path="/dashboard" element={<AppLayout><React.Suspense fallback={suspenseWrapper}><Dashboard /></React.Suspense></AppLayout>} />
+          <Route path="/system-admin/dashboard" element={<AppLayout><React.Suspense fallback={suspenseWrapper}><SystemAdminDashboard /></React.Suspense></AppLayout>} />
+          <Route path="/system-admin/system-monitoring" element={<AppLayout><React.Suspense fallback={suspenseWrapper}><SystemMonitoring /></React.Suspense></AppLayout>} />
+          <Route path="/system-admin/network-management" element={<AppLayout><React.Suspense fallback={suspenseWrapper}><NetworkManagement /></React.Suspense></AppLayout>} />
+          <Route path="/system-admin/workstation-management" element={<AppLayout><React.Suspense fallback={suspenseWrapper}><WorkstationManagement /></React.Suspense></AppLayout>} />
+          <Route path="/system-admin/camera-management" element={<AppLayout><React.Suspense fallback={suspenseWrapper}><CameraManagement /></React.Suspense></AppLayout>} />
+          <Route path="/system-admin/model-management" element={<AppLayout><React.Suspense fallback={suspenseWrapper}><ModelManagement /></React.Suspense></AppLayout>} />
+          <Route path="/system-admin/model-deployment" element={<AppLayout><React.Suspense fallback={suspenseWrapper}><ModelDeployment /></React.Suspense></AppLayout>} />
+          <Route path="/train/data-collection" element={<AppLayout><React.Suspense fallback={suspenseWrapper}><DataCollection /></React.Suspense></AppLayout>} />
+          <Route path="/train/data-set" element={<AppLayout><React.Suspense fallback={suspenseWrapper}><DataSet /></React.Suspense></AppLayout>} />
+          <Route path="/train/image-annotation" element={<AppLayout><React.Suspense fallback={suspenseWrapper}><ImageAnnotation /></React.Suspense></AppLayout>} />
+          <Route path="/train/model-training" element={<AppLayout><React.Suspense fallback={suspenseWrapper}><ModelTraining /></React.Suspense></AppLayout>} />
+          <Route path="/train/ai-models" element={<AppLayout><React.Suspense fallback={suspenseWrapper}><AIModels /></React.Suspense></AppLayout>} />
+          <Route path="/develop/building-blocks" element={<AppLayout><React.Suspense fallback={suspenseWrapper}><BuildingBlocks /></React.Suspense></AppLayout>} />
+          <Route path="/develop/no-code-editor" element={<AppLayout><React.Suspense fallback={suspenseWrapper}><NoCodeEditor /></React.Suspense></AppLayout>} />
+          <Route path="/develop/applications" element={<AppLayout><React.Suspense fallback={suspenseWrapper}><Applications /></React.Suspense></AppLayout>} />
+          <Route path="/deploy/dashboard" element={<AppLayout><React.Suspense fallback={suspenseWrapper}><DeployDashboard /></React.Suspense></AppLayout>} />
+          <Route path="/deploy/live-feed-camera" element={<AppLayout><React.Suspense fallback={suspenseWrapper}><DeployLiveFeedCamera /></React.Suspense></AppLayout>} />
+          <Route path="/deploy/detection-log" element={<AppLayout><React.Suspense fallback={suspenseWrapper}><DeployDetectionLog /></React.Suspense></AppLayout>} />
+          <Route path="/deploy/report" element={<AppLayout><React.Suspense fallback={suspenseWrapper}><DeployReport /></React.Suspense></AppLayout>} />
+          <Route path="/system-admin/channel-management/*" element={<AppLayout><React.Suspense fallback={suspenseWrapper}><ChannelManagement /></React.Suspense></AppLayout>} />
+          <Route path="/system-admin/algorithm-context" element={<AppLayout><React.Suspense fallback={suspenseWrapper}><AlgorithmContext /></React.Suspense></AppLayout>} />
+          <Route path="/system-admin/package-management" element={<AppLayout><React.Suspense fallback={suspenseWrapper}><PackageManagement /></React.Suspense></AppLayout>} />
+          <Route path="/system-admin/roles" element={<AppLayout><React.Suspense fallback={suspenseWrapper}><Roles /></React.Suspense></AppLayout>} />
+          <Route path="/system-admin/users" element={<AppLayout><React.Suspense fallback={suspenseWrapper}><Users /></React.Suspense></AppLayout>} />
+          <Route path="/system-admin/role-modules" element={<AppLayout><React.Suspense fallback={suspenseWrapper}><RoleModules /></React.Suspense></AppLayout>} />
+          <Route path="/user-settings" element={<AppLayout><React.Suspense fallback={suspenseWrapper}><UserSettings /></React.Suspense></AppLayout>} />
+          <Route path="/system-admin/configuration" element={<AppLayout><React.Suspense fallback={suspenseWrapper}><Configuration /></React.Suspense></AppLayout>} />
           <Route path="*" element={<Navigate to="/dashboard" replace />} />
         </Routes>
       </BrowserRouter>

@@ -46,47 +46,47 @@ export const AIModels = () => {
             </thead>
             <tbody className="divide-y divide-gray-200 dark:divide-[#222]">
               {models.map((model) => (
-                <tr key={model.id} className="hover:bg-white/5 hover:bg-gray-50 transition-colors group">
+                <tr key={model.id} className="hover:bg-gray-50 dark:hover:bg-[#252525]/30 transition-colors group">
                   <td className="px-5 py-4">
                       <div className="flex items-center gap-2 mb-0.5">
-                          <span className="font-semibold text-gray-900 dark:text-white text-xs">{model.name}</span>
-                          <span className="bg-gray-200 dark:bg-[#2a2a2a] text-gray-700 dark:text-gray-300 font-mono px-1.5 py-0.5 rounded text-[10px]">{model.version}</span>
+                          <span className="font-semibold text-gray-900 dark:text-white text-[13px] tracking-tight">{model.name}</span>
+                          <span className="bg-gray-100 dark:bg-[#222] text-gray-700 dark:text-gray-300 font-mono px-1.5 py-0.5 rounded text-[10px] font-bold">{model.version}</span>
                       </div>
-                      <div className="text-[10px] text-gray-500 font-mono uppercase tracking-widest font-black">{model.id}</div>
+                      <div className="text-[10px] text-gray-500 font-mono uppercase tracking-widest font-black leading-none">{model.id}</div>
                   </td>
                   <td className="px-5 py-4">
-                      <div className="text-gray-700 dark:text-gray-300 font-medium mb-0.5">{model.architecture}</div>
-                      <div className="text-[10px] text-gray-500 uppercase tracking-widest font-black">{model.param} params • {model.size}</div>
+                      <div className="text-[13px] text-gray-900 dark:text-white font-medium tracking-tight mb-0.5">{model.architecture}</div>
+                      <div className="text-[10px] text-gray-500 uppercase tracking-widest font-bold leading-none">{model.param} params • {model.size}</div>
                   </td>
                   <td className="px-5 py-4">
-                      <div className="flex items-center gap-2">
-                          <div className={cn("text-xs font-bold font-mono", model.map > 0.8 ? "text-green-400" : model.map > 0.6 ? "text-orange-400" : "text-red-400")}>
-                              {model.map.toFixed(3)}
-                          </div>
+                      <div className={cn("text-[13px] font-black font-mono tracking-tight", model.map > 0.8 ? "text-green-500" : model.map > 0.6 ? "text-orange-500" : "text-red-500")}>
+                          {model.map.toFixed(3)}
                       </div>
                   </td>
                   <td className="px-5 py-4">
                       <div className="flex flex-wrap gap-1.5">
                           {model.tags.map(t => (
-                              <span key={t} className="bg-accent/10 border border-accent/20 text-accent px-1.5 py-0.5 rounded text-[10px] font-bold">{t}</span>
+                              <span key={t} className="bg-accent/10 border border-accent/20 text-accent px-2 py-0.5 rounded-full text-[10px] font-bold tracking-wide">{t}</span>
                           ))}
                       </div>
                   </td>
                   <td className="px-5 py-4">
                     <div className="flex items-center gap-1.5">
-                         {model.status === 'ready' && <CheckCircle2 size={14} className="text-gray-600 dark:text-gray-400" />}
-                         {model.status === 'deployed' && <CheckCircle2 size={14} className="text-green-500" />}
-                         {model.status === 'investigating' && <AlertTriangle size={14} className="text-orange-500" />}
-                         <span className="text-[11px] font-medium text-gray-700 dark:text-gray-300 capitalize">{model.status}</span>
+                         {model.status === 'ready' && <div className="w-1.5 h-1.5 rounded-full bg-green-500" />}
+                         {model.status === 'deployed' && <div className="w-1.5 h-1.5 rounded-full bg-blue-500" />}
+                         {model.status === 'investigating' && <div className="w-1.5 h-1.5 rounded-full bg-orange-500 animate-pulse" />}
+                         <span className="text-[11px] font-bold text-gray-700 dark:text-gray-300 capitalize tracking-wide">{model.status}</span>
                     </div>
                   </td>
-                  <td className="px-5 py-4 flex justify-end gap-2">
-                      <button onClick={() => toast.info(`Viewing details for ${model.name}`)} className="p-1.5 bg-gray-100 dark:bg-[#151515] border border-gray-200 dark:border-[#222] hover:bg-gray-200 dark:hover:bg-gray-200 dark:bg-[#2a2a2a] rounded-lg text-gray-600 dark:text-gray-400 transition-colors" title="View details">
+                  <td className="px-5 py-4">
+                    <div className="flex items-center justify-end gap-2">
+                      <button onClick={() => toast.info(`Viewing details for ${model.name}`)} className="p-1.5 bg-[#1c1c1c] border border-gray-700 rounded-full text-white/70 hover:text-white hover:bg-[#2a2a2a] transition-colors" title="View details">
                           <Info size={14} />
                       </button>
-                      <button onClick={() => toast.promise(new Promise(r => setTimeout(r, 1000)), { loading: `Exporting ONNX for ${model.name}...`, success: `Export completed for ${model.name}` })} className="p-1.5 bg-gray-100 dark:bg-[#151515] border border-gray-200 dark:border-[#222] hover:text-white hover:bg-gray-200 dark:hover:bg-gray-200 dark:bg-[#2a2a2a] rounded-lg text-gray-600 dark:text-gray-400 transition-colors" title="Export ONNX">
+                      <button onClick={() => toast.promise(new Promise(r => setTimeout(r, 1000)), { loading: `Exporting ONNX for ${model.name}...`, success: `Export completed for ${model.name}` })} className="p-1.5 bg-accent/10 border border-accent/20 rounded-full text-accent hover:bg-accent hover:text-[#161616] transition-colors" title="Export ONNX">
                           <Download size={14} />
                       </button>
+                    </div>
                   </td>
                 </tr>
               ))}

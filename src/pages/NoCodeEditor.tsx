@@ -1,4 +1,4 @@
-import React, { useState, useCallback, useRef } from 'react';
+import React, { useState, useCallback, useRef, useMemo } from 'react';
 import { Play, Save, Settings as SettingsIcon, Video, BrainCircuit, Server, Search, X } from 'lucide-react';
 import { cn } from '../lib/utils';
 import { useTheme } from '../context/ThemeContext';
@@ -87,6 +87,7 @@ export const NoCodeEditor = () => {
   const [edges, setEdges, onEdgesChange] = useEdgesState(initialEdges);
   const [reactFlowInstance, setReactFlowInstance] = useState<any>(null);
   const [selectedNodeId, setSelectedNodeId] = useState<string | null>(null);
+  const [searchQuery, setSearchQuery] = useState('');
 
   const selectedNode = nodes.find(n => n.id === selectedNodeId);
 
@@ -297,43 +298,68 @@ export const NoCodeEditor = () => {
           <div className="p-4 border-b border-gray-200 dark:border-[#222]">
              <div className="relative">
                 <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 dark:text-gray-400" size={16} />
-                <Input type="text" placeholder="Search blocks..." className="pl-9" />
+                <Input type="text" placeholder="Search blocks..." className="pl-9" value={searchQuery} onChange={(e) => setSearchQuery(e.target.value)} />
              </div>
           </div>
           <div className="flex-1 overflow-y-auto p-4 space-y-6 custom-scrollbar">
-              <div>
-                  <h3 className="text-[10px] font-black text-gray-500 mb-3 flex items-center gap-1.5 uppercase tracking-widest"><Video size={12}/> Sources</h3>
-                  <div className="space-y-2">
-                      <div onDragStart={(event) => onDragStart(event, 'sourceNode', 'RTSP Stream')} draggable className="bg-white dark:bg-[#1a1a1a] border border-gray-200 dark:border-[#222] hover:border-gray-500 p-2.5 rounded-lg cursor-grab flex items-center gap-2 text-xs font-semibold text-gray-700 dark:text-gray-300">
-                          <div className="w-2 h-2 rounded-full bg-blue-500"></div> RTSP Stream
-                      </div>
-                      <div onDragStart={(event) => onDragStart(event, 'sourceNode', 'Video File')} draggable className="bg-white dark:bg-[#1a1a1a] border border-gray-200 dark:border-[#222] hover:border-gray-500 p-2.5 rounded-lg cursor-grab flex items-center gap-2 text-xs font-semibold text-gray-700 dark:text-gray-300">
-                          <div className="w-2 h-2 rounded-full bg-blue-500"></div> Video File
-                      </div>
-                  </div>
-              </div>
-              <div>
-                  <h3 className="text-[10px] font-black text-gray-500 mb-3 flex items-center gap-1.5 uppercase tracking-widest"><BrainCircuit size={12}/> Processors</h3>
-                  <div className="space-y-2">
-                      <div onDragStart={(event) => onDragStart(event, 'processorNode', 'YOLOv8 Detection')} draggable className="bg-white dark:bg-[#1a1a1a] border border-gray-200 dark:border-[#222] hover:border-gray-500 p-2.5 rounded-lg cursor-grab flex items-center gap-2 text-xs font-semibold text-gray-700 dark:text-gray-300">
-                          <div className="w-2 h-2 rounded-full bg-accent"></div> YOLOv8 Detection
-                      </div>
-                      <div onDragStart={(event) => onDragStart(event, 'processorNode', 'DeepSORT Tracker')} draggable className="bg-white dark:bg-[#1a1a1a] border border-gray-200 dark:border-[#222] hover:border-gray-500 p-2.5 rounded-lg cursor-grab flex items-center gap-2 text-xs font-semibold text-gray-700 dark:text-gray-300">
-                          <div className="w-2 h-2 rounded-full bg-accent"></div> DeepSORT Tracker
-                      </div>
-                      <div onDragStart={(event) => onDragStart(event, 'logicNode', 'Line Region Logic')} draggable className="bg-white dark:bg-[#1a1a1a] border border-gray-200 dark:border-[#222] hover:border-gray-500 p-2.5 rounded-lg cursor-grab flex items-center gap-2 text-xs font-semibold text-gray-700 dark:text-gray-300">
-                          <div className="w-2 h-2 rounded-full bg-secondary"></div> Line Region Logic
-                      </div>
-                  </div>
-              </div>
-              <div>
-                  <h3 className="text-[10px] font-black text-gray-500 mb-3 flex items-center gap-1.5 uppercase tracking-widest"><Server size={12}/> Sinks</h3>
-                  <div className="space-y-2">
-                      <div onDragStart={(event) => onDragStart(event, 'sinkNode', 'Webhook Event')} draggable className="bg-white dark:bg-[#1a1a1a] border border-gray-200 dark:border-[#222] hover:border-gray-500 p-2.5 rounded-lg cursor-grab flex items-center gap-2 text-xs font-semibold text-gray-700 dark:text-gray-300">
-                          <div className="w-2 h-2 rounded-full bg-green-500"></div> Webhook Event
-                      </div>
-                  </div>
-              </div>
+              {(() => {
+                 const BLOCKS = [
+                   {
+                     category: 'Sources',
+                     icon: <Video size={12}/>,
+                     items: [
+                       { type: 'sourceNode', label: 'RTSP Stream', colorClass: 'bg-blue-500' },
+                       { type: 'sourceNode', label: 'Video File', colorClass: 'bg-blue-500' },
+                     ]
+                   },
+                   {
+                     category: 'Processors',
+                     icon: <BrainCircuit size={12}/>,
+                     items: [
+                       { type: 'processorNode', label: 'YOLOv8 Detection', colorClass: 'bg-accent' },
+                       { type: 'processorNode', label: 'DeepSORT Tracker', colorClass: 'bg-accent' },
+                       { type: 'logicNode', label: 'Line Region Logic', colorClass: 'bg-secondary' },
+                     ]
+                   },
+                   {
+                     category: 'Sinks',
+                     icon: <Server size={12}/>,
+                     items: [
+                       { type: 'sinkNode', label: 'Webhook Event', colorClass: 'bg-green-500' },
+                     ]
+                   }
+                 ];
+
+                 let hasResults = false;
+                 
+                 const renderedBlocks = BLOCKS.map(category => {
+                     const filteredItems = category.items.filter(item => item.label.toLowerCase().includes(searchQuery.toLowerCase()));
+                     if (filteredItems.length === 0) return null;
+                     
+                     hasResults = true;
+                     return (
+                         <div key={category.category}>
+                            <h3 className="text-[10px] font-black text-gray-500 mb-3 flex items-center gap-1.5 uppercase tracking-widest">{category.icon} {category.category}</h3>
+                            <div className="space-y-2">
+                                {filteredItems.map(item => (
+                                    <div key={item.label} onDragStart={(event) => onDragStart(event, item.type, item.label)} draggable className="bg-white dark:bg-[#1a1a1a] border border-gray-200 dark:border-[#222] hover:border-gray-500 p-2.5 rounded-lg cursor-grab flex items-center gap-2 text-xs font-semibold text-gray-700 dark:text-gray-300">
+                                        <div className={`w-2 h-2 rounded-full ${item.colorClass}`}></div> {item.label}
+                                    </div>
+                                ))}
+                            </div>
+                         </div>
+                     );
+                 });
+
+                 return hasResults ? renderedBlocks : (
+                     <div className="text-center py-8">
+                         <div className="inline-flex items-center justify-center w-8 h-8 rounded-full bg-gray-100 dark:bg-[#222] mb-3">
+                             <Search size={14} className="text-gray-400" />
+                         </div>
+                         <p className="text-xs text-gray-500 font-medium">No blocks found matching "{searchQuery}"</p>
+                     </div>
+                 );
+              })()}
           </div>
         </div>
 

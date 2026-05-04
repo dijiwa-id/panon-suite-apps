@@ -1,5 +1,5 @@
-export * from './button';
-export * from './card';
-export * from './badge';
-export * from './table';
-export * from './input';
+export { Button } from './button';
+export { Card, CardHeader, CardTitle, CardContent } from './card';
+export { Badge } from './badge';
+export { Table, TableHeader, TableBody, TableHead, TableRow, TableCell } from './table';
+export { Input } from './input';
