@@ -189,7 +189,7 @@ export const Users = () => {
                     <TableCell>
                       <div className="flex items-center gap-1.5">
                         <div className={cn("w-1.5 h-1.5 rounded-full", user.status === 'Active' ? "bg-accent" : "bg-gray-400 dark:bg-gray-600")}></div>
-                        <span className="text-[10px] font-medium text-gray-700 dark:text-gray-300">{user.status}</span>
+                        <span className="text-[12px] font-medium text-gray-700 dark:text-gray-300">{user.status}</span>
                       </div>
                     </TableCell>
                     <TableCell className="text-[10px] text-gray-500 dark:text-[#888] font-medium capitalize tracking-widest font-black">

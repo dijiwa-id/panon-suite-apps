@@ -143,16 +143,16 @@ export const DeployDetectionLog = () => {
                    {filteredLogs.map((log, idx) => (
                      <TableRow key={idx}>
                        <TableCell>
-                         <span className="text-[11px] font-bold text-[#52C5F3] cursor-pointer hover:underline">{log.id}</span>
+                         <span className="text-xs font-bold text-[#52C5F3] cursor-pointer hover:underline">{log.id}</span>
                        </TableCell>
-                       <TableCell>{log.time}</TableCell>
+                       <TableCell className="text-xs">{log.time}</TableCell>
                        <TableCell>
                          <span className="bg-gray-100 dark:bg-[#2a2a2a] text-gray-600 dark:text-gray-300 px-2 py-1 rounded text-[10px] font-black tracking-widest capitalize">{log.category}</span>
                        </TableCell>
-                       <TableCell>{log.module}</TableCell>
-                       <TableCell className="capitalize">{log.camera}</TableCell>
-                       <TableCell>{log.cameraId}</TableCell>
-                       <TableCell className="italic text-gray-500">{log.personName}</TableCell>
+                       <TableCell className="text-xs">{log.module}</TableCell>
+                       <TableCell className="capitalize text-xs">{log.camera}</TableCell>
+                       <TableCell className="text-xs">{log.cameraId}</TableCell>
+                       <TableCell className="italic text-gray-500 text-xs">{log.personName}</TableCell>
                        <TableCell className="text-right">
                          <div className="flex justify-end">
                            <Button 
