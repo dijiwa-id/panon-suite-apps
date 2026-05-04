@@ -36,6 +36,28 @@ export const Configuration = () => {
     smtpPassword: ''
   });
 
+  const [waConfig, setWaConfig] = useState({
+    apiUrl: '',
+    accessToken: '',
+    senderNumber: '',
+  });
+
+  const [webhookConfig, setWebhookConfig] = useState({
+    url: '',
+    secret: '',
+    method: 'POST',
+  });
+
+  const [mqttConfig, setMqttConfig] = useState({
+    brokerHost: '',
+    port: '1883',
+    clientId: '',
+    username: '',
+    password: '',
+    topicPrefix: 'panonsuite/alerts',
+    useSSL: false,
+  });
+
   const [errors, setErrors] = useState<{smtpPort?: string, smtpServer?: string, smtpDomain?: string, smtpUsername?: string, smtpPassword?: string}>({});
 
   const validate = () => {
@@ -293,12 +315,12 @@ export const Configuration = () => {
                             </SelectWrapper>
                           </div>
                           <div className="pt-2 space-y-3">
-                            <label className="flex items-center gap-2 text-xs font-bold text-gray-900 dark:text-white cursor-pointer">
-                              <input type="checkbox" checked={emailConfig.useStartTLS} onChange={(e) => setEmailConfig({...emailConfig, useStartTLS: e.target.checked})} className="rounded bg-transparent border-gray-300 dark:border-gray-600 text-accent focus:ring-accent" />
+                            <label className="flex items-center gap-2 text-xs font-bold text-gray-900 dark:text-white cursor-pointer -ml-1">
+                              <input type="checkbox" checked={emailConfig.useStartTLS} onChange={(e) => setEmailConfig({...emailConfig, useStartTLS: e.target.checked})} className="rounded bg-transparent border-gray-300 dark:border-gray-600 text-accent focus:ring-accent ml-1" />
                               Use STARTTLS if available
                             </label>
-                            <label className="flex items-center gap-2 text-xs font-bold text-gray-900 dark:text-white cursor-pointer">
-                              <input type="checkbox" checked={emailConfig.useSSL} onChange={(e) => setEmailConfig({...emailConfig, useSSL: e.target.checked})} className="rounded bg-transparent border-gray-300 dark:border-gray-600 text-accent focus:ring-accent" />
+                            <label className="flex items-center gap-2 text-xs font-bold text-gray-900 dark:text-white cursor-pointer -ml-1">
+                              <input type="checkbox" checked={emailConfig.useSSL} onChange={(e) => setEmailConfig({...emailConfig, useSSL: e.target.checked})} className="rounded bg-transparent border-gray-300 dark:border-gray-600 text-accent focus:ring-accent ml-1" />
                               Use SSL Connection
                             </label>
                           </div>
@@ -342,14 +364,114 @@ export const Configuration = () => {
                      </div>
                    )}
 
-                   {activeTab !== 'Email' && (
-                      <div className="py-12 border-2 border-dashed border-gray-200 dark:border-[#222] rounded-xl text-center">
-                         <div className="w-12 h-12 rounded-full bg-gray-100 dark:bg-[#1a1a1a] flex items-center justify-center mx-auto mb-3">
-                           <Bell className="text-gray-400" size={20} />
-                         </div>
-                         <h4 className="text-sm font-bold text-gray-900 dark:text-white mb-1">{activeTab} Integration</h4>
-                         <p className="text-[10px] font-medium text-gray-500 capitalize tracking-widest font-black">Coming soon in the next system update.</p>
-                      </div>
+                   {activeTab === 'Whatsapp' && (
+                     <div className="max-w-3xl space-y-6">
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                           <div className="md:col-span-2">
+                             <label className={labelClass}>WhatsApp Business API URL</label>
+                             <Input type="text" placeholder="https://graph.facebook.com/v17.0/..." value={waConfig.apiUrl} onChange={(e) => setWaConfig({...waConfig, apiUrl: e.target.value})} />
+                           </div>
+                           <div className="md:col-span-2">
+                             <label className={labelClass}>Access Token</label>
+                             <Input type="password" placeholder="EAAB..." value={waConfig.accessToken} onChange={(e) => setWaConfig({...waConfig, accessToken: e.target.value})} />
+                           </div>
+                           <div>
+                             <label className={labelClass}>Sender Phone Number ID</label>
+                             <Input type="text" placeholder="1234567890" value={waConfig.senderNumber} onChange={(e) => setWaConfig({...waConfig, senderNumber: e.target.value})} />
+                           </div>
+                        </div>
+
+                       <div className="pt-6 flex items-center justify-end gap-4 border-t border-gray-200 dark:border-[#222]">
+                          <Button variant="ghost" className="text-accent hover:text-accent/80 cursor-pointer">
+                            Send test message
+                          </Button>
+                          <Button onClick={handleSave} className="gap-1.5 cursor-pointer">
+                            <Save size={14} />
+                            Save WhatsApp Config
+                          </Button>
+                       </div>
+                     </div>
+                   )}
+
+                   {activeTab === 'Webhook' && (
+                     <div className="max-w-3xl space-y-6">
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                           <div className="md:col-span-2">
+                             <label className={labelClass}>Webhook URL</label>
+                             <Input type="text" placeholder="https://your-domain.com/webhook/alerts" value={webhookConfig.url} onChange={(e) => setWebhookConfig({...webhookConfig, url: e.target.value})} />
+                           </div>
+                           <div>
+                             <label className={labelClass}>Security Token / Secret</label>
+                             <Input type="password" placeholder="Optional signature secret" value={webhookConfig.secret} onChange={(e) => setWebhookConfig({...webhookConfig, secret: e.target.value})} />
+                           </div>
+                           <div>
+                             <label className={labelClass}>HTTP Method</label>
+                             <SelectWrapper>
+                               <select value={webhookConfig.method} onChange={(e) => setWebhookConfig({...webhookConfig, method: e.target.value})} className={selectClass}>
+                                 <option>POST</option>
+                                 <option>PUT</option>
+                               </select>
+                             </SelectWrapper>
+                           </div>
+                        </div>
+
+                       <div className="pt-6 flex items-center justify-end gap-4 border-t border-gray-200 dark:border-[#222]">
+                          <Button variant="ghost" className="text-accent hover:text-accent/80 cursor-pointer">
+                            Trigger test webhook
+                          </Button>
+                          <Button onClick={handleSave} className="gap-1.5 cursor-pointer">
+                            <Save size={14} />
+                            Save Webhook Config
+                          </Button>
+                       </div>
+                     </div>
+                   )}
+
+                   {activeTab === 'MQTT' && (
+                     <div className="max-w-3xl space-y-6">
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                           <div>
+                             <label className={labelClass}>Broker Host</label>
+                             <Input type="text" placeholder="mqtt.eclipseprojects.io" value={mqttConfig.brokerHost} onChange={(e) => setMqttConfig({...mqttConfig, brokerHost: e.target.value})} />
+                           </div>
+                           <div>
+                             <label className={labelClass}>Port</label>
+                             <Input type="text" placeholder="1883" value={mqttConfig.port} onChange={(e) => setMqttConfig({...mqttConfig, port: e.target.value})} />
+                           </div>
+                           <div>
+                             <label className={labelClass}>Client ID</label>
+                             <Input type="text" placeholder="panonsuite-prod-1" value={mqttConfig.clientId} onChange={(e) => setMqttConfig({...mqttConfig, clientId: e.target.value})} />
+                           </div>
+                           <div>
+                             <label className={labelClass}>Topic Prefix</label>
+                             <Input type="text" placeholder="panonsuite/alerts" value={mqttConfig.topicPrefix} onChange={(e) => setMqttConfig({...mqttConfig, topicPrefix: e.target.value})} />
+                           </div>
+                           <div>
+                             <label className={labelClass}>Username (Optional)</label>
+                             <Input type="text" placeholder="mqtt_user" value={mqttConfig.username} onChange={(e) => setMqttConfig({...mqttConfig, username: e.target.value})} />
+                           </div>
+                           <div>
+                             <label className={labelClass}>Password (Optional)</label>
+                             <Input type="password" placeholder="••••••••" value={mqttConfig.password} onChange={(e) => setMqttConfig({...mqttConfig, password: e.target.value})} />
+                           </div>
+                           <div className="md:col-span-2 pt-2">
+                            <label className="flex items-center gap-2 text-xs font-bold text-gray-900 dark:text-white cursor-pointer -ml-1">
+                              <input type="checkbox" checked={mqttConfig.useSSL} onChange={(e) => setMqttConfig({...mqttConfig, useSSL: e.target.checked})} className="rounded bg-transparent border-gray-300 dark:border-gray-600 text-accent focus:ring-accent ml-1" />
+                              Use SSL/TLS Connection
+                            </label>
+                           </div>
+                        </div>
+
+                       <div className="pt-6 flex items-center justify-end gap-4 border-t border-gray-200 dark:border-[#222]">
+                          <Button variant="ghost" className="text-accent hover:text-accent/80 cursor-pointer">
+                            Test MQTT Connection
+                          </Button>
+                          <Button onClick={handleSave} className="gap-1.5 cursor-pointer">
+                            <Save size={14} />
+                            Save MQTT Config
+                          </Button>
+                       </div>
+                     </div>
                    )}
                  </div>
               </div>
