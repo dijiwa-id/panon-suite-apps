@@ -27,32 +27,32 @@ import { cn } from "../lib/utils";
 import { motion } from "motion/react";
 
 const iconMap: Record<string, React.ReactNode> = {
-  Dashboard: <LayoutDashboard size={14} />,
-  Notification: <Bell size={14} />,
-  "Data Collection": <Database size={14} />,
-  "Data Set": <Layers size={14} />,
-  "Image Annotation": <Edit3 size={14} />,
-  "Model Training": <Cpu size={14} />,
-  "AI Models": <Box size={14} />,
-  "Building Blocks": <Layout size={14} />,
-  "No Code Editor": <Code size={14} />,
-  Applications: <Grid size={14} />,
-  "System Monitoring": <Cpu size={14} />,
-  "Workstation Management": <Box size={14} />,
-  "Camera Management": <Aperture size={14} />,
-  "Channel Management": <Layers size={14} />,
-  "Model Management": <Cpu size={14} />,
-  "Model Deployment": <Cpu size={14} />,
-  "Algorithm Package": <Code size={14} />,
-  "Network Management": <Network size={14} />,
-  "User Management": <Users size={14} />,
-  "Roles": <Layers size={14} />,
-  "Users": <Box size={14} />,
-  "Role Modules": <Layers size={14} />,
-  "Configuration": <Layout size={14} />,
-  "Live Feed Camera": <Camera size={14} />,
-  "Detection Log": <List size={14} />,
-  "Report": <FileText size={14} />,
+  Dashboard: <LayoutDashboard size={12} />,
+  Notification: <Bell size={12} />,
+  "Data Collection": <Database size={12} />,
+  "Data Set": <Layers size={12} />,
+  "Image Annotation": <Edit3 size={12} />,
+  "Model Training": <Cpu size={12} />,
+  "AI Models": <Box size={12} />,
+  "Building Blocks": <Layout size={12} />,
+  "No Code Editor": <Code size={12} />,
+  Applications: <Grid size={12} />,
+  "System Monitoring": <Cpu size={12} />,
+  "Workstation Management": <Box size={12} />,
+  "Camera Management": <Aperture size={12} />,
+  "Channel Management": <Layers size={12} />,
+  "Model Management": <Cpu size={12} />,
+  "Model Deployment": <Cpu size={12} />,
+  "Algorithm Package": <Code size={12} />,
+  "Network Management": <Network size={12} />,
+  "User Management": <Users size={12} />,
+  "Roles": <Layers size={12} />,
+  "Users": <Box size={12} />,
+  "Role Modules": <Layers size={12} />,
+  "Configuration": <Layout size={12} />,
+  "Live Feed Camera": <Camera size={12} />,
+  "Detection Log": <List size={12} />,
+  "Report": <FileText size={12} />,
 };
 
 interface NavItemProps {
@@ -112,24 +112,27 @@ const NavItem: React.FC<NavItemProps & { subItems?: SubItem[]; isOpen?: boolean;
           >
             <span
               className={cn(
-                "transition-colors duration-300",
+                "flex items-center justify-center w-4 h-4 shrink-0 transition-colors duration-300",
                 !isCollapsed && active
                   ? "text-accent"
                   : isCollapsed && active
                     ? "text-accent"
-                    : "text-gray-600 group-hover:text-accent",
+                    : "text-gray-500 group-hover:text-gray-800 dark:text-gray-400 dark:group-hover:text-gray-200",
               )}
             >
-              {iconMap[icon] || <Box size={14} />}
+              {iconMap[icon] || <Box size={12} />}
             </span>
             {!isCollapsed && (
-              <span className="text-xs font-normal tracking-wide capitalize">
+              <span className={cn(
+                "text-[12px] tracking-tight transition-all duration-300",
+                active ? "font-medium text-gray-900 dark:text-white" : "font-normal text-gray-600 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-gray-200"
+              )}>
                 {label}
               </span>
             )}
           </div>
           {hasSubItems && !isCollapsed && (
-             <ChevronDown size={14} className={cn("transition-transform", isSubOpen ? "rotate-180" : "")} />
+             <ChevronDown size={12} className={cn("transition-transform duration-300 text-gray-400", isSubOpen ? "rotate-180" : "")} />
           )}
           {badge && !isCollapsed && (
             <span className="bg-secondary/10 text-secondary text-[9px] font-black px-2 py-0.5 rounded-md border border-secondary/20">
@@ -142,9 +145,9 @@ const NavItem: React.FC<NavItemProps & { subItems?: SubItem[]; isOpen?: boolean;
         </div>
       </Link>
       {hasSubItems && !isCollapsed && isSubOpen && (
-        <div className="pl-6 ml-6 border-l border-gray-200 dark:border-[#222] space-y-1 mt-1">
+        <div className="ml-[32px] pl-3 border-l border-gray-200/70 dark:border-[#222] space-y-px mt-1 mb-2">
           {subItems!.map(sub => (
-              <Link key={sub.path} to={sub.path} className={cn("block text-[12px] py-1 hover:text-accent pl-2", location.pathname === sub.path ? "text-accent font-bold" : "text-gray-500")}>
+              <Link key={sub.path} to={sub.path} className={cn("block text-[11px] py-1.5 transition-colors pl-2", location.pathname === sub.path ? "text-accent font-medium bg-accent/5 rounded-md -ml-2" : "text-gray-500 hover:text-gray-800 dark:text-gray-400 dark:hover:text-gray-200")}>
                 {sub.label}
               </Link>
           ))}
@@ -222,22 +225,22 @@ export const Sidebar = ({
             </div>
             {!isCollapsed && (
               <div className="flex-1 overflow-hidden">
-                <p className="text-[13px] font-black tracking-tight text-gray-900 dark:text-white truncate leading-none mb-1">
+                <p className="text-[13px] font-bold tracking-tight text-gray-900 dark:text-white truncate leading-none mb-1">
                   panon PT.
                 </p>
-                <p className="text-[10px] tracking-wider font-bold text-gray-500 capitalize truncate leading-none">
-                  M Iqbal
+                <p className="text-[11px] font-medium text-gray-500 truncate leading-none mt-1">
+                  dijiwa.id@gmail.com
                 </p>
               </div>
             )}
             {!isCollapsed && (
-              <ChevronDown size={14} className="text-gray-500 shrink-0 opacity-0 group-hover/profile:opacity-100 transition-opacity" />
+              <ChevronDown size={14} className="text-gray-400 shrink-0 opacity-0 group-hover/profile:opacity-100 transition-opacity" />
             )}
           </div>
         </Link>
 
         {/* Main Nav */}
-        <div className="space-y-1 mb-10">
+        <div className="space-y-px mb-8">
           <NavItem
             icon="Dashboard"
             label="Dashboard"
@@ -255,7 +258,7 @@ export const Sidebar = ({
 
 
         {/* Dynamic Groups */}
-        <div className="space-y-6 pb-20">
+        <div className="space-y-4 pb-20">
           <NavSection
             isCollapsed={isCollapsed}
             title="Train"
@@ -398,21 +401,22 @@ const NavSection = ({
       <div
         onClick={() => setIsOpen(!isOpen)}
         className={cn(
-          "px-6 flex items-center justify-between text-[10px] font-black tracking-tight text-gray-500 dark:text-gray-600 cursor-pointer group hover:text-gray-800 dark:hover:text-gray-400",
+          "px-6 flex items-center justify-between cursor-pointer group hover:text-gray-800 dark:hover:text-gray-400 mt-1 mb-1",
           isCollapsed && "justify-center px-0",
         )}
       >
-        {!isCollapsed && <span className="tracking-tight text-[12px]">{title}</span>}
+        {!isCollapsed && <span className="text-[9px] font-bold tracking-widest uppercase text-gray-400 dark:text-gray-500">{title}</span>}
         {!isCollapsed && (
           <motion.div
             animate={{ rotate: isOpen ? 0 : -90 }}
             transition={{ duration: 0.2 }}
+            className="text-gray-400 dark:text-gray-500"
           >
             <ChevronDown size={12} />
           </motion.div>
         )}
         {isCollapsed && (
-          <div className="w-6 h-0.5 bg-gray-300 dark:bg-gray-700/50 rounded-full" />
+          <div className="w-4 h-[2px] bg-gray-300 dark:bg-[#333] rounded-full" />
         )}
       </div>
       <motion.div
@@ -420,7 +424,7 @@ const NavSection = ({
         animate={{ height: isOpen ? "auto" : 0, opacity: isOpen ? 1 : 0 }}
         className="overflow-hidden"
       >
-        <div className="space-y-1 mt-1">
+        <div className="space-y-px mt-0.5">
           {items.map((item, index) => item.isDivider ? (
             <div key={`divider-${index}`} className={cn("my-3 border-t border-gray-200 dark:border-[#2a2a2a]", isCollapsed ? "mx-4" : "mx-6")} />
           ) : (
