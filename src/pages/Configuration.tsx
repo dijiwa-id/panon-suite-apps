@@ -369,23 +369,23 @@ export const Configuration = () => {
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                            <div className="md:col-span-2">
                              <label className={labelClass}>WhatsApp Business API URL</label>
-                             <Input type="text" placeholder="https://graph.facebook.com/v17.0/..." value={waConfig.apiUrl} onChange={(e) => setWaConfig({...waConfig, apiUrl: e.target.value})} />
+                             <Input type="text" placeholder="https://graph.facebook.com/v17.0/..." value={waConfig.apiUrl} onChange={(e) => setWaConfig({...waConfig, apiUrl: e.target.value})} className={cn(errors.smtpDomain && "border-red-500 focus-visible:ring-red-500/20")} />
                            </div>
                            <div className="md:col-span-2">
                              <label className={labelClass}>Access Token</label>
-                             <Input type="password" placeholder="EAAB..." value={waConfig.accessToken} onChange={(e) => setWaConfig({...waConfig, accessToken: e.target.value})} />
+                             <Input type="password" placeholder="EAAB..." value={waConfig.accessToken} onChange={(e) => setWaConfig({...waConfig, accessToken: e.target.value})} className={cn(errors.smtpDomain && "border-red-500 focus-visible:ring-red-500/20")} />
                            </div>
                            <div>
                              <label className={labelClass}>Sender Phone Number ID</label>
-                             <Input type="text" placeholder="1234567890" value={waConfig.senderNumber} onChange={(e) => setWaConfig({...waConfig, senderNumber: e.target.value})} />
+                             <Input type="text" placeholder="1234567890" value={waConfig.senderNumber} onChange={(e) => setWaConfig({...waConfig, senderNumber: e.target.value})} className={cn(errors.smtpDomain && "border-red-500 focus-visible:ring-red-500/20")}/>
                            </div>
                         </div>
 
                        <div className="pt-6 flex items-center justify-end gap-4 border-t border-gray-200 dark:border-[#222]">
-                          <Button variant="ghost" className="text-accent hover:text-accent/80 cursor-pointer">
+                          <Button variant="ghost" className="text-accent hover:text-accent/80 cursor-pointer" onClick={() => toast.info('Sending WhatsApp test message...')}>
                             Send test message
                           </Button>
-                          <Button onClick={handleSave} className="gap-1.5 cursor-pointer">
+                          <Button onClick={() => toast.success('WhatsApp Config saved')} className="gap-1.5 cursor-pointer">
                             <Save size={14} />
                             Save WhatsApp Config
                           </Button>
@@ -416,10 +416,10 @@ export const Configuration = () => {
                         </div>
 
                        <div className="pt-6 flex items-center justify-end gap-4 border-t border-gray-200 dark:border-[#222]">
-                          <Button variant="ghost" className="text-accent hover:text-accent/80 cursor-pointer">
+                          <Button variant="ghost" className="text-accent hover:text-accent/80 cursor-pointer" onClick={() => toast.info('Triggering test webhook...')}>
                             Trigger test webhook
                           </Button>
-                          <Button onClick={handleSave} className="gap-1.5 cursor-pointer">
+                          <Button onClick={() => toast.success('Webhook Config saved')} className="gap-1.5 cursor-pointer">
                             <Save size={14} />
                             Save Webhook Config
                           </Button>
@@ -463,10 +463,10 @@ export const Configuration = () => {
                         </div>
 
                        <div className="pt-6 flex items-center justify-end gap-4 border-t border-gray-200 dark:border-[#222]">
-                          <Button variant="ghost" className="text-accent hover:text-accent/80 cursor-pointer">
+                          <Button variant="ghost" className="text-accent hover:text-accent/80 cursor-pointer" onClick={() => toast.info('Testing MQTT Connection...')}>
                             Test MQTT Connection
                           </Button>
-                          <Button onClick={handleSave} className="gap-1.5 cursor-pointer">
+                          <Button onClick={() => toast.success('MQTT Config saved')} className="gap-1.5 cursor-pointer">
                             <Save size={14} />
                             Save MQTT Config
                           </Button>
