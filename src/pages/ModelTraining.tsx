@@ -1,21 +1,80 @@
-import React from 'react';
-import { Play, Square, Activity, Database, Cpu, Clock, History } from 'lucide-react';
+import React, { useState } from 'react';
+import { Play, Square, Activity, Database, Cpu, Clock, History, X } from 'lucide-react';
 import { cn } from '../lib/utils';
 import { AreaChart, Area, ResponsiveContainer, YAxis, Tooltip, CartesianGrid } from 'recharts';
 import { useTheme } from '../context/ThemeContext';
 import { PerformanceLineChart } from '../components/ChartCards';
-
-const jobs = [
-  { id: 'TR-092', name: 'Security-Cam-YoloV8', dataset: 'Main Gate Vehicles', epoch: '45/100', map: 0.82, status: 'training', timeRemaining: '2h 15m' },
-  { id: 'TR-091', name: 'Lobby-Face-ResNet', dataset: 'Lobby Faces', epoch: '100/100', map: 0.94, status: 'completed', timeRemaining: '-' },
-  { id: 'TR-090', name: 'Perimeter-Night', dataset: 'Perimeter Intrusion', epoch: '12/50', map: 0.45, status: 'failed', timeRemaining: '-' },
-];
+import { useTrain } from '../context/TrainContext';
+import { Input, Button } from '../components/ui';
 
 const mockLoss = Array.from({ length: 40 }).map((_, i) => ({ val: Math.max(0.2, 2.5 * Math.exp(-i / 8) + (Math.random() * 0.2)) }));
 
+const NewTrainingModal = ({ isOpen, onClose, datasets, onCreate }: any) => {
+  const [name, setName] = useState('');
+  const [dataset, setDataset] = useState(datasets[0]?.name || '');
+
+  if (!isOpen) return null;
+  return (
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm p-4">
+      <div className="bg-white dark:bg-[#1e1e1e] border border-gray-200 dark:border-[#222] rounded-[11px] shadow-2xl w-full max-w-md overflow-hidden">
+        <div className="p-6 border-b border-gray-200 dark:border-[#222] flex items-center justify-between bg-gray-50/50 dark:bg-[#1a1a1a]">
+          <h2 className="text-sm font-black text-gray-900 dark:text-white">Start New Training</h2>
+          <button onClick={onClose} className="text-gray-500 hover:text-white transition-colors">
+            <X size={16} />
+          </button>
+        </div>
+        
+        <form onSubmit={(e) => { 
+          e.preventDefault(); 
+          onCreate({ name, dataset });
+          onClose(); 
+        }} className="p-6 space-y-5">
+          <div>
+            <label className="block text-[10px] font-black text-gray-500 mb-2 uppercase tracking-widest">Model Name</label>
+            <Input 
+              type="text" 
+              required
+              placeholder="e.g. YOLOv8 Detection"
+              value={name}
+              onChange={(e) => setName(e.target.value)}
+            />
+          </div>
+          
+          <div>
+            <label className="block text-[10px] font-black text-gray-500 mb-2 uppercase tracking-widest">Select Dataset ({datasets.filter((d: any) => d.status === 'ready').length} Ready)</label>
+            <select 
+               className="w-full bg-gray-50 dark:bg-[#161616] border border-gray-200 dark:border-[#222] rounded-lg pl-4 pr-9 h-[37px] text-[12px] font-bold text-gray-700 dark:text-gray-300 outline-none focus-visible:ring-1 focus-visible:ring-accent/50 transition-all cursor-pointer"
+               value={dataset}
+               onChange={(e) => setDataset(e.target.value)}
+               required
+            >
+              {datasets.filter((d: any)=>d.status === 'ready').map((d: any) => (
+                  <option key={d.id} value={d.name}>{d.name} ({d.annotations} annotations)</option>
+              ))}
+            </select>
+          </div>
+
+          <div className="flex justify-between mt-8 pt-4 border-t border-gray-200 dark:border-[#222] items-center">
+            <Button variant="ghost" type="button" onClick={onClose}>
+              Cancel
+            </Button>
+            <Button variant="primary" type="submit" className="h-8">
+              Start Training
+            </Button>
+          </div>
+        </form>
+      </div>
+    </div>
+  );
+};
+
 export const ModelTraining = () => {
   const { theme } = useTheme();
+  const { trainingJobs, datasets, addTrainingJob } = useTrain();
   const isDark = theme === 'dark';
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
+  const activeJob = trainingJobs.find(job => job.status === 'training') || trainingJobs[0];
 
   const CustomTooltip = ({ active, payload, label }: any) => {
     if (active && payload && payload.length) {
@@ -38,13 +97,14 @@ export const ModelTraining = () => {
           <p className="text-gray-600 dark:text-gray-400 text-xs font-medium">Configure hyper-parameters and orchestrate training jobs.</p>
         </div>
         <div className="flex gap-3 w-full md:w-auto">
-          <button className="flex-1 md:flex-none flex justify-center items-center gap-2 bg-accent hover:bg-accent/90 text-black h-8 rounded-full text-xs font-bold px-5 transition-colors shadow-[0_0_15px_rgba(82,197,243,0.3)] leading-[12px]">
+          <button onClick={() => setIsModalOpen(true)} className="flex-1 md:flex-none flex justify-center items-center gap-2 bg-accent hover:bg-accent/90 text-black h-8 rounded-full text-xs font-bold px-5 transition-colors shadow-[0_0_15px_rgba(82,197,243,0.3)] leading-[12px]">
             <Play size={14} className="fill-black" /> Start New Training
           </button>
         </div>
       </div>
 
       {/* Active Training Dashboard */}
+      {activeJob && (
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 mb-4">
         <div className="card-glass col-span-1 lg:col-span-2 bg-white dark:bg-[#1e1e1e] rounded-[11px] border border-gray-100 dark:border-[#222] p-6 shadow-sm overflow-hidden flex flex-col">
           <div className="flex justify-between items-start mb-4 shrink-0">
@@ -53,8 +113,8 @@ export const ModelTraining = () => {
                          <div className="w-2 h-2 rounded-full bg-accent animate-pulse shadow-[0_0_10px_rgba(82,197,243,0.8)]"></div>
                          <span className="text-xs font-bold text-accent">Training Active</span>
                      </div>
-                     <h2 className="text-sm font-bold text-gray-900 dark:text-white">Security-Cam-YoloV8</h2>
-                     <p className="text-xs text-gray-600 dark:text-gray-400 mt-1 font-mono">TR-092 • Started 4h 12m ago</p>
+                     <h2 className="text-sm font-bold text-gray-900 dark:text-white">{activeJob.name}</h2>
+                     <p className="text-xs text-gray-600 dark:text-gray-400 mt-1 font-mono">{activeJob.id} • Started recently</p>
                  </div>
                  <button className="px-4 py-1.5 bg-red-500/10 text-red-500 hover:bg-red-500/20 border border-red-500/20 rounded-lg text-xs font-bold transition-colors flex items-center gap-2">
                      <Square size={12} className="fill-red-500" /> Stop Job
@@ -64,15 +124,15 @@ export const ModelTraining = () => {
             <div className="grid grid-cols-3 gap-4 mb-4">
                 <div className="bg-gray-100 dark:bg-[#151515] rounded-xl border border-gray-200 dark:border-[#222] p-4 text-center">
                     <span className="block text-[10px] text-gray-500 font-black mb-1 uppercase tracking-widest">Epoch</span>
-                    <span className="text-xl font-mono text-gray-900 dark:text-white">45<span className="text-gray-500 text-sm">/100</span></span>
+                    <span className="text-xl font-mono text-gray-900 dark:text-white">{activeJob.epoch}</span>
                 </div>
                 <div className="bg-gray-100 dark:bg-[#151515] rounded-xl border border-gray-200 dark:border-[#222] p-4 text-center">
                     <span className="block text-[10px] text-gray-500 font-black mb-1 uppercase tracking-widest">mAP@0.5</span>
-                    <span className="text-xl font-mono text-accent">0.824</span>
+                    <span className="text-xl font-mono text-accent">{activeJob.map.toFixed(3)}</span>
                 </div>
                 <div className="bg-gray-100 dark:bg-[#151515] rounded-xl border border-gray-200 dark:border-[#222] p-4 text-center">
                     <span className="block text-[10px] text-gray-500 font-black mb-1 uppercase tracking-widest">Loss</span>
-                    <span className="text-xl font-mono text-secondary">0.412</span>
+                    <span className="text-xl font-mono text-secondary">{(Math.random() * 0.4 + 0.1).toFixed(3)}</span>
                 </div>
             </div>
 
@@ -139,6 +199,7 @@ export const ModelTraining = () => {
             </div>
         </div>
       </div>
+      )}
 
       <div className="mb-4">
         <PerformanceLineChart />
@@ -161,7 +222,7 @@ export const ModelTraining = () => {
               </tr>
             </thead>
             <tbody className="divide-y divide-gray-200 dark:divide-[#222]">
-              {jobs.map((job) => (
+              {trainingJobs.map((job) => (
                 <tr key={job.id} className="hover:bg-white/5 transition-colors">
                   <td className="px-5 py-4">
                       <div className="font-semibold text-gray-900 dark:text-white text-xs mb-0.5">{job.name}</div>
@@ -174,7 +235,7 @@ export const ModelTraining = () => {
                   </td>
                   <td className="px-5 py-4 font-mono text-gray-700 dark:text-gray-300">{job.epoch}</td>
                   <td className="px-5 py-4 font-mono text-gray-700 dark:text-gray-300">{job.map}</td>
-                  <td className="px-5 py-4">
+                  <td className="px-5 py-4 text-right">
                     <div className={cn("inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md border text-[10px] font-bold", 
                         job.status === 'completed' ? "bg-green-500/10 border-green-500/20 text-green-400" : 
                         job.status === 'training' ? "bg-accent/10 border-accent/20 text-accent" :
@@ -189,6 +250,7 @@ export const ModelTraining = () => {
           </table>
         </div>
       </div>
+      <NewTrainingModal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} datasets={datasets} onCreate={addTrainingJob} />
     </main>
   );
 };

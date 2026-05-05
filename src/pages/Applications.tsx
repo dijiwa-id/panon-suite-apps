@@ -2,20 +2,17 @@ import React, { useState } from 'react';
 import { Search, Plus, Play, ExternalLink, Activity, Server, ShieldCheck, Pause, Settings, X, Video, Cpu, Activity as ActivityIcon, ChevronDown } from 'lucide-react';
 import { cn } from '../lib/utils';
 import { toast } from 'sonner';
-
-const apps = [
-  { id: 'APP-01', name: 'Main Gate Security Tracker', status: 'running', type: 'Intrusion Detection', nodes: 3, uptime: '14d 2h', endpoint: '/api/v1/gate-alerts' },
-  { id: 'APP-02', name: 'Lobby Face Authentication', status: 'running', type: 'Face Recognition', nodes: 4, uptime: '32d 5h', endpoint: '/api/v1/faces' },
-  { id: 'APP-03', name: 'Parking Lot Monitor', status: 'stopped', type: 'ALPR & Counting', nodes: 5, uptime: '-', endpoint: '-' },
-];
+import { useDevelop } from '../context/DevelopContext';
 
 export const Applications = () => {
+  const { applications, pipelines, addApplication, toggleApplicationStatus } = useDevelop();
   const [isNewAppModalOpen, setIsNewAppModalOpen] = useState(false);
   
   const [appName, setAppName] = useState('');
   const [appDesc, setAppDesc] = useState('');
   const [inputStream, setInputStream] = useState('Cam-01 (Main Gate)');
-  const [visionPipeline, setVisionPipeline] = useState('Main Gate Security Pipeline');
+  
+  const [visionPipeline, setVisionPipeline] = useState(pipelines.length > 0 ? pipelines[0].id : '');
   const [computeTarget, setComputeTarget] = useState('Edge Node Alpha');
 
   const [errors, setErrors] = useState<{appName?: string}>({});
@@ -33,12 +30,20 @@ export const Applications = () => {
 
   const handleDeploy = () => {
     if (validate()) {
-      // simulate deployment
-      toast.promise(new Promise(resolve => setTimeout(resolve, 1500)), {
-        loading: 'Deploying application...',
-        success: `${appName} deployed successfully to ${computeTarget}`,
-        error: 'Deployment failed',
+      // Find the pipeline type (just an example mapping based on pipeline name/content)
+      const pipelineObj = pipelines.find(p => p.id === visionPipeline);
+      const pipelineType = pipelineObj?.name || 'Custom Pipeline';
+
+      addApplication({
+        name: appName,
+        desc: appDesc,
+        type: pipelineType,
+        pipelineId: visionPipeline,
+        inputStream,
+        computeTarget
       });
+
+      toast.success(`${appName} deployed successfully to ${computeTarget}`);
       setIsNewAppModalOpen(false);
       setAppName('');
       setAppDesc('');
@@ -83,7 +88,7 @@ export const Applications = () => {
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
-          {apps.map((app) => (
+          {applications.map((app) => (
               <div key={app.id} className="bg-white dark:bg-[#1e1e1e] border border-gray-200 dark:border-[#222] rounded-[11px] p-6 flex flex-col hover:border-accent/30 transition-colors group">
                   <div className="flex justify-between items-start mb-4">
                       <div>
@@ -102,7 +107,7 @@ export const Applications = () => {
                   <div className="grid grid-cols-2 gap-4 mb-4 mt-2">
                       <div className="bg-gray-100 dark:bg-[#151515] border border-gray-200 dark:border-[#222] rounded-xl p-3">
                           <div className="text-[10px] text-gray-500 font-black mb-1 uppercase tracking-widest">Nodes Count</div>
-                          <div className="text-sm font-semibold text-gray-900 dark:text-white">{app.nodes} active blocks</div>
+                          <div className="text-sm font-semibold text-gray-900 dark:text-white">{app.nodesCount} active blocks</div>
                       </div>
                       <div className="bg-gray-100 dark:bg-[#151515] border border-gray-200 dark:border-[#222] rounded-xl p-3">
                           <div className="text-[10px] text-gray-500 font-black mb-1 uppercase tracking-widest">Uptime</div>
@@ -117,11 +122,11 @@ export const Applications = () => {
 
                   <div className="flex items-center gap-3 mt-auto pt-4 border-t border-gray-200 dark:border-[#222]">
                       {app.status === 'running' ? (
-                          <button className="flex-1 flex justify-center items-center gap-2 bg-gray-50/50 dark:bg-[#1a1a1a] border border-gray-200 dark:border-[#222] hover:bg-gray-100 dark:hover:bg-[#202020] text-red-400 h-[32px] rounded-lg text-xs font-bold transition-colors">
+                          <button onClick={() => toggleApplicationStatus(app.id)} className="flex-1 flex justify-center items-center gap-2 bg-gray-50/50 dark:bg-[#1a1a1a] border border-gray-200 dark:border-[#222] hover:bg-gray-100 dark:hover:bg-[#202020] text-red-400 h-[32px] rounded-lg text-xs font-bold transition-colors">
                               <Pause size={14} className="fill-red-400/20" /> Stop App
                           </button>
                       ) : (
-                          <button className="flex-1 flex justify-center items-center gap-2 bg-gray-50/50 dark:bg-[#1a1a1a] border border-gray-200 dark:border-[#222] hover:bg-gray-100 dark:hover:bg-[#202020] text-green-400 h-[32px] rounded-lg text-xs font-bold transition-colors">
+                          <button onClick={() => toggleApplicationStatus(app.id)} className="flex-1 flex justify-center items-center gap-2 bg-gray-50/50 dark:bg-[#1a1a1a] border border-gray-200 dark:border-[#222] hover:bg-gray-100 dark:hover:bg-[#202020] text-green-400 h-[32px] rounded-lg text-xs font-bold transition-colors">
                               <Play size={14} className="fill-green-400/20" /> Start App
                           </button>
                       )}
@@ -213,9 +218,10 @@ export const Applications = () => {
                                   onChange={(e) => setVisionPipeline(e.target.value)}
                                   className="w-full bg-gray-100 dark:bg-[#151515] border border-gray-200 dark:border-[#222] rounded-xl pl-4 pr-9 h-[37px] text-[12px] text-gray-900 dark:text-white focus:border-accent/50 focus:ring-1 focus:ring-accent/50 outline-none transition-all font-medium appearance-none cursor-pointer"
                               >
-                                  <option>Main Gate Security Pipeline</option>
-                                  <option>Lobby Face Auth Pipeline</option>
-                                  <option>Night Intrusion Pipeline</option>
+                                  {pipelines.length === 0 && <option disabled value="">No pipelines available</option>}
+                                  {pipelines.map(p => (
+                                      <option key={p.id} value={p.id}>{p.name}</option>
+                                  ))}
                               </select>
                           </div>
                       </div>

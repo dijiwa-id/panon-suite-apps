@@ -1,16 +1,18 @@
-import React from 'react';
-import { Search, Box, Copy, Download, Info, CheckCircle2, AlertTriangle } from 'lucide-react';
+import React, { useState } from 'react';
+import { Search, Box, Copy, Download, Info, CheckCircle2, AlertTriangle, Loader } from 'lucide-react';
 import { cn } from '../lib/utils';
 import { toast } from 'sonner';
-
-const models = [
-  { id: 'MOD-2026-001', name: 'Security-Cam-YoloV8', version: 'v1.4.2', architecture: 'YOLOv8-m', map: 0.824, param: '25.9M', size: '52 MB', status: 'ready', tags: ['Object Detection', 'Security'] },
-  { id: 'MOD-2026-002', name: 'Lobby-Face-ResNet', version: 'v2.0.0', architecture: 'ResNet-50', map: 0.941, param: '23.5M', size: '48 MB', status: 'ready', tags: ['Face Recognition', 'Access Control'] },
-  { id: 'MOD-2026-003', name: 'Parking-LPR-DBNet', version: 'v1.1.0', architecture: 'DBNet', map: 0.892, param: '18.2M', size: '36 MB', status: 'deployed', tags: ['OCR', 'LPR'] },
-  { id: 'MOD-2026-004', name: 'Perimeter-Night', version: 'v0.9.1', architecture: 'YOLOv8-s', map: 0.450, param: '11.1M', size: '22 MB', status: 'investigating', tags: ['Object Detection', 'Night Vision'] },
-];
+import { useTrain } from '../context/TrainContext';
 
 export const AIModels = () => {
+  const { models } = useTrain();
+  const [searchQuery, setSearchQuery] = useState('');
+
+  const filteredModels = models.filter((model: any) => 
+     model.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+     model.tags.some((tag: string) => tag.toLowerCase().includes(searchQuery.toLowerCase()))
+  );
+
   return (
     <main className="flex-1 overflow-y-auto bg-transparent p-6 lg:p-8 text-gray-800 dark:text-gray-200 transition-colors custom-scrollbar">
       <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-4 gap-4">
@@ -28,7 +30,13 @@ export const AIModels = () => {
           <div className="flex w-full sm:w-auto">
              <div className="bg-gray-100 dark:bg-[#151515] px-4 py-2 rounded-xl border border-gray-200 dark:border-[#222] flex items-center gap-2 flex-1 sm:flex-none focus-within:border-accent/50 focus-within:ring-1 focus-within:ring-accent/50 transition-all">
                 <Search className="text-gray-600 dark:text-gray-400" size={16} />
-                <input type="text" placeholder="Search models by name or tag..." className="bg-transparent outline-none text-xs font-medium text-gray-800 dark:text-gray-200 w-full sm:w-64 placeholder-gray-600" />
+                <input 
+                  type="text" 
+                  placeholder="Search models by name or tag..." 
+                  className="bg-transparent outline-none text-xs font-medium text-gray-800 dark:text-gray-200 w-full sm:w-64 placeholder-gray-600"
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                />
              </div>
           </div>
         </div>
@@ -45,7 +53,7 @@ export const AIModels = () => {
               </tr>
             </thead>
             <tbody className="divide-y divide-gray-200 dark:divide-[#222]">
-              {models.map((model) => (
+              {filteredModels.map((model: any) => (
                 <tr key={model.id} className="hover:bg-gray-50 dark:hover:bg-[#252525]/30 transition-colors group">
                   <td className="px-5 py-4">
                       <div className="flex items-center gap-2 mb-0.5">
@@ -65,7 +73,7 @@ export const AIModels = () => {
                   </td>
                   <td className="px-5 py-4">
                       <div className="flex flex-wrap gap-1.5">
-                          {model.tags.map(t => (
+                          {model.tags.map((t: string) => (
                               <span key={t} className="bg-accent/10 border border-accent/20 text-accent px-2 py-0.5 rounded-full text-[10px] font-bold tracking-wide">{t}</span>
                           ))}
                       </div>

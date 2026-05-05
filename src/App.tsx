@@ -4,7 +4,7 @@
  */
 
 import React from 'react';
-import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
+import { BrowserRouter, Routes, Route, Navigate, Outlet } from 'react-router-dom';
 import { ThemeProvider } from './context/ThemeContext';
 import { Sidebar } from './components/Sidebar';
 import { Header } from './components/Header';
@@ -42,8 +42,10 @@ const DeployReport = React.lazy(() => import('./pages/DeployReport').then(module
 import { Toaster } from 'sonner';
 
 import { ErrorBoundary } from './components/ErrorBoundary';
+import { DevelopProvider } from './context/DevelopContext';
+import { TrainProvider } from './context/TrainContext';
 
-const AppLayout = ({ children }: { children: React.ReactNode }) => {
+const AppLayout = () => {
   const [isSidebarCollapsed, setIsSidebarCollapsed] = React.useState(false);
 
   return (
@@ -56,7 +58,9 @@ const AppLayout = ({ children }: { children: React.ReactNode }) => {
       <div className="flex-1 flex flex-col min-w-0 z-10 bg-transparent">
         <Header />
         <ErrorBoundary>
-          {children}
+          <React.Suspense fallback={suspenseWrapper}>
+            <Outlet />
+          </React.Suspense>
         </ErrorBoundary>
       </div>
     </div>
@@ -72,43 +76,50 @@ const suspenseWrapper = (
 export default function App() {
   return (
     <ThemeProvider>
-      <BrowserRouter>
-        <Routes>
-          <Route path="/signin" element={<React.Suspense fallback={suspenseWrapper}><SignIn /></React.Suspense>} />
-          <Route path="/signup" element={<React.Suspense fallback={suspenseWrapper}><SignUp /></React.Suspense>} />
-          <Route path="/notifications" element={<AppLayout><React.Suspense fallback={suspenseWrapper}><Notifications /></React.Suspense></AppLayout>} />
-          <Route path="/dashboard" element={<AppLayout><React.Suspense fallback={suspenseWrapper}><Dashboard /></React.Suspense></AppLayout>} />
-          <Route path="/system-admin/dashboard" element={<AppLayout><React.Suspense fallback={suspenseWrapper}><SystemAdminDashboard /></React.Suspense></AppLayout>} />
-          <Route path="/system-admin/system-monitoring" element={<AppLayout><React.Suspense fallback={suspenseWrapper}><SystemMonitoring /></React.Suspense></AppLayout>} />
-          <Route path="/system-admin/network-management" element={<AppLayout><React.Suspense fallback={suspenseWrapper}><NetworkManagement /></React.Suspense></AppLayout>} />
-          <Route path="/system-admin/workstation-management" element={<AppLayout><React.Suspense fallback={suspenseWrapper}><WorkstationManagement /></React.Suspense></AppLayout>} />
-          <Route path="/system-admin/camera-management" element={<AppLayout><React.Suspense fallback={suspenseWrapper}><CameraManagement /></React.Suspense></AppLayout>} />
-          <Route path="/system-admin/model-management" element={<AppLayout><React.Suspense fallback={suspenseWrapper}><ModelManagement /></React.Suspense></AppLayout>} />
-          <Route path="/system-admin/model-deployment" element={<AppLayout><React.Suspense fallback={suspenseWrapper}><ModelDeployment /></React.Suspense></AppLayout>} />
-          <Route path="/train/data-collection" element={<AppLayout><React.Suspense fallback={suspenseWrapper}><DataCollection /></React.Suspense></AppLayout>} />
-          <Route path="/train/data-set" element={<AppLayout><React.Suspense fallback={suspenseWrapper}><DataSet /></React.Suspense></AppLayout>} />
-          <Route path="/train/image-annotation" element={<AppLayout><React.Suspense fallback={suspenseWrapper}><ImageAnnotation /></React.Suspense></AppLayout>} />
-          <Route path="/train/model-training" element={<AppLayout><React.Suspense fallback={suspenseWrapper}><ModelTraining /></React.Suspense></AppLayout>} />
-          <Route path="/train/ai-models" element={<AppLayout><React.Suspense fallback={suspenseWrapper}><AIModels /></React.Suspense></AppLayout>} />
-          <Route path="/develop/building-blocks" element={<AppLayout><React.Suspense fallback={suspenseWrapper}><BuildingBlocks /></React.Suspense></AppLayout>} />
-          <Route path="/develop/no-code-editor" element={<AppLayout><React.Suspense fallback={suspenseWrapper}><NoCodeEditor /></React.Suspense></AppLayout>} />
-          <Route path="/develop/applications" element={<AppLayout><React.Suspense fallback={suspenseWrapper}><Applications /></React.Suspense></AppLayout>} />
-          <Route path="/deploy/dashboard" element={<AppLayout><React.Suspense fallback={suspenseWrapper}><DeployDashboard /></React.Suspense></AppLayout>} />
-          <Route path="/deploy/live-feed-camera" element={<AppLayout><React.Suspense fallback={suspenseWrapper}><DeployLiveFeedCamera /></React.Suspense></AppLayout>} />
-          <Route path="/deploy/detection-log" element={<AppLayout><React.Suspense fallback={suspenseWrapper}><DeployDetectionLog /></React.Suspense></AppLayout>} />
-          <Route path="/deploy/report" element={<AppLayout><React.Suspense fallback={suspenseWrapper}><DeployReport /></React.Suspense></AppLayout>} />
-          <Route path="/system-admin/channel-management/*" element={<AppLayout><React.Suspense fallback={suspenseWrapper}><ChannelManagement /></React.Suspense></AppLayout>} />
-          <Route path="/system-admin/algorithm-context" element={<AppLayout><React.Suspense fallback={suspenseWrapper}><AlgorithmContext /></React.Suspense></AppLayout>} />
-          <Route path="/system-admin/package-management" element={<AppLayout><React.Suspense fallback={suspenseWrapper}><PackageManagement /></React.Suspense></AppLayout>} />
-          <Route path="/system-admin/roles" element={<AppLayout><React.Suspense fallback={suspenseWrapper}><Roles /></React.Suspense></AppLayout>} />
-          <Route path="/system-admin/users" element={<AppLayout><React.Suspense fallback={suspenseWrapper}><Users /></React.Suspense></AppLayout>} />
-          <Route path="/system-admin/role-modules" element={<AppLayout><React.Suspense fallback={suspenseWrapper}><RoleModules /></React.Suspense></AppLayout>} />
-          <Route path="/user-settings" element={<AppLayout><React.Suspense fallback={suspenseWrapper}><UserSettings /></React.Suspense></AppLayout>} />
-          <Route path="/system-admin/configuration" element={<AppLayout><React.Suspense fallback={suspenseWrapper}><Configuration /></React.Suspense></AppLayout>} />
-          <Route path="*" element={<Navigate to="/dashboard" replace />} />
-        </Routes>
-      </BrowserRouter>
-      <Toaster position="top-right" richColors />
+      <DevelopProvider>
+        <TrainProvider>
+          <BrowserRouter>
+            <Routes>
+              <Route path="/signin" element={<React.Suspense fallback={suspenseWrapper}><SignIn /></React.Suspense>} />
+              <Route path="/signup" element={<React.Suspense fallback={suspenseWrapper}><SignUp /></React.Suspense>} />
+              
+              <Route element={<AppLayout />}>
+                <Route path="/notifications" element={<Notifications />} />
+                <Route path="/dashboard" element={<Dashboard />} />
+                <Route path="/system-admin/dashboard" element={<SystemAdminDashboard />} />
+                <Route path="/system-admin/system-monitoring" element={<SystemMonitoring />} />
+                <Route path="/system-admin/network-management" element={<NetworkManagement />} />
+                <Route path="/system-admin/workstation-management" element={<WorkstationManagement />} />
+                <Route path="/system-admin/camera-management" element={<CameraManagement />} />
+                <Route path="/system-admin/model-management" element={<ModelManagement />} />
+                <Route path="/system-admin/model-deployment" element={<ModelDeployment />} />
+                <Route path="/train/data-collection" element={<DataCollection />} />
+                <Route path="/train/data-set" element={<DataSet />} />
+                <Route path="/train/image-annotation" element={<ImageAnnotation />} />
+                <Route path="/train/model-training" element={<ModelTraining />} />
+                <Route path="/train/ai-models" element={<AIModels />} />
+                <Route path="/develop/building-blocks" element={<BuildingBlocks />} />
+                <Route path="/develop/no-code-editor" element={<NoCodeEditor />} />
+                <Route path="/develop/applications" element={<Applications />} />
+                <Route path="/deploy/dashboard" element={<DeployDashboard />} />
+                <Route path="/deploy/live-feed-camera" element={<DeployLiveFeedCamera />} />
+                <Route path="/deploy/detection-log" element={<DeployDetectionLog />} />
+                <Route path="/deploy/report" element={<DeployReport />} />
+                <Route path="/system-admin/channel-management/*" element={<ChannelManagement />} />
+                <Route path="/system-admin/algorithm-context" element={<AlgorithmContext />} />
+                <Route path="/system-admin/package-management" element={<PackageManagement />} />
+                <Route path="/system-admin/roles" element={<Roles />} />
+                <Route path="/system-admin/users" element={<Users />} />
+                <Route path="/system-admin/role-modules" element={<RoleModules />} />
+                <Route path="/user-settings" element={<UserSettings />} />
+                <Route path="/system-admin/configuration" element={<Configuration />} />
+                <Route path="*" element={<Navigate to="/dashboard" replace />} />
+              </Route>
+            </Routes>
+          </BrowserRouter>
+          <Toaster position="top-right" richColors />
+        </TrainProvider>
+      </DevelopProvider>
     </ThemeProvider>
   );
 }

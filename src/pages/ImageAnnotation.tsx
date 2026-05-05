@@ -1,6 +1,8 @@
 import React, { useState, useRef } from 'react';
 import { MousePointer2, Square, Hexagon, Maximize, ZoomIn, ZoomOut, ChevronLeft, ChevronRight, Save, Settings, Trash2, Plus, X } from 'lucide-react';
 import { cn } from '../lib/utils';
+import { useTrain } from '../context/TrainContext';
+import { toast } from 'sonner';
 
 interface AnnotationClass {
   id: string;
@@ -25,6 +27,9 @@ interface Annotation {
 }
 
 export const ImageAnnotation = () => {
+  const { datasets, incrementDatasetAnnotations } = useTrain();
+  const datasetTarget = datasets.length > 0 ? datasets[0].id : null; 
+  
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const images = [
     { url: 'https://images.unsplash.com/photo-1517646287270-a5a9ca602e5c?q=80&w=2000&auto=format&fit=crop', name: 'IMG_20260428_1023.jpg', w: 1920, h: 1080 },
@@ -50,7 +55,10 @@ export const ImageAnnotation = () => {
   };
 
   const handleSaveNext = () => {
-      // Logic for saving annotations can go here
+      if (datasetTarget) {
+          incrementDatasetAnnotations(datasetTarget, annotations.length);
+      }
+      toast.success('Annotations saved successfully');
       handleNext();
   };
 

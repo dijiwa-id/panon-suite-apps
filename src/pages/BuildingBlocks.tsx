@@ -1,66 +1,50 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useMemo } from 'react';
 import { Layers, Video, BrainCircuit, ShieldCheck, Zap, Server, Code, Upload, X, Settings, Book, Activity, CheckCircle2, Play, Lock } from 'lucide-react';
 import { cn } from '../lib/utils';
 import { toast } from 'sonner';
 import { Card, Button, Input, Badge } from '../components/ui';
+import { useDevelop } from '../context/DevelopContext';
 
 export const BuildingBlocks = () => {
+  const { blocks, addBlock } = useDevelop();
   const [isImportModalOpen, setIsImportModalOpen] = useState(false);
-  const [activeNode, setActiveNode] = useState<{name: string, desc: string, version: string, type: string, categoryIcon: React.ReactNode} | null>(null);
+  const [activeNode, setActiveNode] = useState<any>(null);
   const [activeTab, setActiveTab] = useState<'config' | 'docs' | 'metrics'>('config');
   const [isImporting, setIsImporting] = useState(false);
   const [importSuccess, setImportSuccess] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
-  const categories = [
-    {
-      title: "Input Nodes",
-      type: "input",
-      icon: <Video size={18} className="text-[#52C5F3]" />,
-      blocks: [
-        { name: "RTSP Stream", desc: "Connect to live IP cameras via RTSP protocol.", version: "1.0.2" },
-        { name: "Video File", desc: "Upload or link an MP4/MKV video for batch processing.", version: "1.1.0" },
-        { name: "Image Sequence", desc: "Process a sequence of images frame by frame.", version: "1.0.0" },
-      ]
-    },
-    {
-      title: "Vision AI Processors",
-      type: "processor",
-      icon: <BrainCircuit size={18} className="text-[#8b5cf6]" />,
-      blocks: [
-        { name: "YOLOv8 Detection", desc: "High-performance object detection using ONNX.", version: "2.3.1" },
-        { name: "ResNet Classifier", desc: "Image classification and feature extraction.", version: "1.4.0" },
-        { name: "DeepSORT Tracker", desc: "Multi-object tracking across sequential frames.", version: "2.0.0" },
-        { name: "ALPR Engine", desc: "License plate extraction and character recognition.", version: "3.1.2" },
-      ]
-    },
-    {
-      title: "Logic & Analytics",
-      type: "logic",
-      icon: <Zap size={18} className="text-orange-400" />,
-      blocks: [
-        { name: "Line Crossing", desc: "Trigger events when objects cross defined virtual lines.", version: "1.0.5" },
-        { name: "Region Intrusion", desc: "Detect presence inside a defined polygon ROI.", version: "1.2.0" },
-        { name: "Dwell Timer", desc: "Measure how long an object stays within an area.", version: "1.0.1" },
-      ]
-    },
-    {
-      title: "Output & Integration",
-      type: "output",
-      icon: <Server size={18} className="text-[#10b981]" />,
-      blocks: [
-        { name: "Webhook Dispatcher", desc: "Send JSON payloads via HTTP POST on events.", version: "2.1.0" },
-        { name: "PostgreSQL Sink", desc: "Store structured event data directly to DB.", version: "1.0.3" },
-        { name: "Kafka Producer", desc: "Stream analytics events to a Kafka topic.", version: "1.5.0" },
-      ]
-    }
-  ];
+  const categories = useMemo(() => {
+    const grouped = {
+      'Sources': { title: 'Input Nodes', type: 'input', icon: <Video size={18} className="text-[#52C5F3]" />, blocks: [] as any[] },
+      'Vision AI Processors': { title: 'Vision AI Processors', type: 'processor', icon: <BrainCircuit size={18} className="text-[#8b5cf6]" />, blocks: [] as any[] },
+      'Logic & Analytics': { title: 'Logic & Analytics', type: 'logic', icon: <Zap size={18} className="text-orange-400" />, blocks: [] as any[] },
+      'Output & Integration': { title: 'Output & Integration', type: 'output', icon: <Server size={18} className="text-[#10b981]" />, blocks: [] as any[] }
+    };
+    
+    blocks.forEach(block => {
+      if (grouped[block.category]) {
+        grouped[block.category].blocks.push(block);
+      }
+    });
+    
+    return Object.values(grouped);
+  }, [blocks]);
 
   const handleImport = () => {
     setIsImporting(true);
     setTimeout(() => {
       setIsImporting(false);
       setImportSuccess(true);
+      
+      addBlock({
+        name: "Custom Model Node",
+        desc: "Custom imported ONNX model logic block.",
+        version: "1.0.0",
+        type: "processorNode",
+        category: "Vision AI Processors"
+      });
+
       setTimeout(() => {
         setImportSuccess(false);
         setIsImportModalOpen(false);

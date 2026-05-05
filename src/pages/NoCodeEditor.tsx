@@ -1,8 +1,11 @@
-import React, { useState, useCallback, useRef, useMemo } from 'react';
+import React, { useState, useCallback, useRef, useMemo, useEffect } from 'react';
 import { Play, Save, Settings as SettingsIcon, Video, BrainCircuit, Server, Search, X } from 'lucide-react';
 import { cn } from '../lib/utils';
 import { useTheme } from '../context/ThemeContext';
 import { Button, Input } from '../components/ui';
+import { useDevelop } from '../context/DevelopContext';
+import { toast } from 'sonner';
+import { useNavigate } from 'react-router-dom';
 import {
   ReactFlow,
   Background,
@@ -81,13 +84,44 @@ const initialEdges: Edge[] = [
 ];
 
 export const NoCodeEditor = () => {
+  const { blocks, pipelines, savePipeline, activePipelineId } = useDevelop();
   const { theme } = useTheme();
+  
+  const activePipeline = useMemo(() => {
+    return pipelines.find(p => p.id === activePipelineId) || pipelines[0];
+  }, [activePipelineId, pipelines]);
+
   const reactFlowWrapper = useRef<HTMLDivElement>(null);
-  const [nodes, setNodes, onNodesChange] = useNodesState(initialNodes);
-  const [edges, setEdges, onEdgesChange] = useEdgesState(initialEdges);
+  const [nodes, setNodes, onNodesChange] = useNodesState(activePipeline?.nodes || []);
+  const [edges, setEdges, onEdgesChange] = useEdgesState(activePipeline?.edges || []);
   const [reactFlowInstance, setReactFlowInstance] = useState<any>(null);
   const [selectedNodeId, setSelectedNodeId] = useState<string | null>(null);
   const [searchQuery, setSearchQuery] = useState('');
+  
+  const [pipelineName, setPipelineName] = useState(activePipeline?.name || 'Untitled Pipeline');
+
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    if (activePipeline) {
+      setNodes(activePipeline.nodes);
+      setEdges(activePipeline.edges);
+      setPipelineName(activePipeline.name);
+    }
+  }, [activePipeline, setNodes, setEdges]);
+  
+  const handleSave = () => {
+    savePipeline({
+      name: pipelineName,
+      nodes,
+      edges,
+    });
+  };
+
+  const handleDeploy = () => {
+     handleSave();
+     navigate('/develop/applications');
+  };
 
   const selectedNode = nodes.find(n => n.id === selectedNodeId);
 
@@ -274,19 +308,24 @@ export const NoCodeEditor = () => {
       <div className="h-[60px] border-b border-gray-200 dark:border-[#222] bg-white dark:bg-[#161616] flex items-center justify-between px-6 shrink-0 z-20">
         <div className="flex items-center gap-4">
           <div>
-            <h1 className="text-sm font-bold text-gray-900 dark:text-white flex items-center gap-2">
+            <div className="flex items-center gap-2">
                 <span className="w-2 h-2 rounded-full bg-accent animate-pulse shadow-[0_0_8px_rgba(82,197,243,0.8)]"></span>
-                Main Gate Security Pipeline
-            </h1>
-            <p className="text-[10px] text-gray-500 font-mono mt-0.5 uppercase tracking-widest font-black">draft-mode • unsaved changes</p>
+                <input 
+                  className="bg-transparent text-sm font-bold text-gray-900 dark:text-white outline-none placeholder-gray-400"
+                  value={pipelineName}
+                  onChange={(e) => setPipelineName(e.target.value)}
+                  placeholder="Pipeline Name"
+                />
+            </div>
+            <p className="text-[10px] text-gray-500 font-mono mt-0.5 uppercase tracking-widest font-black">editing mode</p>
           </div>
         </div>
 
         <div className="flex gap-3 items-center">
-          <Button variant="outline" className="gap-2 h-8 rounded-lg px-4">
+          <Button variant="outline" className="gap-2 h-8 rounded-lg px-4" onClick={handleSave}>
             <Save size={14} /> Save Pipeline
           </Button>
-          <Button variant="primary" className="gap-2 h-8 rounded-lg px-5">
+          <Button variant="primary" className="gap-2 h-8 rounded-lg px-5" onClick={handleDeploy}>
             <Play size={14} className="fill-black" /> Deploy
           </Button>
         </div>
@@ -303,36 +342,33 @@ export const NoCodeEditor = () => {
           </div>
           <div className="flex-1 overflow-y-auto p-4 space-y-6 custom-scrollbar">
               {(() => {
-                 const BLOCKS = [
+                 // Group blocks dynamically
+                 const groupedBlocks = [
                    {
                      category: 'Sources',
                      icon: <Video size={12}/>,
-                     items: [
-                       { type: 'sourceNode', label: 'RTSP Stream', colorClass: 'bg-blue-500' },
-                       { type: 'sourceNode', label: 'Video File', colorClass: 'bg-blue-500' },
-                     ]
+                     items: blocks.filter(b => b.category === 'Sources').map(b => ({ type: b.type, label: b.name, colorClass: 'bg-blue-500' }))
                    },
                    {
                      category: 'Processors',
                      icon: <BrainCircuit size={12}/>,
-                     items: [
-                       { type: 'processorNode', label: 'YOLOv8 Detection', colorClass: 'bg-accent' },
-                       { type: 'processorNode', label: 'DeepSORT Tracker', colorClass: 'bg-accent' },
-                       { type: 'logicNode', label: 'Line Region Logic', colorClass: 'bg-secondary' },
-                     ]
+                     items: blocks.filter(b => b.category === 'Vision AI Processors').map(b => ({ type: b.type, label: b.name, colorClass: 'bg-accent' }))
+                   },
+                   {
+                     category: 'Logic',
+                     icon: <SettingsIcon size={12} />,
+                     items: blocks.filter(b => b.category === 'Logic & Analytics').map(b => ({ type: b.type, label: b.name, colorClass: 'bg-secondary' }))
                    },
                    {
                      category: 'Sinks',
                      icon: <Server size={12}/>,
-                     items: [
-                       { type: 'sinkNode', label: 'Webhook Event', colorClass: 'bg-green-500' },
-                     ]
+                     items: blocks.filter(b => b.category === 'Output & Integration').map(b => ({ type: b.type, label: b.name, colorClass: 'bg-green-500' }))
                    }
                  ];
 
                  let hasResults = false;
                  
-                 const renderedBlocks = BLOCKS.map(category => {
+                 const renderedBlocks = groupedBlocks.map(category => {
                      const filteredItems = category.items.filter(item => item.label.toLowerCase().includes(searchQuery.toLowerCase()));
                      if (filteredItems.length === 0) return null;
                      

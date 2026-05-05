@@ -3,16 +3,10 @@ import { Search, Plus, HardDrive, Filter, Clock, CheckCircle2, X, ChevronDown } 
 import { useNavigate } from 'react-router-dom';
 import { cn } from '../lib/utils';
 import { Card, Button, Input, Badge, Table, TableHeader, TableRow, TableHead, TableBody, TableCell } from '../components/ui';
-
-const initialDatasets = [
-  { id: 'DS-2026-001', name: 'Main Gate Vehicles', type: 'Object Detection', samples: 12500, annotations: 45000, size: '4.2 GB', lastUpdated: '2 hours ago', status: 'ready' },
-  { id: 'DS-2026-002', name: 'Lobby Faces', type: 'Face Recognition', samples: 8300, annotations: 8300, size: '2.1 GB', lastUpdated: '5 hours ago', status: 'annotating' },
-  { id: 'DS-2026-003', name: 'Perimeter Intrusion', type: 'Object Detection', samples: 24000, annotations: 32000, size: '8.5 GB', lastUpdated: '1 day ago', status: 'ready' },
-  { id: 'DS-2026-004', name: 'Parking Lot LPR', type: 'Optical Character Recognition', samples: 5400, annotations: 6800, size: '1.2 GB', lastUpdated: '2 days ago', status: 'uploading' },
-];
+import { useTrain } from '../context/TrainContext';
 
 export const DataSet = () => {
-  const [datasets, setDatasets] = useState(initialDatasets);
+  const { datasets, addDataset } = useTrain();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [newDataset, setNewDataset] = useState({ name: '', type: 'Object Detection', description: '' });
   const [searchQuery, setSearchQuery] = useState('');
@@ -20,17 +14,10 @@ export const DataSet = () => {
 
   const handleCreate = () => {
     if (newDataset.name.trim()) {
-      const newEntry = {
-        id: `DS-2026-00${datasets.length + 1}`,
+      addDataset({
         name: newDataset.name,
         type: newDataset.type,
-        samples: 0,
-        annotations: 0,
-        size: '0 MB',
-        lastUpdated: 'Just now',
-        status: 'uploading'
-      };
-      setDatasets([newEntry, ...datasets]);
+      });
       setIsModalOpen(false);
       setNewDataset({ name: '', type: 'Object Detection', description: '' });
     }
@@ -157,8 +144,9 @@ export const DataSet = () => {
                   </TableCell>
                   <TableCell>
                     {ds.status === 'ready' && <Badge variant="success">ready</Badge>}
-                    {ds.status === 'annotating' && <Badge className="bg-accent/10 border-accent/20 text-accent hover:bg-accent/20">annotating</Badge>}
+                     {ds.status === 'annotating' && <Badge className="bg-accent/10 border-accent/20 text-accent hover:bg-accent/20">annotating</Badge>}
                     {ds.status === 'uploading' && <Badge variant="warning">uploading</Badge>}
+                    {ds.status === 'collecting' && <Badge className="bg-blue-500/10 border-blue-500/20 text-blue-500 hover:bg-blue-500/20">collecting</Badge>}
                   </TableCell>
                   <TableCell className="text-right">
                     <Button 
