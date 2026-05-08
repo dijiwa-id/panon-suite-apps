@@ -1,9 +1,81 @@
 import React, { useState } from 'react';
-import { Search, Plus, Filter, Database, Play, Pause, MoreVertical, UploadCloud, Image as ImageIcon, X, ChevronDown } from 'lucide-react';
+import { Search, Plus, Filter, Database, Play, Pause, MoreVertical, UploadCloud, Image as ImageIcon, X, ChevronDown, Link as LinkIcon, Cloud } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
 import { cn } from '../lib/utils';
 import { toast } from 'sonner';
 import { Card, Button, Input, Badge, Table, TableHeader, TableRow, TableHead, TableBody, TableCell } from '../components/ui';
-import { useTrain } from '../context/TrainContext';
+import { useTrain, type Dataset } from '../context/TrainContext';
+
+const DatasetDetailModal = ({ isOpen, onClose, dataset }: { isOpen: boolean; onClose: () => void; dataset: Dataset | null }) => {
+  const navigate = useNavigate();
+
+  if (!isOpen || !dataset) return null;
+
+  return (
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm p-4">
+      <div className="bg-white dark:bg-[#1e1e1e] border border-gray-200 dark:border-[#222] rounded-[11px] shadow-2xl w-full max-w-lg overflow-hidden">
+        <div className="p-6 border-b border-gray-200 dark:border-[#222] flex items-center justify-between bg-gray-50/50 dark:bg-[#1a1a1a]">
+          <h2 className="text-sm font-black text-gray-900 dark:text-white">Dataset Details</h2>
+          <button onClick={onClose} className="text-gray-500 hover:text-white transition-colors">
+            <X size={16} />
+          </button>
+        </div>
+        
+        <div className="p-6 space-y-4">
+          <div className="grid grid-cols-2 gap-y-4 gap-x-8">
+            <div>
+              <p className="text-[10px] font-black text-gray-500 uppercase tracking-widest mb-1">ID</p>
+              <p className="text-sm font-semibold text-gray-900 dark:text-white">{dataset.id}</p>
+            </div>
+            <div>
+              <p className="text-[10px] font-black text-gray-500 uppercase tracking-widest mb-1">Status</p>
+              <p className="text-sm font-semibold text-gray-900 dark:text-white capitalize">{dataset.status}</p>
+            </div>
+            <div className="col-span-2">
+              <p className="text-[10px] font-black text-gray-500 uppercase tracking-widest mb-1">Name</p>
+              <p className="text-sm font-semibold text-gray-900 dark:text-white">{dataset.name}</p>
+            </div>
+            <div>
+              <p className="text-[10px] font-black text-gray-500 uppercase tracking-widest mb-1">Type</p>
+              <p className="text-sm font-semibold text-gray-900 dark:text-white">{dataset.type}</p>
+            </div>
+            <div>
+              <p className="text-[10px] font-black text-gray-500 uppercase tracking-widest mb-1">Size</p>
+              <p className="text-sm font-semibold text-gray-900 dark:text-white">{dataset.size}</p>
+            </div>
+            <div>
+              <p className="text-[10px] font-black text-gray-500 uppercase tracking-widest mb-1">Samples</p>
+              <p className="text-sm font-semibold text-gray-900 dark:text-white">{dataset.samples.toLocaleString()}</p>
+            </div>
+            <div>
+              <p className="text-[10px] font-black text-gray-500 uppercase tracking-widest mb-1">Annotations</p>
+              <p className="text-sm font-semibold text-gray-900 dark:text-white">{dataset.annotations.toLocaleString()}</p>
+            </div>
+            <div className="col-span-2">
+              <p className="text-[10px] font-black text-gray-500 uppercase tracking-widest mb-1">Last Updated</p>
+              <p className="text-sm font-semibold text-gray-900 dark:text-white">{dataset.lastUpdated}</p>
+            </div>
+          </div>
+        </div>
+
+        <div className="p-6 border-t border-gray-200 dark:border-[#222] flex justify-between items-center bg-gray-50/50 dark:bg-[#1a1a1a]">
+          <Button variant="ghost" onClick={onClose}>
+            Close
+          </Button>
+          <Button 
+            variant="primary" 
+            onClick={() => {
+              navigate('/image-annotation');
+              onClose();
+            }}
+          >
+            Start Annotation
+          </Button>
+        </div>
+      </div>
+    </div>
+  );
+};
 
 const NewTaskModal = ({ isOpen, onClose, onCreate }: { isOpen: boolean; onClose: () => void; onCreate: (name: string, source: string) => void }) => {
   const [name, setName] = useState('');
@@ -92,10 +164,12 @@ const NewTaskModal = ({ isOpen, onClose, onCreate }: { isOpen: boolean; onClose:
 };
 
 const UploadDatasetModal = ({ isOpen, onClose }: { isOpen: boolean; onClose: () => void }) => {
+  const [uploadType, setUploadType] = useState<'local' | 'url' | 'cloud'>('local');
+
   if (!isOpen) return null;
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm p-4">
-      <div className="bg-white dark:bg-[#1e1e1e] border border-gray-200 dark:border-[#222] rounded-[11px] shadow-2xl w-full max-w-md overflow-hidden">
+      <div className="bg-white dark:bg-[#1e1e1e] border border-gray-200 dark:border-[#222] rounded-[11px] shadow-2xl w-full max-w-md overflow-hidden flex flex-col max-h-[90vh]">
         <div className="p-6 border-b border-gray-200 dark:border-[#222] flex items-center justify-between bg-gray-50/50 dark:bg-[#1a1a1a]">
           <h2 className="text-sm font-black text-gray-900 dark:text-white">Upload Dataset</h2>
           <button onClick={onClose} className="text-gray-500 hover:text-white transition-colors">
@@ -103,28 +177,95 @@ const UploadDatasetModal = ({ isOpen, onClose }: { isOpen: boolean; onClose: () 
           </button>
         </div>
         
-        <div className="p-8 space-y-6">
-          <div>
-            <label className="block text-[10px] font-black text-gray-500 mb-2 uppercase tracking-widest">Dataset Name</label>
-            <Input 
-              type="text" 
-              placeholder="e.g. Training Set July" 
-            />
-          </div>
-          
-          <div>
-            <label className="block text-[10px] font-black text-gray-500 mb-2 uppercase tracking-widest">Dataset Files (ZIP only)</label>
-            <div className="border-2 border-dashed border-gray-200 dark:border-[#222] rounded-xl p-10 flex flex-col items-center justify-center text-center hover:border-accent group transition-all bg-gray-50 dark:bg-[#161616]/50 cursor-pointer">
-              <div className="w-12 h-12 bg-gray-50/50 dark:bg-[#1a1a1a] border border-gray-200 dark:border-[#222] rounded-full flex items-center justify-center group-hover:scale-110 group-hover:border-accent transition-all mb-4">
-                <UploadCloud className="text-gray-500 group-hover:text-accent" size={24} />
-              </div>
-              <p className="text-sm font-bold text-gray-800 dark:text-gray-200 mb-1">Click or drag & drop</p>
-              <p className="text-[10px] text-gray-500 font-black uppercase tracking-widest">ZIP Format (Max 2GB)</p>
+        <div className="p-6 overflow-y-auto">
+          <div className="space-y-6">
+            <div>
+              <label className="block text-[10px] font-black text-gray-500 mb-2 uppercase tracking-widest">Dataset Name</label>
+              <Input 
+                type="text" 
+                placeholder="e.g. Training Set July" 
+              />
             </div>
+
+            <div>
+              <label className="block text-[10px] font-black text-gray-500 mb-2 uppercase tracking-widest">Source</label>
+              <div className="flex bg-gray-100 dark:bg-[#111] p-1 rounded-lg">
+                <button 
+                  onClick={() => setUploadType('local')}
+                  className={cn("flex-1 text-xs font-bold py-1.5 rounded-md flex items-center justify-center gap-2 transition-all", uploadType === 'local' ? "bg-white dark:bg-[#222] text-gray-900 dark:text-white shadow-sm" : "text-gray-500 hover:text-gray-700 dark:hover:text-gray-300")}
+                >
+                  <UploadCloud size={14} /> Local
+                </button>
+                <button 
+                  onClick={() => setUploadType('url')}
+                  className={cn("flex-1 text-xs font-bold py-1.5 rounded-md flex items-center justify-center gap-2 transition-all", uploadType === 'url' ? "bg-white dark:bg-[#222] text-gray-900 dark:text-white shadow-sm" : "text-gray-500 hover:text-gray-700 dark:hover:text-gray-300")}
+                >
+                  <LinkIcon size={14} /> URL
+                </button>
+                <button 
+                  onClick={() => setUploadType('cloud')}
+                  className={cn("flex-1 text-xs font-bold py-1.5 rounded-md flex items-center justify-center gap-2 transition-all", uploadType === 'cloud' ? "bg-white dark:bg-[#222] text-gray-900 dark:text-white shadow-sm" : "text-gray-500 hover:text-gray-700 dark:hover:text-gray-300")}
+                >
+                  <Cloud size={14} /> Storage
+                </button>
+              </div>
+            </div>
+            
+            {uploadType === 'local' && (
+              <div className="animate-in fade-in slide-in-from-bottom-2 duration-300">
+                <label className="block text-[10px] font-black text-gray-500 mb-2 uppercase tracking-widest">Dataset Files (ZIP only)</label>
+                <div className="border-2 border-dashed border-gray-200 dark:border-[#222] rounded-xl p-10 flex flex-col items-center justify-center text-center hover:border-accent group transition-all bg-gray-50 dark:bg-[#161616]/50 cursor-pointer">
+                  <div className="w-12 h-12 bg-gray-50/50 dark:bg-[#1a1a1a] border border-gray-200 dark:border-[#222] rounded-full flex items-center justify-center group-hover:scale-110 group-hover:border-accent transition-all mb-4">
+                    <UploadCloud className="text-gray-500 group-hover:text-accent" size={24} />
+                  </div>
+                  <p className="text-sm font-bold text-gray-800 dark:text-gray-200 mb-1">Click or drag & drop</p>
+                  <p className="text-[10px] text-gray-500 font-black uppercase tracking-widest">ZIP Format (Max 2GB)</p>
+                </div>
+              </div>
+            )}
+
+            {uploadType === 'url' && (
+              <div className="animate-in fade-in slide-in-from-bottom-2 duration-300 space-y-4">
+                <div>
+                  <label className="block text-[10px] font-black text-gray-500 mb-2 uppercase tracking-widest">Public URL</label>
+                  <Input 
+                    type="url" 
+                    placeholder="https://example.com/dataset.zip" 
+                  />
+                  <p className="text-[10px] text-gray-500 mt-2">Must be a direct link to a ZIP file.</p>
+                </div>
+              </div>
+            )}
+
+            {uploadType === 'cloud' && (
+              <div className="animate-in fade-in slide-in-from-bottom-2 duration-300 space-y-4">
+                <div>
+                  <label className="block text-[10px] font-black text-gray-500 mb-2 uppercase tracking-widest">Bucket URI</label>
+                  <Input 
+                    type="text" 
+                    placeholder="s3://my-bucket/dataset/ or gs://..." 
+                  />
+                </div>
+                <div>
+                  <label className="block text-[10px] font-black text-gray-500 mb-2 uppercase tracking-widest">Access Key ID (Optional)</label>
+                  <Input 
+                    type="text" 
+                    placeholder="Leave empty if public" 
+                  />
+                </div>
+                <div>
+                  <label className="block text-[10px] font-black text-gray-500 mb-2 uppercase tracking-widest">Secret Access Key (Optional)</label>
+                  <Input 
+                    type="password" 
+                    placeholder="Leave empty if public" 
+                  />
+                </div>
+              </div>
+            )}
           </div>
         </div>
 
-        <div className="p-6 border-t border-gray-200 dark:border-[#222] flex gap-3 justify-between items-center bg-gray-50/50 dark:bg-[#1a1a1a]">
+        <div className="p-6 border-t border-gray-200 dark:border-[#222] flex gap-3 justify-between items-center bg-gray-50/50 dark:bg-[#1a1a1a] shrink-0">
            <Button variant="ghost" type="button" onClick={onClose}>
              Cancel
            </Button>
@@ -150,6 +291,7 @@ export const DataCollection = () => {
   const { datasets, addDataset, incrementDatasetSamples } = useTrain();
   const [isTaskModalOpen, setIsTaskModalOpen] = useState(false);
   const [isUploadModalOpen, setIsUploadModalOpen] = useState(false);
+  const [selectedDataset, setSelectedDataset] = useState<Dataset | null>(null);
 
   const handleCreateTask = (name: string, source: string) => {
     addDataset({
@@ -222,7 +364,7 @@ export const DataCollection = () => {
             </TableHeader>
             <TableBody>
               {datasets.map((ds) => (
-                <TableRow key={ds.id} className="group cursor-pointer">
+                <TableRow key={ds.id} className="group cursor-pointer" onClick={() => setSelectedDataset(ds)}>
                   <TableCell className="pl-5">
                     <div className="font-semibold text-gray-900 dark:text-white text-xs mb-0.5">{ds.name}</div>
                     <div className="text-gray-500 text-[11px] font-medium">ID: {ds.id}</div>
@@ -247,7 +389,7 @@ export const DataCollection = () => {
                      <Badge variant="default">{ds.status}</Badge>
                     }
                   </TableCell>
-                  <TableCell className="pr-5">
+                  <TableCell className="pr-5" onClick={(e) => e.stopPropagation()}>
                     <div className="flex justify-end gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
                       {ds.status === 'collecting' ? (
                           <Button variant="outline" className="px-2.5"><Pause size={14} className="text-yellow-500" /></Button>
@@ -264,6 +406,7 @@ export const DataCollection = () => {
       </Card>
       <NewTaskModal isOpen={isTaskModalOpen} onClose={() => setIsTaskModalOpen(false)} onCreate={handleCreateTask} />
       <UploadDatasetModal isOpen={isUploadModalOpen} onClose={() => setIsUploadModalOpen(false)} />
+      <DatasetDetailModal isOpen={!!selectedDataset} onClose={() => setSelectedDataset(null)} dataset={selectedDataset} />
     </main>
   );
 };

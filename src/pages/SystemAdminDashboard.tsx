@@ -1,5 +1,5 @@
 import React from 'react';
-import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
+import { AreaChart, Area, LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
 import { Activity, Camera, Video, AlertTriangle } from 'lucide-react';
 import { useTheme } from '../context/ThemeContext';
 
@@ -77,60 +77,99 @@ export const SystemAdminDashboard = () => {
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 mb-4">
         {/* First Chart */}
-        <div className="card-glass bg-white dark:bg-[#1e1e1e] p-6 rounded-[11px] border border-gray-100 dark:border-[#222] shadow-sm flex flex-col">
-          <div className="flex items-center gap-2 mb-4 shrink-0">
-            <Activity size={16} className="text-gray-500" />
-            <h2 className="text-sm font-bold text-gray-900 dark:text-white">Inference Detections vs Latency</h2>
+        <div className="card-glass bg-white dark:bg-[#1e1e1e] p-6 rounded-[11px] border border-gray-100 dark:border-[#222] shadow-sm flex flex-col group hover:border-[#52C5F3]/50 transition-colors cursor-pointer">
+          <div className="flex justify-between items-start mb-6">
+             <div className="flex items-center gap-2 text-gray-500 group-hover:text-[#52C5F3] transition-colors">
+                <Activity size={16} />
+                <h3 className="text-sm font-bold text-gray-900 dark:text-white tracking-tight">Inference Detections vs Latency</h3>
+             </div>
+             <div className="text-right">
+                <div className="text-[24px] font-black text-[#52C5F3] leading-none tracking-tight drop-shadow-sm">{inferenceData[inferenceData.length - 1].detections}</div>
+                <div className="text-[10px] tracking-widest uppercase font-black text-gray-500 mt-1">Latest Detections</div>
+             </div>
           </div>
-          <div className="h-64 pb-2 flex-1 w-full">
+          <div className="h-48 pb-2 flex-1 w-full mt-2">
             <ResponsiveContainer width="100%" height="100%" minWidth={0} minHeight={0}>
               <AreaChart data={inferenceData} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
                 <defs>
                   <linearGradient id="colorDetections" x1="0" y1="0" x2="0" y2="1">
-                    <stop offset="5%" stopColor={DATA_COLOR} stopOpacity={0.15}/>
+                    <stop offset="5%" stopColor={DATA_COLOR} stopOpacity={0.3}/>
                     <stop offset="95%" stopColor={DATA_COLOR} stopOpacity={0}/>
                   </linearGradient>
                   <linearGradient id="colorLatency" x1="0" y1="0" x2="0" y2="1">
-                    <stop offset="5%" stopColor={SECONDARY_COLOR} stopOpacity={0.15}/>
+                    <stop offset="5%" stopColor={SECONDARY_COLOR} stopOpacity={0.3}/>
                     <stop offset="95%" stopColor={SECONDARY_COLOR} stopOpacity={0}/>
                   </linearGradient>
+                  <filter id="shadowDetections" height="200%">
+                    <feDropShadow dx="0" dy="4" stdDeviation="4" floodColor={DATA_COLOR} floodOpacity="0.4"/>
+                  </filter>
+                  <filter id="shadowLatency" height="200%">
+                    <feDropShadow dx="0" dy="4" stdDeviation="4" floodColor={SECONDARY_COLOR} floodOpacity="0.4"/>
+                  </filter>
                 </defs>
                 <CartesianGrid strokeDasharray="3 3" stroke={isDark ? '#2a2a2a' : '#e5e7eb'} vertical={false} />
                 <XAxis dataKey="time" axisLine={false} tickLine={false} tick={{fontSize: 10, fill: '#888', fontWeight: 600}} dy={10} />
-                <YAxis axisLine={false} tickLine={false} tick={{fontSize: 10, fill: '#888', fontWeight: 600}} />
-                <Tooltip cursor={{ stroke: isDark ? '#333' : '#e5e7eb', strokeWidth: 1, strokeDasharray: '3 3' }} content={<CustomTooltip />} />
-                <Area type="monotone" dataKey="detections" stroke={DATA_COLOR} strokeWidth={2} fill="url(#colorDetections)" fillOpacity={1} animationDuration={1000} />
-                <Area type="monotone" dataKey="latency" stroke={SECONDARY_COLOR} strokeWidth={2} fill="url(#colorLatency)" fillOpacity={1} animationDuration={1000} />
+                <YAxis yAxisId="left" axisLine={false} tickLine={false} tick={{fontSize: 10, fill: '#888', fontWeight: 600}} />
+                <YAxis yAxisId="right" orientation="right" axisLine={false} tickLine={false} tick={{fontSize: 10, fill: '#888', fontWeight: 600}} />
+                <Tooltip cursor={{ stroke: isDark ? '#333' : '#cecece', strokeWidth: 1, strokeDasharray: '3 3' }} content={<CustomTooltip />} />
+                <Area yAxisId="left" type="monotone" name="Detections" dataKey="detections" stroke={DATA_COLOR} fill="url(#colorDetections)" strokeWidth={3} activeDot={{ r: 6, strokeWidth: 0, fill: DATA_COLOR }} style={{ filter: 'url(#shadowDetections)' }} animationDuration={1000} />
+                <Area yAxisId="right" type="monotone" name="Latency (ms)" dataKey="latency" stroke={SECONDARY_COLOR} fill="url(#colorLatency)" strokeWidth={3} activeDot={{ r: 6, strokeWidth: 0, fill: SECONDARY_COLOR }} style={{ filter: 'url(#shadowLatency)' }} animationDuration={1000} />
               </AreaChart>
             </ResponsiveContainer>
           </div>
         </div>
 
         {/* Second Chart */}
-        <div className="card-glass bg-white dark:bg-[#1e1e1e] p-6 rounded-[11px] border border-gray-100 dark:border-[#222] shadow-sm flex flex-col">
-          <div className="flex items-center gap-2 mb-4 shrink-0">
-             <Camera size={16} className="text-gray-500" />
-             <h2 className="text-sm font-bold text-gray-900 dark:text-white">Camera Global Status Over Time</h2>
+        <div className="card-glass bg-white dark:bg-[#1e1e1e] p-6 rounded-[11px] border border-gray-100 dark:border-[#222] shadow-sm flex flex-col group hover:border-[#52C5F3]/50 transition-colors cursor-pointer">
+          <div className="flex justify-between items-start mb-6">
+             <div className="flex items-center gap-2 text-gray-500 group-hover:text-[#52C5F3] transition-colors">
+                <Camera size={16} />
+                <h3 className="text-sm font-bold text-gray-900 dark:text-white tracking-tight">Camera Global Status</h3>
+             </div>
+             <div className="flex gap-4 text-right">
+                <div>
+                  <div className="text-[24px] font-black text-[#52C5F3] leading-none tracking-tight drop-shadow-sm">{statusData[statusData.length - 1].active}</div>
+                  <div className="text-[10px] tracking-widest uppercase font-black text-gray-500 mt-1">Active</div>
+                </div>
+                <div>
+                  <div className="text-[24px] font-black text-[#EC3292] leading-none tracking-tight drop-shadow-sm">{statusData[statusData.length - 1].standby}</div>
+                  <div className="text-[10px] tracking-widest uppercase font-black text-gray-500 mt-1">Standby</div>
+                </div>
+             </div>
           </div>
-          <div className="h-64 pb-2 flex-1 w-full">
+          <div className="h-48 pb-2 flex-1 w-full mt-2">
             <ResponsiveContainer width="100%" height="100%" minWidth={0} minHeight={0}>
               <AreaChart data={statusData} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
                 <defs>
                   <linearGradient id="colorActive" x1="0" y1="0" x2="0" y2="1">
-                    <stop offset="5%" stopColor={DATA_COLOR} stopOpacity={0.15}/>
+                    <stop offset="5%" stopColor={DATA_COLOR} stopOpacity={0.3}/>
                     <stop offset="95%" stopColor={DATA_COLOR} stopOpacity={0}/>
                   </linearGradient>
                   <linearGradient id="colorStandby" x1="0" y1="0" x2="0" y2="1">
-                    <stop offset="5%" stopColor={SECONDARY_COLOR} stopOpacity={0.15}/>
+                    <stop offset="5%" stopColor={SECONDARY_COLOR} stopOpacity={0.3}/>
                     <stop offset="95%" stopColor={SECONDARY_COLOR} stopOpacity={0}/>
                   </linearGradient>
+                  <linearGradient id="colorOffline" x1="0" y1="0" x2="0" y2="1">
+                    <stop offset="5%" stopColor={TERTIARY_COLOR} stopOpacity={0.3}/>
+                    <stop offset="95%" stopColor={TERTIARY_COLOR} stopOpacity={0}/>
+                  </linearGradient>
+                  <filter id="shadowActive" height="200%">
+                    <feDropShadow dx="0" dy="4" stdDeviation="4" floodColor={DATA_COLOR} floodOpacity="0.4"/>
+                  </filter>
+                  <filter id="shadowStandby" height="200%">
+                    <feDropShadow dx="0" dy="4" stdDeviation="4" floodColor={SECONDARY_COLOR} floodOpacity="0.4"/>
+                  </filter>
+                  <filter id="shadowOffline" height="200%">
+                    <feDropShadow dx="0" dy="4" stdDeviation="4" floodColor={TERTIARY_COLOR} floodOpacity="0.4"/>
+                  </filter>
                 </defs>
                 <CartesianGrid strokeDasharray="3 3" stroke={isDark ? '#2a2a2a' : '#e5e7eb'} vertical={false} />
                 <XAxis dataKey="time" axisLine={false} tickLine={false} tick={{fontSize: 10, fill: '#888', fontWeight: 600}} dy={10} />
                 <YAxis axisLine={false} tickLine={false} tick={{fontSize: 10, fill: '#888', fontWeight: 600}} />
-                <Tooltip cursor={{ stroke: isDark ? '#333' : '#e5e7eb', strokeWidth: 1, strokeDasharray: '3 3' }} content={<CustomTooltip />} />
-                <Area type="monotone" dataKey="active" stroke={DATA_COLOR} strokeWidth={2} fill="url(#colorActive)" fillOpacity={1} animationDuration={1000} />
-                <Area type="monotone" dataKey="standby" stroke={SECONDARY_COLOR} strokeWidth={2} fill="url(#colorStandby)" fillOpacity={1} animationDuration={1000} />
+                <Tooltip cursor={{ stroke: isDark ? '#333' : '#cecece', strokeWidth: 1, strokeDasharray: '3 3' }} content={<CustomTooltip />} />
+                <Area type="monotone" name="Active" dataKey="active" stroke={DATA_COLOR} fill="url(#colorActive)" strokeWidth={3} activeDot={{ r: 6, strokeWidth: 0, fill: DATA_COLOR }} style={{ filter: 'url(#shadowActive)' }} animationDuration={1000} />
+                <Area type="monotone" name="Standby" dataKey="standby" stroke={SECONDARY_COLOR} fill="url(#colorStandby)" strokeWidth={3} activeDot={{ r: 6, strokeWidth: 0, fill: SECONDARY_COLOR }} style={{ filter: 'url(#shadowStandby)' }} animationDuration={1000} />
+                <Area type="monotone" name="Offline" dataKey="offline" stroke={TERTIARY_COLOR} fill="url(#colorOffline)" strokeWidth={3} activeDot={{ r: 6, strokeWidth: 0, fill: TERTIARY_COLOR }} style={{ filter: 'url(#shadowOffline)' }} animationDuration={1000} />
               </AreaChart>
             </ResponsiveContainer>
           </div>

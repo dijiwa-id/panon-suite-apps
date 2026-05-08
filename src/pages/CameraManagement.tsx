@@ -344,8 +344,8 @@ export const CameraManagement = () => {
                   </TableCell>
                   <TableCell className="text-right">
                     <div className="flex items-center justify-end gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
-                      <Button variant="outline" className="px-3" onClick={() => openEditModal(cam)}>
-                        <Pencil size={12} />
+                      <Button variant="outline" className="px-3" onClick={() => openEditModal(cam)} title="Settings">
+                        <Settings size={12} />
                       </Button>
                       <Button variant="danger" className="px-3" onClick={() => handleDelete(cam.id)}>
                         <Trash2 size={12} />

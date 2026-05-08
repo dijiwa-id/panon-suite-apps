@@ -3,6 +3,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { Mail, Lock, ArrowRight, AlertCircle, Loader2 } from 'lucide-react';
 import { cn } from '../lib/utils';
 import { Logo } from '../components/Logo';
+import { useAppStore } from '../store';
 
 export const SignIn = () => {
   const [email, setEmail] = useState('');
@@ -10,6 +11,7 @@ export const SignIn = () => {
   const [errors, setErrors] = useState<{email?: string, password?: string}>({});
   const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
+  const login = useAppStore(state => state.login);
 
   const validate = () => {
     let isValid = true;
@@ -36,6 +38,13 @@ export const SignIn = () => {
       // Simulate auth
       setTimeout(() => {
         setIsLoading(false);
+        // Dispatch to global store
+        login({
+          id: 'user-1',
+          name: 'System Admin',
+          email: email,
+          role: 'admin'
+        });
         navigate('/'); // Redirect to dashboard
       }, 1000);
     }

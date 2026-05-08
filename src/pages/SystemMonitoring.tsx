@@ -1,5 +1,5 @@
 import React from 'react';
-import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
+import { AreaChart, Area, LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
 import { cn } from '../lib/utils';
 import { HardDrive, Activity, Monitor, Network, ShieldCheck, ChevronDown } from 'lucide-react';
 import { useTheme } from '../context/ThemeContext';
@@ -88,7 +88,7 @@ export const SystemMonitoring = () => {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mb-4">
           <ProgressBar label="CPU Usage" value={31.67} max={100} colorClass="bg-accent" />
           <ProgressBar label="RAM Usage" value={85.67} max={100} colorClass="bg-secondary" />
-          <ProgressBar label="GPU Usage" value={75.48} max={100} colorClass="bg-secondary" />
+          <ProgressBar label="GPU Usage" value={75} max={100} colorClass="bg-[#52C5F3]" />
           <ProgressBar label="FPS Usage" value={0.27} max={100} colorClass="bg-accent" />
           <ProgressBar label="NPU Usage" value={14.98} max={100} colorClass="bg-accent" />
           <ProgressBar label="HD Space" value={17.17} max={100} colorClass="bg-accent" />
@@ -121,63 +121,61 @@ export const SystemMonitoring = () => {
       {/* Charts */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 mb-4">
         {/* Memory Usage Card */}
-        <div className="card-glass p-5 flex flex-col">
-          <div className="flex justify-between items-start mb-4">
-             <div className="flex items-center gap-2">
-                <Activity size={16} className="text-gray-500" />
-                <h3 className="text-sm font-bold text-gray-900 dark:text-white tracking-tight">Memory Usage</h3>
+        <div className="card-glass p-6 flex flex-col group hover:border-[#52C5F3]/50 transition-colors">
+          <div className="flex justify-between items-start mb-6">
+             <div className="flex items-center gap-2 text-gray-500 group-hover:text-[#52C5F3] transition-colors">
+                <Activity size={16} />
+                <h3 className="text-sm font-bold text-gray-900 dark:text-white tracking-tight">Memory Usage Trends</h3>
              </div>
              <div className="text-right">
-                <div className="text-[20px] font-black text-[#52C5F3] leading-none">27.4 GB</div>
+                <div className="text-[24px] font-black text-[#52C5F3] leading-none tracking-tight drop-shadow-sm">{(memoryData[memoryData.length - 1].value * 32 / 100).toFixed(1)} <span className="text-[14px]">GB</span></div>
                 <div className="text-[10px] tracking-widest uppercase font-black text-gray-500 mt-1">/ 32.0 GB Total</div>
              </div>
           </div>
           <div className="h-48 pb-2 flex-1 w-full mt-2">
             <ResponsiveContainer width="100%" height="100%" minWidth={0} minHeight={0}>
-              <AreaChart data={memoryData} margin={{ top: 10, right: 0, left: -25, bottom: 0 }}>
+              <LineChart data={memoryData} margin={{ top: 10, right: 10, left: -25, bottom: 0 }}>
                 <defs>
-                  <linearGradient id="colorMemory" x1="0" y1="0" x2="0" y2="1">
-                    <stop offset="5%" stopColor="#52C5F3" stopOpacity={0.3}/>
-                    <stop offset="95%" stopColor="#52C5F3" stopOpacity={0}/>
-                  </linearGradient>
+                  <filter id="shadowMemory" height="200%">
+                    <feDropShadow dx="0" dy="4" stdDeviation="4" floodColor="#52C5F3" floodOpacity="0.4"/>
+                  </filter>
                 </defs>
                 <CartesianGrid strokeDasharray="3 3" stroke={isDark ? '#2a2a2a' : '#e5e7eb'} vertical={false} />
                 <XAxis dataKey="time" axisLine={false} tickLine={false} tick={{fontSize: 10, fill: '#888', fontWeight: 600}} dy={10} />
                 <YAxis axisLine={false} tickLine={false} tick={{fontSize: 10, fill: '#888', fontWeight: 600}} />
                 <Tooltip cursor={{ stroke: isDark ? '#333' : '#cecece', strokeWidth: 1, strokeDasharray: '3 3' }} content={<CustomTooltip />} />
-                <Area type="monotone" name="Memory Usage" dataKey="value" stroke="#52C5F3" strokeWidth={3} fillOpacity={1} fill="url(#colorMemory)" activeDot={{ r: 5, strokeWidth: 0, fill: "#52C5F3" }} animationDuration={1000} />
-              </AreaChart>
+                <Line type="monotone" name="Memory Usage" dataKey="value" stroke="#52C5F3" strokeWidth={3} dot={false} activeDot={{ r: 6, strokeWidth: 0, fill: "#52C5F3" }} style={{ filter: 'url(#shadowMemory)' }} animationDuration={1000} />
+              </LineChart>
             </ResponsiveContainer>
           </div>
         </div>
 
         {/* Disk Usage Card */}
-        <div className="card-glass p-5 flex flex-col">
-          <div className="flex justify-between items-start mb-4">
-             <div className="flex items-center gap-2">
-                <HardDrive size={16} className="text-gray-500" />
-                <h3 className="text-sm font-bold text-gray-900 dark:text-white tracking-tight">Disk Usage</h3>
+        <div className="card-glass p-6 flex flex-col group hover:border-[#EC3292]/50 transition-colors">
+          <div className="flex justify-between items-start mb-6">
+             <div className="flex items-center gap-2 text-gray-500 group-hover:text-[#EC3292] transition-colors">
+                <HardDrive size={16} />
+                <h3 className="text-sm font-bold text-gray-900 dark:text-white tracking-tight">Disk Space Trends</h3>
              </div>
              <div className="text-right">
-                <div className="text-[20px] font-black text-[#EC3292] leading-none">17.1%</div>
-                <div className="text-[10px] tracking-widest uppercase font-black text-gray-500 mt-1">Status: OK</div>
+                <div className="text-[24px] font-black text-[#EC3292] leading-none tracking-tight drop-shadow-sm">{diskData[diskData.length - 1].value.toFixed(1)}<span className="text-[14px]">%</span></div>
+                <div className="text-[10px] tracking-widest uppercase font-black text-gray-500 mt-1">Status: Normal</div>
              </div>
           </div>
           <div className="h-48 pb-2 flex-1 w-full mt-2">
             <ResponsiveContainer width="100%" height="100%" minWidth={0} minHeight={0}>
-              <AreaChart data={diskData} margin={{ top: 10, right: 0, left: -25, bottom: 0 }}>
+              <LineChart data={diskData} margin={{ top: 10, right: 10, left: -25, bottom: 0 }}>
                 <defs>
-                  <linearGradient id="colorDisk" x1="0" y1="0" x2="0" y2="1">
-                    <stop offset="5%" stopColor="#EC3292" stopOpacity={0.3}/>
-                    <stop offset="95%" stopColor="#EC3292" stopOpacity={0}/>
-                  </linearGradient>
+                  <filter id="shadowDisk" height="200%">
+                    <feDropShadow dx="0" dy="4" stdDeviation="4" floodColor="#EC3292" floodOpacity="0.4"/>
+                  </filter>
                 </defs>
                 <CartesianGrid strokeDasharray="3 3" stroke={isDark ? '#2a2a2a' : '#e5e7eb'} vertical={false} />
                 <XAxis dataKey="time" axisLine={false} tickLine={false} tick={{fontSize: 10, fill: '#888', fontWeight: 600}} dy={10} />
                 <YAxis axisLine={false} tickLine={false} tick={{fontSize: 10, fill: '#888', fontWeight: 600}} />
                 <Tooltip cursor={{ stroke: isDark ? '#333' : '#cecece', strokeWidth: 1, strokeDasharray: '3 3' }} content={<CustomTooltip />} />
-                <Area type="monotone" name="Disk Usage" dataKey="value" stroke="#EC3292" strokeWidth={3} fillOpacity={1} fill="url(#colorDisk)" activeDot={{ r: 5, strokeWidth: 0, fill: "#EC3292" }} animationDuration={1000} />
-              </AreaChart>
+                <Line type="monotone" name="Disk Usage" dataKey="value" stroke="#EC3292" strokeWidth={3} dot={false} activeDot={{ r: 6, strokeWidth: 0, fill: "#EC3292" }} style={{ filter: 'url(#shadowDisk)' }} animationDuration={1000} />
+              </LineChart>
             </ResponsiveContainer>
           </div>
         </div>

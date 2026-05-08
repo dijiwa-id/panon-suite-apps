@@ -25,6 +25,7 @@ import {
 } from "lucide-react";
 import { cn } from "../lib/utils";
 import { motion } from "motion/react";
+import { useAppStore } from "../store";
 
 const iconMap: Record<string, React.ReactNode> = {
   Dashboard: <LayoutDashboard size={12} />,
@@ -166,6 +167,8 @@ export const Sidebar = ({
   toggleSidebar: () => void;
   className?: string;
 }) => {
+  const user = useAppStore(state => state.user);
+
   return (
     <aside
       className={cn(
@@ -226,10 +229,10 @@ export const Sidebar = ({
             {!isCollapsed && (
               <div className="flex-1 overflow-hidden">
                 <p className="text-[13px] font-bold tracking-tight text-gray-900 dark:text-white truncate leading-none mb-1">
-                  panon PT.
+                  {user ? user.name : "System User"}
                 </p>
                 <p className="text-[11px] font-medium text-gray-500 truncate leading-none mt-1">
-                  dijiwa.id@gmail.com
+                  {user ? user.email : "user@panon.ai"}
                 </p>
               </div>
             )}

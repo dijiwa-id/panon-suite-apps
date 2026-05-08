@@ -114,7 +114,7 @@ export const ApplicationTab = ({
           </TableHeader>
           <TableBody>
             {filteredApps.map((app) => (
-              <TableRow key={app.id}>
+              <TableRow key={app.id} className="group">
                 <TableCell>
                   <div className="font-bold text-xs text-gray-900 dark:text-white mb-0.5">
                     {app.name}

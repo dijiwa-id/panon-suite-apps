@@ -3,8 +3,10 @@ import { Search, Plus, Play, ExternalLink, Activity, Server, ShieldCheck, Pause,
 import { cn } from '../lib/utils';
 import { toast } from 'sonner';
 import { useDevelop } from '../context/DevelopContext';
+import { useNavigate } from 'react-router-dom';
 
 export const Applications = () => {
+  const navigate = useNavigate();
   const { applications, pipelines, addApplication, toggleApplicationStatus } = useDevelop();
   const [isNewAppModalOpen, setIsNewAppModalOpen] = useState(false);
   
@@ -101,7 +103,7 @@ export const Applications = () => {
                           <h3 className="text-sm font-bold text-gray-900 dark:text-white tracking-tight">{app.name}</h3>
                           <p className="text-[10px] text-gray-500 font-mono mt-0.5 uppercase tracking-widest font-black">{app.id} • {app.type}</p>
                       </div>
-                      <button className="text-gray-500 hover:text-white transition-colors bg-gray-100 dark:bg-[#151515] p-2 rounded-lg border border-gray-200 dark:border-[#222]"><Settings size={14}/></button>
+                      <button onClick={() => toast.info('Application settings coming soon...')} className="text-gray-500 hover:text-white transition-colors bg-gray-100 dark:bg-[#151515] p-2 rounded-lg border border-gray-200 dark:border-[#222]"><Settings size={14}/></button>
                   </div>
                   
                   <div className="grid grid-cols-2 gap-4 mb-4 mt-2">
@@ -130,7 +132,7 @@ export const Applications = () => {
                               <Play size={14} className="fill-green-400/20" /> Start App
                           </button>
                       )}
-                      <button className="flex justify-center items-center gap-2 bg-gray-50/50 dark:bg-[#1a1a1a] border border-gray-200 dark:border-[#222] hover:bg-gray-100 dark:hover:bg-[#202020] text-gray-900 dark:text-white h-[32px] px-4 rounded-lg text-xs font-bold transition-colors w-full sm:w-auto">
+                      <button onClick={() => navigate('/deploy/dashboard')} className="flex justify-center items-center gap-2 bg-gray-50/50 dark:bg-[#1a1a1a] border border-gray-200 dark:border-[#222] hover:bg-gray-100 dark:hover:bg-[#202020] text-gray-900 dark:text-white h-[32px] px-4 rounded-lg text-xs font-bold transition-colors w-full sm:w-auto">
                           <ExternalLink size={14} /> View Dashboard
                       </button>
                   </div>

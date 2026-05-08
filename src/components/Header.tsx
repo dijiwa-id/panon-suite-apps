@@ -1,17 +1,20 @@
 import React, { useState } from 'react';
 import { Search, Bell, Monitor, LogOut, KeySquare, Sun, Moon, User } from 'lucide-react';
 import { Link, useNavigate } from 'react-router-dom';
-import { useTheme } from '../context/ThemeContext';
+import { useAppStore } from '../store';
 import { Input } from './ui';
 import { toast } from 'sonner';
 
 export const Header = () => {
-  const { theme, toggleTheme } = useTheme();
+  const theme = useAppStore(state => state.theme);
+  const toggleTheme = useAppStore(state => state.toggleTheme);
+  const logout = useAppStore(state => state.logout);
+  
   const [searchQuery, setSearchQuery] = useState('');
   const navigate = useNavigate();
 
   const handleLogout = () => {
-    // Basic logout logic
+    logout();
     navigate('/signin');
   };
 

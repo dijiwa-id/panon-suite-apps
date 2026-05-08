@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { cn } from '../lib/utils';
-import { Camera, Search, Plus, Maximize2, MoreVertical, LayoutGrid, LayoutList, Signal, SignalHigh, SignalMedium, X, Link as LinkIcon, Server, MapPin, Settings, Power, ArrowUpDown } from 'lucide-react';
+import { Camera, Search, Plus, Maximize2, MoreVertical, LayoutGrid, LayoutList, Signal, SignalHigh, SignalMedium, X, Link as LinkIcon, Server, MapPin, Settings, Power, ArrowUpDown, Save } from 'lucide-react';
 import { toast } from 'sonner';
 import { Button, Input, Card, Badge, Table, TableHeader, TableRow, TableHead, TableBody, TableCell } from '../components/ui';
 
@@ -90,7 +90,35 @@ export const DeployLiveFeedCamera = () => {
   
   const [maximizedCamera, setMaximizedCamera] = useState<any>(null);
   const [selectedCameraForSettings, setSelectedCameraForSettings] = useState<any>(null);
+  const [settingsFormData, setSettingsFormData] = useState({ url: '', fps: 30, resolution: '1080p' });
   const [sortConfig, setSortConfig] = useState<{ key: string, direction: 'asc' | 'desc' } | null>(null);
+
+  const openSettings = (cam: any) => {
+    setSelectedCameraForSettings(cam);
+    setSettingsFormData({
+      url: cam.url || `rtsp://${cam.ip}/stream`,
+      fps: cam.fps || 30,
+      resolution: cam.resolution || '1080p'
+    });
+  };
+
+  const handleSaveSettings = () => {
+    if (selectedCameraForSettings) {
+      setCameras(cameras.map(cam => {
+        if (cam.id === selectedCameraForSettings.id) {
+          return {
+            ...cam,
+            url: settingsFormData.url,
+            fps: Number(settingsFormData.fps),
+            resolution: settingsFormData.resolution
+          };
+        }
+        return cam;
+      }));
+      toast.success('Camera settings updated');
+      setSelectedCameraForSettings(null);
+    }
+  };
 
   const handleSort = (key: string) => {
     let direction: 'asc' | 'desc' = 'asc';
@@ -314,7 +342,7 @@ export const DeployLiveFeedCamera = () => {
                             <button onClick={() => setMaximizedCamera(cam)} className="p-1 rounded-[6px] text-gray-400 hover:text-gray-900 dark:hover:text-white hover:bg-gray-100 dark:hover:bg-[#2a2a2a] transition-all">
                                <Maximize2 size={12} />
                             </button>
-                            <button onClick={() => setSelectedCameraForSettings(cam)} className="p-1 rounded-[6px] text-gray-400 hover:text-gray-900 dark:hover:text-white hover:bg-gray-100 dark:hover:bg-[#2a2a2a] transition-all">
+                            <button onClick={() => openSettings(cam)} className="p-1 rounded-[6px] text-gray-400 hover:text-gray-900 dark:hover:text-white hover:bg-gray-100 dark:hover:bg-[#2a2a2a] transition-all">
                                <MoreVertical size={14} />
                             </button>
                          </div>
@@ -393,7 +421,7 @@ export const DeployLiveFeedCamera = () => {
                              <Button variant="ghost" className="px-2" onClick={() => setMaximizedCamera(cam)}>
                                <Maximize2 size={14} />
                              </Button>
-                             <Button variant="ghost" className="px-2" onClick={() => setSelectedCameraForSettings(cam)}>
+                             <Button variant="ghost" className="px-2" onClick={() => openSettings(cam)}>
                                <MoreVertical size={14} />
                              </Button>
                            </div>
@@ -582,21 +610,53 @@ export const DeployLiveFeedCamera = () => {
                              <span className="text-xs font-medium text-gray-900 dark:text-gray-300">{selectedCameraForSettings.node}</span>
                          </div>
                      </div>
-                     <div className="grid grid-cols-2 gap-3 mt-2">
-                         <Button 
-                             variant={selectedCameraForSettings.status === 'online' ? "outline" : "primary"} 
-                             className={cn("gap-2 w-full", selectedCameraForSettings.status === 'online' ? "border-orange-200 text-orange-600 hover:bg-orange-50 dark:border-orange-500/30 dark:text-orange-400 dark:hover:bg-orange-500/10" : "")}
-                             onClick={() => toggleCameraStatus(selectedCameraForSettings.id)}
-                         >
-                             <Power size={14} />
-                             {selectedCameraForSettings.status === 'online' ? 'Stop Feed' : 'Start Feed'}
-                         </Button>
+
+                     <div className="space-y-3 mt-2">
+                        <div>
+                          <label className="block text-[10px] font-black text-gray-500 mb-1.5 uppercase tracking-widest">Stream URL</label>
+                          <Input 
+                            type="text" 
+                            value={settingsFormData.url}
+                            onChange={(e) => setSettingsFormData({...settingsFormData, url: e.target.value})}
+                            placeholder="rtsp://..."
+                          />
+                        </div>
+                        <div className="grid grid-cols-2 gap-3">
+                           <div>
+                              <label className="block text-[10px] font-black text-gray-500 mb-1.5 uppercase tracking-widest">Resolution</label>
+                              <select 
+                                value={settingsFormData.resolution}
+                                onChange={(e) => setSettingsFormData({...settingsFormData, resolution: e.target.value})}
+                                className="w-full bg-white dark:bg-[#1e1e1e] border border-gray-200 dark:border-[#222] rounded-lg pl-3 pr-8 h-[37px] text-[12px] font-medium text-gray-800 dark:text-gray-200 outline-none focus-visible:ring-1 focus-visible:ring-[#52C5F3]/50 transition-all cursor-pointer appearance-none"
+                              >
+                                  <option>720p</option>
+                                  <option>1080p</option>
+                                  <option>4K</option>
+                              </select>
+                           </div>
+                           <div>
+                              <label className="block text-[10px] font-black text-gray-500 mb-1.5 uppercase tracking-widest">FPS</label>
+                              <Input 
+                                type="number" 
+                                min="1" max="120"
+                                value={settingsFormData.fps}
+                                onChange={(e) => setSettingsFormData({...settingsFormData, fps: parseInt(e.target.value) || 0})}
+                              />
+                           </div>
+                        </div>
+                     </div>
+
+                     <div className="grid grid-cols-2 gap-3 mt-2 pt-4 border-t border-gray-100 dark:border-[#222]">
                          <Button 
                              variant="outline" 
-                             className="gap-2 w-full border-red-200 text-red-600 hover:bg-red-50 dark:border-red-500/30 dark:text-red-400 dark:hover:bg-red-500/10"
-                             onClick={() => removeCamera(selectedCameraForSettings.id)}
+                             className="w-full"
+                             onClick={() => toggleCameraStatus(selectedCameraForSettings.id)}
                          >
-                             Remove
+                             <Power size={14} className="mr-2" />
+                             {selectedCameraForSettings.status === 'online' ? 'Stop Feed' : 'Start Feed'}
+                         </Button>
+                         <Button variant="primary" className="w-full" onClick={handleSaveSettings}>
+                             <Save size={14} className="mr-2" /> Save Config
                          </Button>
                      </div>
                  </div>

@@ -3,75 +3,94 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import React from 'react';
-import { BrowserRouter, Routes, Route, Navigate, Outlet } from 'react-router-dom';
+import React, { useEffect } from 'react';
+import { BrowserRouter, Routes, Route, Navigate, Outlet, useLocation } from 'react-router-dom';
 import { ThemeProvider } from './context/ThemeContext';
 import { Sidebar } from './components/Sidebar';
 import { Header } from './components/Header';
-const Dashboard = React.lazy(() => import('./components/Dashboard').then(module => ({ default: module.Dashboard })));
-const SignIn = React.lazy(() => import('./pages/SignIn').then(module => ({ default: module.SignIn })));
-const SignUp = React.lazy(() => import('./pages/SignUp').then(module => ({ default: module.SignUp })));
-const SystemAdminDashboard = React.lazy(() => import('./pages/SystemAdminDashboard').then(module => ({ default: module.SystemAdminDashboard })));
-const SystemMonitoring = React.lazy(() => import('./pages/SystemMonitoring').then(module => ({ default: module.SystemMonitoring })));
-const NetworkManagement = React.lazy(() => import('./pages/NetworkManagement').then(module => ({ default: module.NetworkManagement })));
-const WorkstationManagement = React.lazy(() => import('./pages/WorkstationManagement').then(module => ({ default: module.WorkstationManagement })));
-const CameraManagement = React.lazy(() => import('./pages/CameraManagement').then(module => ({ default: module.CameraManagement })));
-const ModelManagement = React.lazy(() => import('./pages/ModelManagement').then(module => ({ default: module.ModelManagement })));
-const ModelDeployment = React.lazy(() => import('./pages/ModelDeployment').then(module => ({ default: module.ModelDeployment })));
-const ChannelManagement = React.lazy(() => import('./pages/ChannelManagement').then(module => ({ default: module.ChannelManagement })));
-const AlgorithmContext = React.lazy(() => import('./pages/AlgorithmContext').then(module => ({ default: module.AlgorithmContext })));
-const PackageManagement = React.lazy(() => import('./pages/PackageManagement').then(module => ({ default: module.PackageManagement })));
-const Roles = React.lazy(() => import('./pages/Roles').then(module => ({ default: module.Roles })));
-const Users = React.lazy(() => import('./pages/Users').then(module => ({ default: module.Users })));
-const RoleModules = React.lazy(() => import('./pages/RoleModules').then(module => ({ default: module.RoleModules })));
-const UserSettings = React.lazy(() => import('./pages/UserSettings').then(module => ({ default: module.UserSettings })));
-const Configuration = React.lazy(() => import('./pages/Configuration').then(module => ({ default: module.Configuration })));
-const DataCollection = React.lazy(() => import('./pages/DataCollection').then(module => ({ default: module.DataCollection })));
-const DataSet = React.lazy(() => import('./pages/DataSet').then(module => ({ default: module.DataSet })));
-const ImageAnnotation = React.lazy(() => import('./pages/ImageAnnotation').then(module => ({ default: module.ImageAnnotation })));
-const ModelTraining = React.lazy(() => import('./pages/ModelTraining').then(module => ({ default: module.ModelTraining })));
-const AIModels = React.lazy(() => import('./pages/AIModels').then(module => ({ default: module.AIModels })));
-const BuildingBlocks = React.lazy(() => import('./pages/BuildingBlocks').then(module => ({ default: module.BuildingBlocks })));
-const NoCodeEditor = React.lazy(() => import('./pages/NoCodeEditor').then(module => ({ default: module.NoCodeEditor })));
-const Applications = React.lazy(() => import('./pages/Applications').then(module => ({ default: module.Applications })));
-const Notifications = React.lazy(() => import('./pages/Notifications').then(module => ({ default: module.Notifications })));
-const DeployDashboard = React.lazy(() => import('./pages/DeployDashboard').then(module => ({ default: module.DeployDashboard })));
-const DeployLiveFeedCamera = React.lazy(() => import('./pages/DeployLiveFeedCamera').then(module => ({ default: module.DeployLiveFeedCamera })));
-const DeployDetectionLog = React.lazy(() => import('./pages/DeployDetectionLog').then(module => ({ default: module.DeployDetectionLog })));
-const DeployReport = React.lazy(() => import('./pages/DeployReport').then(module => ({ default: module.DeployReport })));
+import { Dashboard } from './components/Dashboard';
+import { SignIn } from './pages/SignIn';
+import { SignUp } from './pages/SignUp';
+import { SystemAdminDashboard } from './pages/SystemAdminDashboard';
+import { SystemMonitoring } from './pages/SystemMonitoring';
+import { NetworkManagement } from './pages/NetworkManagement';
+import { WorkstationManagement } from './pages/WorkstationManagement';
+import { CameraManagement } from './pages/CameraManagement';
+import { ModelManagement } from './pages/ModelManagement';
+import { ModelDeployment } from './pages/ModelDeployment';
+import { ChannelManagement } from './pages/ChannelManagement';
+import { AlgorithmContext } from './pages/AlgorithmContext';
+import { PackageManagement } from './pages/PackageManagement';
+import { Roles } from './pages/Roles';
+import { Users } from './pages/Users';
+import { RoleModules } from './pages/RoleModules';
+import { UserSettings } from './pages/UserSettings';
+import { Configuration } from './pages/Configuration';
+import { DataCollection } from './pages/DataCollection';
+import { DataSet } from './pages/DataSet';
+import { ImageAnnotation } from './pages/ImageAnnotation';
+import { ModelTraining } from './pages/ModelTraining';
+import { AIModels } from './pages/AIModels';
+import { BuildingBlocks } from './pages/BuildingBlocks';
+import { NoCodeEditor } from './pages/NoCodeEditor';
+import { Applications } from './pages/Applications';
+import { Notifications } from './pages/Notifications';
+import { DeployDashboard } from './pages/DeployDashboard';
+import { DeployLiveFeedCamera } from './pages/DeployLiveFeedCamera';
+import { DeployDetectionLog } from './pages/DeployDetectionLog';
+import { DeployReport } from './pages/DeployReport';
 import { Toaster } from 'sonner';
 
 import { ErrorBoundary } from './components/ErrorBoundary';
 import { DevelopProvider } from './context/DevelopContext';
 import { TrainProvider } from './context/TrainContext';
+import { useAppStore } from './store';
+
+const RouteSync = () => {
+  const location = useLocation();
+  const setActivePath = useAppStore(state => state.setActivePath);
+
+  useEffect(() => {
+    setActivePath(location.pathname);
+  }, [location.pathname, setActivePath]);
+
+  return null;
+};
+
+const ThemeSync = () => {
+  const theme = useAppStore(state => state.theme);
+
+  useEffect(() => {
+    const root = window.document.documentElement;
+    root.classList.remove('light', 'dark');
+    root.classList.add(theme);
+  }, [theme]);
+
+  return null;
+}
 
 const AppLayout = () => {
-  const [isSidebarCollapsed, setIsSidebarCollapsed] = React.useState(false);
+  const isSidebarOpen = useAppStore(state => state.isSidebarOpen);
+  const toggleSidebar = useAppStore(state => state.toggleSidebar);
 
   return (
     <div className="flex h-screen overflow-hidden font-sans bg-gray-50 dark:bg-[#161616] relative">
+      <ThemeSync />
+      <RouteSync />
       {/* Abstract Background Accents */}
       <div className="absolute top-[-20%] left-[-10%] w-[50%] h-[50%] rounded-full bg-gray-300/30 dark:bg-gray-600/10 blur-[120px] pointer-events-none z-0" />
       <div className="absolute bottom-[-20%] right-[-10%] w-[50%] h-[50%] rounded-full bg-gray-400/30 dark:bg-gray-700/20 blur-[120px] pointer-events-none z-0" />
       
-      <Sidebar isCollapsed={isSidebarCollapsed} toggleSidebar={() => setIsSidebarCollapsed(!isSidebarCollapsed)} className="z-10" />
+      <Sidebar isCollapsed={!isSidebarOpen} toggleSidebar={toggleSidebar} className="z-10" />
       <div className="flex-1 flex flex-col min-w-0 z-10 bg-transparent">
         <Header />
         <ErrorBoundary>
-          <React.Suspense fallback={suspenseWrapper}>
-            <Outlet />
-          </React.Suspense>
+          <Outlet />
         </ErrorBoundary>
       </div>
     </div>
   );
 };
-
-const suspenseWrapper = (
-  <div className="flex items-center justify-center h-full w-full opacity-50">
-    <div className="w-6 h-6 border-2 border-accent border-t-transparent rounded-full animate-spin"></div>
-  </div>
-);
 
 export default function App() {
   return (
@@ -80,8 +99,8 @@ export default function App() {
         <TrainProvider>
           <BrowserRouter>
             <Routes>
-              <Route path="/signin" element={<React.Suspense fallback={suspenseWrapper}><SignIn /></React.Suspense>} />
-              <Route path="/signup" element={<React.Suspense fallback={suspenseWrapper}><SignUp /></React.Suspense>} />
+              <Route path="/signin" element={<SignIn />} />
+              <Route path="/signup" element={<SignUp />} />
               
               <Route element={<AppLayout />}>
                 <Route path="/notifications" element={<Notifications />} />

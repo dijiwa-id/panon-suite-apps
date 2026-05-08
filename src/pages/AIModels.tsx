@@ -7,11 +7,18 @@ import { useTrain } from '../context/TrainContext';
 export const AIModels = () => {
   const { models } = useTrain();
   const [searchQuery, setSearchQuery] = useState('');
+  const [selectedStatus, setSelectedStatus] = useState('All');
+  const [selectedTag, setSelectedTag] = useState('All');
 
-  const filteredModels = models.filter((model: any) => 
-     model.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-     model.tags.some((tag: string) => tag.toLowerCase().includes(searchQuery.toLowerCase()))
-  );
+  const allTags = Array.from(new Set(models.flatMap((m: any) => m.tags)));
+
+  const filteredModels = models.filter((model: any) => {
+     const matchQuery = model.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+                        model.tags.some((tag: string) => tag.toLowerCase().includes(searchQuery.toLowerCase()));
+     const matchStatus = selectedStatus === 'All' || model.status.toLowerCase() === selectedStatus.toLowerCase();
+     const matchTag = selectedTag === 'All' || model.tags.includes(selectedTag);
+     return matchQuery && matchStatus && matchTag;
+  });
 
   return (
     <main className="flex-1 overflow-y-auto bg-transparent p-6 lg:p-8 text-gray-800 dark:text-gray-200 transition-colors custom-scrollbar">
@@ -27,7 +34,30 @@ export const AIModels = () => {
           <h2 className="text-sm font-bold text-gray-900 dark:text-white flex items-center gap-2">
             <Box size={16} className="text-gray-500" /> Trained Artifacts
           </h2>
-          <div className="flex w-full sm:w-auto">
+          <div className="flex w-full sm:w-auto gap-3 flex-wrap sm:flex-nowrap">
+             <div className="flex items-center gap-2 w-full sm:w-auto">
+               <select 
+                 className="w-full sm:w-auto bg-gray-100 dark:bg-[#151515] border border-gray-200 dark:border-[#222] rounded-xl px-3 h-[36px] text-xs font-bold text-gray-700 dark:text-gray-300 outline-none focus-visible:ring-1 focus-visible:ring-accent/50 transition-all"
+                 value={selectedStatus}
+                 onChange={(e) => setSelectedStatus(e.target.value)}
+               >
+                 <option value="All">All Statuses</option>
+                 <option value="ready">Ready</option>
+                 <option value="deployed">Deployed</option>
+                 <option value="investigating">Investigating</option>
+               </select>
+
+               <select 
+                 className="w-full sm:w-auto bg-gray-100 dark:bg-[#151515] border border-gray-200 dark:border-[#222] rounded-xl px-3 h-[36px] text-xs font-bold text-gray-700 dark:text-gray-300 outline-none focus-visible:ring-1 focus-visible:ring-accent/50 transition-all"
+                 value={selectedTag}
+                 onChange={(e) => setSelectedTag(e.target.value)}
+               >
+                 <option value="All">All Tags</option>
+                 {allTags.map(tag => (
+                   <option key={tag as string} value={tag as string}>{tag as string}</option>
+                 ))}
+               </select>
+             </div>
              <div className="bg-gray-100 dark:bg-[#151515] px-4 py-2 rounded-xl border border-gray-200 dark:border-[#222] flex items-center gap-2 flex-1 sm:flex-none focus-within:border-accent/50 focus-within:ring-1 focus-within:ring-accent/50 transition-all">
                 <Search className="text-gray-600 dark:text-gray-400" size={16} />
                 <input 
@@ -55,18 +85,18 @@ export const AIModels = () => {
             <tbody className="divide-y divide-gray-200 dark:divide-[#222]">
               {filteredModels.map((model: any) => (
                 <tr key={model.id} className="hover:bg-gray-50 dark:hover:bg-[#252525]/30 transition-colors group">
-                  <td className="px-5 py-4">
+                  <td className="px-5 py-4" title={`Model Name: ${model.name}\nVersion: ${model.version}\nID: ${model.id}`}>
                       <div className="flex items-center gap-2 mb-0.5">
                           <span className="font-semibold text-gray-900 dark:text-white text-[13px] tracking-tight">{model.name}</span>
                           <span className="bg-gray-100 dark:bg-[#222] text-gray-700 dark:text-gray-300 font-mono px-1.5 py-0.5 rounded text-[10px] font-bold">{model.version}</span>
                       </div>
                       <div className="text-[10px] text-gray-500 font-mono uppercase tracking-widest font-black leading-none">{model.id}</div>
                   </td>
-                  <td className="px-5 py-4">
+                  <td className="px-5 py-4" title={`Architecture: ${model.architecture}\nParameters: ${model.param}\nSize: ${model.size}`}>
                       <div className="text-[13px] text-gray-900 dark:text-white font-medium tracking-tight mb-0.5">{model.architecture}</div>
                       <div className="text-[10px] text-gray-500 uppercase tracking-widest font-bold leading-none">{model.param} params • {model.size}</div>
                   </td>
-                  <td className="px-5 py-4">
+                  <td className="px-5 py-4" title={`Mean Average Precision (mAP): ${model.map.toFixed(3)}`}>
                       <div className={cn("text-[13px] font-black font-mono tracking-tight", model.map > 0.8 ? "text-green-500" : model.map > 0.6 ? "text-orange-500" : "text-red-500")}>
                           {model.map.toFixed(3)}
                       </div>
@@ -79,19 +109,24 @@ export const AIModels = () => {
                       </div>
                   </td>
                   <td className="px-5 py-4">
-                    <div className="flex items-center gap-1.5">
-                         {model.status === 'ready' && <div className="w-1.5 h-1.5 rounded-full bg-green-500" />}
+                    <div className={cn(
+                      "inline-flex items-center gap-1.5 px-2 py-1 rounded-md text-[10px] font-bold tracking-wide uppercase",
+                      model.status === 'ready' && "bg-green-500/10 text-green-600 dark:text-green-400 border border-green-500/20",
+                      model.status === 'deployed' && "bg-blue-500/10 text-blue-600 dark:text-blue-400 border border-blue-500/20",
+                      model.status === 'investigating' && "bg-orange-500/10 text-orange-600 dark:text-orange-400 border border-orange-500/20"
+                    )}>
+                         {model.status === 'ready' && <CheckCircle2 size={12} />}
                          {model.status === 'deployed' && <div className="w-1.5 h-1.5 rounded-full bg-blue-500" />}
-                         {model.status === 'investigating' && <div className="w-1.5 h-1.5 rounded-full bg-orange-500 animate-pulse" />}
-                         <span className="text-[11px] font-bold text-gray-700 dark:text-gray-300 capitalize tracking-wide">{model.status}</span>
+                         {model.status === 'investigating' && <Loader size={12} className="animate-spin" />}
+                         {model.status}
                     </div>
                   </td>
                   <td className="px-5 py-4">
-                    <div className="flex items-center justify-end gap-2">
-                      <button onClick={() => toast.info(`Viewing details for ${model.name}`)} className="p-1.5 bg-[#1c1c1c] border border-gray-700 rounded-full text-white/70 hover:text-white hover:bg-[#2a2a2a] transition-colors" title="View details">
+                    <div className="flex items-center justify-end gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
+                      <button onClick={() => toast.info(`Viewing details for ${model.name}`)} className="p-1.5 bg-[#1c1c1c] border border-gray-700 rounded-lg text-white/70 hover:text-white hover:bg-[#2a2a2a] transition-all" title="View details">
                           <Info size={14} />
                       </button>
-                      <button onClick={() => toast.promise(new Promise(r => setTimeout(r, 1000)), { loading: `Exporting ONNX for ${model.name}...`, success: `Export completed for ${model.name}` })} className="p-1.5 bg-accent/10 border border-accent/20 rounded-full text-accent hover:bg-accent hover:text-[#161616] transition-colors" title="Export ONNX">
+                      <button onClick={() => toast.promise(new Promise(r => setTimeout(r, 1000)), { loading: `Exporting ONNX for ${model.name}...`, success: `Export completed for ${model.name}` })} className="p-1.5 bg-[#1c1c1c] border border-accent/20 rounded-lg text-accent hover:bg-accent hover:text-[#161616] transition-all shadow-sm" title="Export ONNX">
                           <Download size={14} />
                       </button>
                     </div>
