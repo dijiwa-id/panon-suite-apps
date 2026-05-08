@@ -34,6 +34,7 @@ import { AIModels } from './pages/AIModels';
 import { BuildingBlocks } from './pages/BuildingBlocks';
 import { NoCodeEditor } from './pages/NoCodeEditor';
 import { Applications } from './pages/Applications';
+import { VideoGeneration } from './pages/VideoGeneration';
 import { Notifications } from './pages/Notifications';
 import { DeployDashboard } from './pages/DeployDashboard';
 import { DeployLiveFeedCamera } from './pages/DeployLiveFeedCamera';
@@ -120,6 +121,7 @@ export default function App() {
                 <Route path="/develop/building-blocks" element={<BuildingBlocks />} />
                 <Route path="/develop/no-code-editor" element={<NoCodeEditor />} />
                 <Route path="/develop/applications" element={<Applications />} />
+                <Route path="/develop/video-generation" element={<VideoGeneration />} />
                 <Route path="/deploy/dashboard" element={<DeployDashboard />} />
                 <Route path="/deploy/live-feed-camera" element={<DeployLiveFeedCamera />} />
                 <Route path="/deploy/detection-log" element={<DeployDetectionLog />} />

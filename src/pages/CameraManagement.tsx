@@ -298,64 +298,68 @@ export const CameraManagement = () => {
              </div>
           </div>
         </div>
-        <div className="overflow-x-auto">
-          <Table>
-            <TableHeader>
-                <TableRow>
-                <TableHead>Status</TableHead>
-                <TableHead>Camera Details</TableHead>
-                <TableHead>Location & Coordinates</TableHead>
-                <TableHead>Stream Info</TableHead>
-                <TableHead>Features</TableHead>
-                <TableHead className="text-right">Actions</TableHead>
-              </TableRow>
-            </TableHeader>
-            <TableBody>
-              {cameraList.map((cam) => (
-                <TableRow key={cam.id} className="group">
-                  <TableCell>
-                    {cam.active ? (
-                        <Badge variant="success">Online</Badge>
-                    ) : (
-                        <Badge variant="danger">Offline</Badge>
-                    )}
-                  </TableCell>
-                  <TableCell>
-                    <div className="font-semibold text-gray-900 dark:text-white text-xs mb-0.5">{cam.name}</div>
-                    <div className="text-[11px] text-gray-500 font-mono">{cam.id}</div>
-                  </TableCell>
-                  <TableCell>
-                    <div className="text-gray-700 dark:text-gray-300 font-medium mb-0.5 text-xs">{cam.location}</div>
-                    <div className="text-[11px] text-gray-500 font-mono flex items-center gap-1">
-                        <MapPin size={10} /> {cam.coordinate}
-                    </div>
-                  </TableCell>
-                  <TableCell>
-                    <div className="flex gap-2 mb-1">
-                        <span className="bg-gray-100 dark:bg-[#151515] border border-gray-200 dark:border-[#222] px-1.5 py-0.5 rounded text-[10px] font-bold text-gray-700 dark:text-gray-300">{cam.resolution}</span>
-                        <span className="bg-gray-100 dark:bg-[#151515] border border-gray-200 dark:border-[#222] px-1.5 py-0.5 rounded text-[10px] font-bold text-gray-700 dark:text-gray-300">{cam.fps} FPS</span>
-                    </div>
-                    <div className="text-[10px] text-gray-500 font-mono truncate max-w-[150px] uppercase tracking-widest font-black">{cam.url}</div>
-                  </TableCell>
-                  <TableCell>
-                    <div className="flex items-center gap-2">
-                        {cam.onvif && <span className="bg-[#52C5F3]/10 text-[#52C5F3] border border-[#52C5F3]/20 px-1.5 py-0.5 rounded text-[10px] font-bold">ONVIF</span>}
-                    </div>
-                  </TableCell>
-                  <TableCell className="text-right">
-                    <div className="flex items-center justify-end gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
-                      <Button variant="outline" className="px-3" onClick={() => openEditModal(cam)} title="Settings">
-                        <Settings size={12} />
-                      </Button>
-                      <Button variant="danger" className="px-3" onClick={() => handleDelete(cam.id)}>
-                        <Trash2 size={12} />
-                      </Button>
-                    </div>
-                  </TableCell>
-                </TableRow>
-              ))}
-            </TableBody>
-          </Table>
+        <div className="p-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
+            {cameraList.map((cam) => (
+              <div key={cam.id} className="bg-white dark:bg-[#1e1e1e] border border-gray-200 dark:border-[#222] rounded-xl overflow-hidden shadow-sm group hover:border-[#52C5F3]/30 transition-all">
+                 <div className="aspect-video bg-gray-50 dark:bg-[#151515] relative flex items-center justify-center border-b border-gray-200 dark:border-[#222]">
+                     {cam.active ? (
+                         <div className="absolute top-3 left-3 bg-green-500/10 text-green-600 dark:text-green-400 border border-green-500/20 px-2 py-0.5 rounded-md text-[10px] font-bold tracking-wide flex items-center gap-1.5 uppercase">
+                             <Check size={12} /> Online
+                         </div>
+                     ) : (
+                         <div className="absolute top-3 left-3 bg-red-500/10 text-red-600 dark:text-red-400 border border-red-500/20 px-2 py-0.5 rounded-md text-[10px] font-bold tracking-wide flex items-center gap-1.5 uppercase">
+                             <X size={12} /> Offline
+                         </div>
+                     )}
+                     
+                     <div className="absolute top-3 right-3 flex items-center gap-1 opacity-100 sm:opacity-0 sm:group-hover:opacity-100 transition-opacity">
+                         <button onClick={() => openEditModal(cam)} className="w-8 h-8 rounded-lg bg-white dark:bg-[#222] border border-gray-200 dark:border-gray-700 shadow-sm flex items-center justify-center text-gray-700 dark:text-gray-300 hover:text-[#52C5F3] hover:border-[#52C5F3]/50 transition-all" title="Settings">
+                             <Settings size={14} />
+                         </button>
+                         <button onClick={() => handleDelete(cam.id)} className="w-8 h-8 rounded-lg bg-white dark:bg-[#222] border border-gray-200 dark:border-gray-700 shadow-sm flex items-center justify-center text-red-500 hover:text-red-400 hover:border-red-500/50 transition-all" title="Delete">
+                             <Trash2 size={14} />
+                         </button>
+                     </div>
+
+                     <Camera size={32} className="text-gray-300 dark:text-[#333]" />
+                 </div>
+                 <div className="p-4 space-y-3">
+                     <div className="flex justify-between items-start">
+                         <div>
+                             <h3 className="text-xs font-bold text-gray-900 dark:text-white mb-0.5">{cam.name}</h3>
+                             <p className="text-[10px] text-gray-500 font-mono">{cam.id}</p>
+                         </div>
+                         {cam.onvif && (
+                             <span className="bg-[#52C5F3]/10 text-[#52C5F3] border border-[#52C5F3]/20 px-1.5 py-0.5 rounded text-[10px] font-bold">ONVIF</span>
+                         )}
+                     </div>
+                     
+                     <div className="space-y-2 pt-3 border-t border-gray-100 dark:border-[#222]">
+                         <div className="flex items-center text-[11px] text-gray-600 dark:text-gray-400 gap-2">
+                             <MapPin size={12} className="text-gray-400" />
+                             <span className="font-medium truncate mr-2">{cam.location}</span>
+                             <span className="text-[9px] font-mono text-gray-400 opacity-70 ml-auto">{cam.coordinate}</span>
+                         </div>
+                         <div className="grid grid-cols-2 gap-2">
+                             <div className="flex items-center text-[10px] text-gray-500 font-mono gap-1.5 bg-gray-50 dark:bg-[#222] p-1.5 rounded-md border border-gray-100 dark:border-white/5">
+                                 <Activity size={12} className="text-gray-400" />
+                                 <span>{cam.fps} FPS</span>
+                             </div>
+                             <div className="flex items-center text-[10px] text-gray-500 font-mono gap-1.5 bg-gray-50 dark:bg-[#222] p-1.5 rounded-md border border-gray-100 dark:border-white/5">
+                                 <Settings size={12} className="text-gray-400" />
+                                 <span>{cam.resolution}</span>
+                             </div>
+                         </div>
+                         <div className="flex items-center text-[10px] text-gray-500 font-mono gap-2 bg-gray-50 dark:bg-[#222] p-1.5 rounded-md border border-gray-100 dark:border-white/5">
+                             <LinkIcon size={12} className="text-gray-400 shrink-0" />
+                             <span className="truncate">{cam.url}</span>
+                         </div>
+                     </div>
+                 </div>
+              </div>
+            ))}
+          </div>
         </div>
       </Card>
     </main>

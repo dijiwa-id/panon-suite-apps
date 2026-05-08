@@ -163,10 +163,40 @@ const NewTaskModal = ({ isOpen, onClose, onCreate }: { isOpen: boolean; onClose:
   );
 };
 
-const UploadDatasetModal = ({ isOpen, onClose }: { isOpen: boolean; onClose: () => void }) => {
+const UploadDatasetModal = ({ isOpen, onClose, onUpload }: { isOpen: boolean; onClose: () => void; onUpload: (name: string, source: string) => void }) => {
   const [uploadType, setUploadType] = useState<'local' | 'url' | 'cloud'>('local');
+  const [datasetName, setDatasetName] = useState('');
+  const [datasetUrl, setDatasetUrl] = useState('');
 
   if (!isOpen) return null;
+
+  const handleStartUpload = () => {
+    if (!datasetName) {
+      toast.error('Please enter a dataset name');
+      return;
+    }
+    
+    let source = 'Uploaded (Local)';
+    if (uploadType === 'url') {
+      if (!datasetUrl) {
+         toast.error('Please enter a valid URL');
+         return;
+      }
+      source = `URL: ${datasetUrl}`;
+    } else if (uploadType === 'cloud') {
+      source = 'Cloud Storage';
+    }
+
+    toast.promise(new Promise(resolve => setTimeout(resolve, 2000)), {
+      loading: 'Uploading dataset...',
+      success: 'Dataset uploaded successfully',
+      error: 'Upload failed',
+    });
+
+    onUpload(datasetName, source);
+    onClose(); 
+  };
+
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm p-4">
       <div className="bg-white dark:bg-[#1e1e1e] border border-gray-200 dark:border-[#222] rounded-[11px] shadow-2xl w-full max-w-md overflow-hidden flex flex-col max-h-[90vh]">
@@ -184,6 +214,8 @@ const UploadDatasetModal = ({ isOpen, onClose }: { isOpen: boolean; onClose: () 
               <Input 
                 type="text" 
                 placeholder="e.g. Training Set July" 
+                value={datasetName}
+                onChange={(e) => setDatasetName(e.target.value)}
               />
             </div>
 
@@ -231,6 +263,8 @@ const UploadDatasetModal = ({ isOpen, onClose }: { isOpen: boolean; onClose: () 
                   <Input 
                     type="url" 
                     placeholder="https://example.com/dataset.zip" 
+                    value={datasetUrl}
+                    onChange={(e) => setDatasetUrl(e.target.value)}
                   />
                   <p className="text-[10px] text-gray-500 mt-2">Must be a direct link to a ZIP file.</p>
                 </div>
@@ -269,16 +303,7 @@ const UploadDatasetModal = ({ isOpen, onClose }: { isOpen: boolean; onClose: () 
            <Button variant="ghost" type="button" onClick={onClose}>
              Cancel
            </Button>
-           <Button variant="primary" onClick={() => { 
-                toast.promise(new Promise(resolve => setTimeout(resolve, 2000)), {
-                  loading: 'Uploading dataset...',
-                  success: 'Dataset uploaded successfully',
-                  error: 'Upload failed',
-                });
-                onClose(); 
-              }} 
-             className="h-8"
-           >
+           <Button variant="primary" onClick={handleStartUpload} className="h-8">
              Start Upload
            </Button>
         </div>
@@ -405,7 +430,7 @@ export const DataCollection = () => {
         </div>
       </Card>
       <NewTaskModal isOpen={isTaskModalOpen} onClose={() => setIsTaskModalOpen(false)} onCreate={handleCreateTask} />
-      <UploadDatasetModal isOpen={isUploadModalOpen} onClose={() => setIsUploadModalOpen(false)} />
+      <UploadDatasetModal isOpen={isUploadModalOpen} onClose={() => setIsUploadModalOpen(false)} onUpload={handleCreateTask} />
       <DatasetDetailModal isOpen={!!selectedDataset} onClose={() => setSelectedDataset(null)} dataset={selectedDataset} />
     </main>
   );

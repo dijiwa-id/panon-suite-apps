@@ -21,7 +21,8 @@ import {
   Camera,
   List,
   FileText,
-  Network
+  Network,
+  Video
 } from "lucide-react";
 import { cn } from "../lib/utils";
 import { motion } from "motion/react";
@@ -38,6 +39,7 @@ const iconMap: Record<string, React.ReactNode> = {
   "Building Blocks": <Layout size={12} />,
   "No Code Editor": <Code size={12} />,
   Applications: <Grid size={12} />,
+  "Video Generation": <Video size={12} />,
   "System Monitoring": <Cpu size={12} />,
   "Workstation Management": <Box size={12} />,
   "Camera Management": <Aperture size={12} />,
@@ -281,6 +283,7 @@ export const Sidebar = ({
               { label: "Building Blocks", path: "/develop/building-blocks" },
               { label: "No Code Editor", path: "/develop/no-code-editor" },
               { label: "Applications", path: "/develop/applications" },
+              { label: "Video Generation", path: "/develop/video-generation" },
             ]}
           />
 
