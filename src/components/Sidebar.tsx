@@ -283,7 +283,7 @@ export const Sidebar = ({
               { label: "Building Blocks", path: "/develop/building-blocks" },
               { label: "No Code Editor", path: "/develop/no-code-editor" },
               { label: "Applications", path: "/develop/applications" },
-              { label: "Video Generation", path: "/develop/video-generation" },
+              { label: "Camera ROI Setup", path: "/develop/video-generation" },
             ]}
           />
 

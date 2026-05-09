@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Search, Upload, Database, CheckCircle, BrainCircuit, Box, Trash2, ShieldCheck, FileCheck, X } from 'lucide-react';
 import { cn } from '../lib/utils';
+import { Button } from '../components/ui/button';
 
 const initialModels = [
   { id: '1', filename: 'Model-2026-Security-80-001', type: 'Intrusion & Weapon', classes: ['Vehicle', 'Person', 'Weapon', 'Crowd'], confidence: 0.8 },
@@ -48,9 +49,9 @@ export const ModelManagement = () => {
           <p className="text-gray-600 dark:text-gray-400 text-xs font-medium">Upload, manage, and verify AI models for edge inferences.</p>
         </div>
         <div className="flex gap-3 w-full md:w-auto">
-          <button onClick={() => setIsModalOpen(true)} className="flex-1 md:flex-none flex justify-center items-center gap-2 bg-accent hover:bg-accent/90 text-black h-8 rounded-full text-xs font-bold px-5 transition-colors shadow-[0_0_15px_rgba(82,197,243,0.3)] leading-[12px]">
+          <Button variant="primary" onClick={() => setIsModalOpen(true)} className="flex-1 md:flex-none px-5">
             <Upload size={14} /> Upload Custom Model (.onnx)
-          </button>
+          </Button>
         </div>
       </div>
 
@@ -87,8 +88,8 @@ export const ModelManagement = () => {
             </div>
             
             <div className="p-6 border-t border-gray-200 dark:border-[#222] flex gap-3 justify-between items-center bg-gray-50/50 dark:bg-[#1a1a1a]">
-                <button onClick={() => setIsModalOpen(false)} className="text-gray-500 hover:text-white font-black text-[10px] transition-colors uppercase tracking-widest">Cancel</button>
-                <button disabled={!uploadedFile} onClick={handleUpload} className="bg-accent disabled:opacity-50 disabled:cursor-not-allowed hover:bg-accent/90 text-black h-[32px] rounded-full text-xs font-bold px-8 transition-colors shadow-[0_0_15px_rgba(82,197,243,0.3)] leading-[12px]">Upload Model</button>
+                <button onClick={() => setIsModalOpen(false)} className="text-gray-500 hover:text-white font-black text-[10px] transition-colors uppercase tracking-widest leading-none">Cancel</button>
+                <Button variant="primary" disabled={!uploadedFile} onClick={handleUpload}>Upload Model</Button>
             </div>
           </div>
         </div>

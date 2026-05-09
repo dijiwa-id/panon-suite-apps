@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Search, Plus, Play, ExternalLink, Activity, Server, ShieldCheck, Pause, Settings, X, Video, Cpu, Activity as ActivityIcon, ChevronDown } from 'lucide-react';
 import { cn } from '../lib/utils';
+import { Button } from '../components/ui/button';
 import { toast } from 'sonner';
 import { useDevelop } from '../context/DevelopContext';
 import { useNavigate } from 'react-router-dom';
@@ -62,12 +63,13 @@ export const Applications = () => {
           <p className="text-gray-600 dark:text-gray-400 text-xs font-medium">Manage and monitor running vision pipelines.</p>
         </div>
         <div className="flex gap-3 w-full md:w-auto">
-          <button 
+          <Button 
+            variant="primary"
             onClick={() => setIsNewAppModalOpen(true)}
-            className="flex-1 md:flex-none flex justify-center items-center gap-2 bg-accent hover:bg-accent/90 text-black h-8 rounded-full text-xs font-bold px-5 transition-colors shadow-[0_0_15px_rgba(82,197,243,0.3)] leading-[12px]"
+            className="flex-1 md:flex-none px-5"
           >
             <Plus size={14} /> New Application
-          </button>
+          </Button>
         </div>
       </div>
 
@@ -266,12 +268,12 @@ export const Applications = () => {
                 >
                   Cancel
                </button>
-               <button 
+               <Button 
+                 variant="primary"
                  onClick={handleDeploy}
-                 className="flex items-center gap-2 bg-accent hover:bg-accent/90 text-black h-8 rounded-full text-xs font-bold px-6 transition-colors shadow-[0_0_15px_rgba(82,197,243,0.3)]"
                >
                  <Play size={14} className="fill-black" /> Deploy Application
-               </button>
+               </Button>
             </div>
           </div>
         </div>

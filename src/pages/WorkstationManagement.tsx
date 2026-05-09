@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Search, Plus, Check, X, Server, Network, Shield, Cpu, Activity, Info } from 'lucide-react';
 import { cn } from '../lib/utils';
+import { Button } from '../components/ui/button';
 
 const workstations = [
   { id: 'WS-001 / Analytic Edge', status: 'Running', credential: '************', description: 'Primary edge analytics for main gate', ip: '192.168.1.10', spec: 'Core Ultra 5 125U', gpu: true, npu: false, load: '45%' },
@@ -83,9 +84,9 @@ const AddWorkstationModal = ({ isOpen, onClose }: { isOpen: boolean; onClose: ()
           <button onClick={onClose} className="text-gray-500 hover:text-white font-black text-[10px] transition-colors uppercase tracking-widest">
             Cancel
           </button>
-          <button onClick={onClose} className="bg-accent hover:bg-accent/90 text-black h-[32px] rounded-full text-xs font-bold px-8 transition-colors shadow-[0_0_15px_rgba(82,197,243,0.3)]">
+          <Button variant="primary" onClick={onClose} >
             Provision Node
-          </button>
+          </Button>
         </div>
       </div>
     </div>
@@ -103,12 +104,13 @@ export const WorkstationManagement = () => {
           <p className="text-gray-600 dark:text-gray-400 text-xs font-medium">Manage and monitor processing edge nodes.</p>
         </div>
         <div className="flex gap-3 w-full md:w-auto">
-          <button 
+          <Button 
+            variant="primary"
             onClick={() => setIsModalOpen(true)}
-            className="flex-1 md:flex-none flex justify-center items-center gap-2 bg-accent hover:bg-accent/90 text-black h-8 rounded-full text-xs font-bold px-5 transition-colors shadow-[0_0_15px_rgba(82,197,243,0.3)] leading-[12px]"
+            className="flex-1 md:flex-none px-5"
           >
             <Plus size={14} /> New Workstation
-          </button>
+          </Button>
         </div>
       </div>
 

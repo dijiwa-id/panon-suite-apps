@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Search, Plus, X, ChevronDown } from 'lucide-react';
 import { toast } from 'sonner';
+import { Button } from '../components/ui/button';
 
 const packages = [
   { id: 'SECURITY', name: 'Security', context: 'Parkir Liar' },
@@ -87,12 +88,12 @@ const AddPackageModal = ({ isOpen, onClose }: { isOpen: boolean; onClose: () => 
             >
               Cancel
             </button>
-            <button 
+            <Button 
+              variant="primary"
               type="submit"
-              className="bg-accent hover:bg-accent/90 text-black h-[32px] rounded-full text-xs font-bold px-6 transition-colors shadow-[0_0_15px_rgba(82,197,243,0.3)] leading-[12px]"
             >
               Create Package
-            </button>
+            </Button>
           </div>
         </form>
       </div>
@@ -111,11 +112,13 @@ export const PackageManagement = () => {
           <p className="text-gray-600 dark:text-gray-400 text-xs font-medium">Manage algorithm packages and configurations.</p>
         </div>
         <div className="flex gap-3">
-          <button 
+          <Button 
+            variant="primary"
             onClick={() => setIsModalOpen(true)}
-            className="flex items-center gap-2 bg-accent hover:bg-accent/90 text-black h-8 rounded-full text-xs font-bold px-5 transition-colors shadow-[0_0_15px_rgba(82,197,243,0.3)] leading-[12px]">
+            className="flex-1 md:flex-none px-5"
+          >
             <Plus size={14} /> New Package
-          </button>
+          </Button>
         </div>
       </div>
 

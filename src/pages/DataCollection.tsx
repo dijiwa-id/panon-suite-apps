@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Search, Plus, Filter, Database, Play, Pause, MoreVertical, UploadCloud, Image as ImageIcon, X, ChevronDown, Link as LinkIcon, Cloud } from 'lucide-react';
+import { Search, Plus, Filter, Database, Play, Pause, MoreVertical, UploadCloud, Image as ImageIcon, X, ChevronDown, Link as LinkIcon, Cloud, Loader2 } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { cn } from '../lib/utils';
 import { toast } from 'sonner';
@@ -80,6 +80,7 @@ const DatasetDetailModal = ({ isOpen, onClose, dataset }: { isOpen: boolean; onC
 const NewTaskModal = ({ isOpen, onClose, onCreate }: { isOpen: boolean; onClose: () => void; onCreate: (name: string, source: string) => void }) => {
   const [name, setName] = useState('');
   const [source, setSource] = useState('CAM-001');
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   if (!isOpen) return null;
   return (
@@ -87,15 +88,22 @@ const NewTaskModal = ({ isOpen, onClose, onCreate }: { isOpen: boolean; onClose:
       <div className="bg-white dark:bg-[#1e1e1e] border border-gray-200 dark:border-[#222] rounded-[11px] shadow-2xl w-full max-w-md overflow-hidden">
         <div className="p-6 border-b border-gray-200 dark:border-[#222] flex items-center justify-between bg-gray-50/50 dark:bg-[#1a1a1a]">
           <h2 className="text-sm font-black text-gray-900 dark:text-white">New Collection Task</h2>
-          <button onClick={onClose} className="text-gray-500 hover:text-white transition-colors">
+          <button onClick={onClose} className="text-gray-500 hover:text-white transition-colors" disabled={isSubmitting}>
             <X size={16} />
           </button>
         </div>
         
         <form onSubmit={(e) => { 
           e.preventDefault(); 
-          onCreate(name, source);
-          onClose(); 
+          setIsSubmitting(true);
+          setTimeout(() => {
+            onCreate(name, source);
+            toast.success("Collection task created successfully!");
+            setIsSubmitting(false);
+            setName('');
+            setSource('CAM-001');
+            onClose(); 
+          }, 800);
         }} className="p-6 space-y-5">
           <div>
             <label className="block text-[10px] font-black text-gray-500 mb-2 uppercase tracking-widest">Task Name</label>
@@ -150,11 +158,11 @@ const NewTaskModal = ({ isOpen, onClose, onCreate }: { isOpen: boolean; onClose:
           </div>
 
           <div className="flex justify-between mt-8 pt-4 border-t border-gray-200 dark:border-[#222] items-center">
-            <Button variant="ghost" type="button" onClick={onClose}>
+            <Button variant="ghost" type="button" onClick={onClose} disabled={isSubmitting}>
               Cancel
             </Button>
-            <Button variant="primary" type="submit" className="h-8">
-              Create Task
+            <Button variant="primary" type="submit" className="h-8 gap-2" disabled={isSubmitting}>
+              {isSubmitting ? <><Loader2 size={14} className="animate-spin" /> Creating...</> : 'Create Task'}
             </Button>
           </div>
         </form>

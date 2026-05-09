@@ -1,349 +1,547 @@
-import React, { useState, useRef } from 'react';
-import { Play, Flame, Image as ImageIcon, Video as VideoIcon, Settings2, Download, Trash2, Maximize2, Loader2, Sparkles, Plus, Clock, Copy } from 'lucide-react';
+import React, { useState, useRef, useEffect, useCallback } from 'react';
+import { Camera, Save, Trash2, Crosshair, Target, Shapes, MousePointer2, Check, X, Edit2 } from 'lucide-react';
 import { cn } from '../lib/utils';
 import { Button } from '../components/ui/button';
-import { Input } from '../components/ui/input';
 import { toast } from 'sonner';
 
-interface GeneratedVideo {
+type FeatureType = 'Perimeter' | 'Detection Area' | 'ROI Counting' | 'Heat Detection' | 'Crowd Detection' | 'Crowd Counting';
+
+interface Point { x: number; y: number }
+
+interface ROI {
   id: string;
-  url: string;
-  prompt: string;
-  date: Date;
-  status: 'generating' | 'completed' | 'failed';
-  duration: string;
-  thumbnail?: string;
+  name: string;
+  type: FeatureType;
+  color: string;
+  coordinates: Point[];
 }
 
-const generateThumbnailFromVideoUrl = (videoUrl: string): Promise<string> => {
-  return new Promise((resolve) => {
-    const video = document.createElement('video');
-    video.crossOrigin = 'anonymous'; // Important for CORS if applicable
-    video.src = videoUrl;
-    // Wait for the video to load metadata
-    video.onloadeddata = () => {
-      // Seek to 1 second (or stay at 0)
-      video.currentTime = 1;
-    };
-    video.onseeked = () => {
-      const canvas = document.createElement('canvas');
-      canvas.width = video.videoWidth;
-      canvas.height = video.videoHeight;
-      const ctx = canvas.getContext('2d');
-      if (ctx) {
-        ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
-        resolve(canvas.toDataURL('image/jpeg'));
-      } else {
-        resolve('');
-      }
-    };
-    video.onerror = () => {
-      resolve(''); // Fallback to empty if error
-    };
-    video.load();
-  });
-};
-
-const PAST_VIDEOS: GeneratedVideo[] = [
-  {
-    id: '1',
-    url: 'https://cdn.pixabay.com/video/2021/08/04/83863-585149302_large.mp4',
-    prompt: 'A futuristic city skyline at glowing sunset, cyberpunk style, flying cars.',
-    date: new Date(Date.now() - 1000 * 60 * 60 * 2), // 2 hours ago
-    status: 'completed',
-    duration: '0:05',
-    thumbnail: 'https://images.unsplash.com/photo-1601460370845-812030d9fb88?auto=format&fit=crop&q=80&w=400'
-  },
-  {
-    id: '2',
-    url: 'https://cdn.pixabay.com/video/2019/08/25/26279-354964205_medium.mp4',
-    prompt: 'Macro shot of water droplets on a neon green leaf, 4k ultra detailed.',
-    date: new Date(Date.now() - 1000 * 60 * 60 * 24), // 1 day ago
-    status: 'completed',
-    duration: '0:03',
-    thumbnail: 'https://images.unsplash.com/photo-1542385150-13f5c15f9b42?auto=format&fit=crop&q=80&w=400'
-  }
+const CAMERAS = [
+  { id: 'CAM-001', name: 'Main Gate Camera', url: 'https://cdn.pixabay.com/video/2019/11/17/29272-373809675_medium.mp4' },
+  { id: 'CAM-002', name: 'Warehouse Entry', url: 'https://cdn.pixabay.com/video/2019/11/17/29272-373809675_medium.mp4' },
+  { id: 'CAM-003', name: 'Assembly Line A', url: 'https://cdn.pixabay.com/video/2019/11/17/29272-373809675_medium.mp4' },
+  { id: 'CAM-004', name: 'Loading Dock', url: 'https://cdn.pixabay.com/video/2019/11/17/29272-373809675_medium.mp4' },
 ];
 
+const FEATURE_COLORS: Record<FeatureType, string> = {
+  'Perimeter': '#ef4444',
+  'Detection Area': '#3b82f6',
+  'ROI Counting': '#10b981',
+  'Heat Detection': '#f97316',
+  'Crowd Detection': '#8b5cf6',
+  'Crowd Counting': '#ec4899',
+};
+
 export const VideoGeneration = () => {
-  const [prompt, setPrompt] = useState<string>('');
-  const [isGenerating, setIsGenerating] = useState(false);
-  const [generationProgress, setGenerationProgress] = useState(0);
-  const [videos, setVideos] = useState<GeneratedVideo[]>(PAST_VIDEOS);
+  const [selectedCamera, setSelectedCamera] = useState(CAMERAS[0].id);
+  const [activeFeature, setActiveFeature] = useState<FeatureType>('Perimeter');
+  const [rois, setRois] = useState<ROI[]>([
+    {
+      id: 'roi-1',
+      name: 'Main Entrance Perimeter',
+      type: 'Perimeter',
+      color: '#ef4444',
+      coordinates: [{ x: 10, y: 10 }, { x: 90, y: 10 }, { x: 90, y: 90 }, { x: 10, y: 90 }]
+    }
+  ]);
   
-  // Settings
-  const [aspectRatio, setAspectRatio] = useState<'16:9' | '9:16' | '1:1'>('16:9');
-  const [resolution, setResolution] = useState<'1080p' | '720p' | '4k'>('1080p');
+  // Interactive Editor State
+  const [isDrawingMode, setIsDrawingMode] = useState(false);
+  const [currentPolygon, setCurrentPolygon] = useState<Point[]>([]);
+  const [selectedRoiId, setSelectedRoiId] = useState<string | null>('roi-1');
+  const [editingRoiNameId, setEditingRoiNameId] = useState<string | null>(null);
+
+  const canvasRef = useRef<HTMLCanvasElement>(null);
+  const containerRef = useRef<HTMLDivElement>(null);
   
-  const generateVideo = () => {
-    if (!prompt.trim()) {
-      toast.error('Please enter a prompt to generate a video');
+  // Mutable state for drag interactions to ensure smooth 60fps rendering without React state lag
+  const dragState = useRef<{ nodeRoiId: string | null, nodeIndex: number | null, isDragging: boolean }>({
+    nodeRoiId: null,
+    nodeIndex: null,
+    isDragging: false
+  });
+  const mousePos = useRef<Point>({ x: 0, y: 0 });
+
+  const getCanvasPos = (clientX: number, clientY: number): Point => {
+    if (!canvasRef.current) return { x: 0, y: 0 };
+    const rect = canvasRef.current.getBoundingClientRect();
+    return {
+      x: ((clientX - rect.left) / rect.width) * 100,
+      y: ((clientY - rect.top) / rect.height) * 100
+    };
+  };
+
+  const drawCanvas = useCallback(() => {
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+    const ctx = canvas.getContext('2d');
+    if (!ctx) return;
+    
+    // Resize to match display size for crisp rendering
+    if (containerRef.current) {
+        if (canvas.width !== containerRef.current.clientWidth || canvas.height !== containerRef.current.clientHeight) {
+           canvas.width = containerRef.current.clientWidth;
+           canvas.height = containerRef.current.clientHeight;
+        }
+    }
+
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    
+    const drawPolygon = (pts: Point[], color: string, isSelected: boolean, name?: string) => {
+      if (pts.length === 0) return;
+      
+      ctx.beginPath();
+      pts.forEach((p, i) => {
+        const x = (p.x / 100) * canvas.width;
+        const y = (p.y / 100) * canvas.height;
+        if (i === 0) ctx.moveTo(x, y);
+        else ctx.lineTo(x, y);
+      });
+      
+      // Close path if it's a finished ROI
+      if (name !== undefined) {
+         ctx.closePath();
+      }
+
+      ctx.fillStyle = isSelected ? `${color}40` : `${color}20`; // Hex alpha
+      if (name !== undefined) ctx.fill();
+
+      ctx.lineWidth = isSelected ? 3 : 2;
+      ctx.strokeStyle = color;
+      
+      // Dashed line if drawing
+      if (name === undefined) {
+          ctx.setLineDash([5, 5]);
+      } else {
+          ctx.setLineDash([]);
+      }
+      ctx.stroke();
+      ctx.setLineDash([]); // Reset
+
+      // Draw nodes
+      pts.forEach((p, i) => {
+        const x = (p.x / 100) * canvas.width;
+        const y = (p.y / 100) * canvas.height;
+        ctx.beginPath();
+        // Slightly larger nodes for selected
+        const radius = isSelected ? 5 : 4;
+        ctx.arc(x, y, radius, 0, 2 * Math.PI);
+        ctx.fillStyle = isSelected ? 'white' : color;
+        ctx.fill();
+        ctx.lineWidth = 2;
+        ctx.strokeStyle = isSelected ? color : 'white';
+        ctx.stroke();
+      });
+
+      // Label
+      if (name && pts.length > 0) {
+        const startX = (pts[0].x / 100) * canvas.width;
+        const startY = (pts[0].y / 100) * canvas.height;
+        
+        ctx.font = 'bold 11px Inter, sans-serif';
+        const textWidth = ctx.measureText(name).width;
+        
+        // Label background
+        ctx.fillStyle = isSelected ? color : '#000000CC';
+        ctx.fillRect(startX - 2, startY - 22, textWidth + 12, 20);
+        
+        // Label text
+        ctx.fillStyle = 'white';
+        ctx.fillText(name, startX + 4, startY - 8);
+      }
+    };
+
+    // Draw saved ROIs
+    rois.forEach(roi => {
+      drawPolygon(roi.coordinates, roi.color, roi.id === selectedRoiId, roi.name);
+    });
+
+    // Draw active drawing polygon + line to mouse
+    if (isDrawingMode && currentPolygon.length > 0) {
+      const activeColor = FEATURE_COLORS[activeFeature];
+      drawPolygon(currentPolygon, activeColor, true);
+      
+      // Line from last point to mouse
+      const lastPt = currentPolygon[currentPolygon.length - 1];
+      ctx.beginPath();
+      ctx.moveTo((lastPt.x / 100) * canvas.width, (lastPt.y / 100) * canvas.height);
+      ctx.lineTo((mousePos.current.x / 100) * canvas.width, (mousePos.current.y / 100) * canvas.height);
+      ctx.lineWidth = 2;
+      ctx.strokeStyle = `${activeColor}80`;
+      ctx.setLineDash([4, 4]);
+      ctx.stroke();
+    }
+  }, [rois, isDrawingMode, currentPolygon, selectedRoiId, activeFeature]);
+
+  // Initial draw and resize observer
+  useEffect(() => {
+    drawCanvas();
+    window.addEventListener('resize', drawCanvas);
+    return () => window.removeEventListener('resize', drawCanvas);
+  }, [drawCanvas]);
+
+  // Handle Canvas Mouse Events
+  const handlePointerDown = (e: React.PointerEvent<HTMLDivElement>) => {
+    const pos = getCanvasPos(e.clientX, e.clientY);
+    
+    if (isDrawingMode) {
+      // Add point
+      if (currentPolygon.length >= 3 && Math.abs(pos.x - currentPolygon[0].x) < 3 && Math.abs(pos.y - currentPolygon[0].y) < 3) {
+        // If clicked near the first point and we have at least 3 points, finish drawing
+        finishDrawing();
+      } else {
+        setCurrentPolygon([...currentPolygon, pos]);
+      }
       return;
     }
-    
-    setIsGenerating(true);
-    setGenerationProgress(0);
-    
-    const newId = Date.now().toString();
-    const generatingVideo: GeneratedVideo = {
-      id: newId,
-      url: '',
-      prompt: prompt,
-      date: new Date(),
-      status: 'generating',
-      duration: '0:05'
-    };
-    
-    setVideos(prev => [generatingVideo, ...prev]);
-    
-    // Simulate generation progress
-    let iters = 0;
-    const interval = setInterval(() => {
-      iters++;
-      setGenerationProgress(Math.min((iters / 20) * 100, 99)); // Cap at 99 until finished
-      if (iters >= 20) {
-        clearInterval(interval);
-        setTimeout(async () => {
-           const generatedUrl = 'https://cdn.pixabay.com/video/2019/11/17/29272-373809675_medium.mp4';
-           const bgFallback = 'https://images.unsplash.com/photo-1542385150-13f5c15f9b42?auto=format&fit=crop&q=80&w=400';
-           
-           // Try to generate thumbnail, but don't block completion if it fails
-           try {
-             const thumbnail = await generateThumbnailFromVideoUrl(generatedUrl);
-             setVideos(prev => 
-               prev.map(v => 
-                 v.id === newId 
-                   ? { ...v, status: 'completed', url: generatedUrl, thumbnail: thumbnail || bgFallback } 
-                   : v
-               )
-             );
-           } catch (err) {
-             setVideos(prev => 
-               prev.map(v => 
-                 v.id === newId 
-                   ? { ...v, status: 'completed', url: generatedUrl, thumbnail: bgFallback } 
-                   : v
-               )
-             );
-           }
-           setIsGenerating(false);
-           toast.success('Video generation complete!');
-        }, 500);
+
+    // Check if clicking a node to drag
+    let clickedNode = false;
+    for (let roi of rois) {
+      for (let i = 0; i < roi.coordinates.length; i++) {
+        const p = roi.coordinates[i];
+        if (Math.abs(p.x - pos.x) < 2.5 && Math.abs(p.y - pos.y) < 2.5) {
+          dragState.current = { nodeRoiId: roi.id, nodeIndex: i, isDragging: true };
+          setSelectedRoiId(roi.id);
+          clickedNode = true;
+          break;
+        }
       }
-    }, 300);
+      if (clickedNode) break;
+    }
+
+    // If not a node, check if clicking inside a polygon to select it
+    if (!clickedNode) {
+       let found = false;
+       for (let roi of rois) {
+          const xs = roi.coordinates.map(c => c.x);
+          const ys = roi.coordinates.map(c => c.y);
+          const minX = Math.min(...xs), maxX = Math.max(...xs);
+          const minY = Math.min(...ys), maxY = Math.max(...ys);
+          if (pos.x >= minX && pos.x <= maxX && pos.y >= minY && pos.y <= maxY) {
+             setSelectedRoiId(roi.id);
+             found = true;
+             break;
+          }
+       }
+       if (!found) setSelectedRoiId(null);
+    }
   };
-  
-  const currentMainVideo = videos[0];
+
+  const handlePointerMove = (e: React.PointerEvent<HTMLDivElement>) => {
+    const pos = getCanvasPos(e.clientX, e.clientY);
+    mousePos.current = pos;
+    
+    if (isDrawingMode) {
+      drawCanvas(); // Trigger redraw to update the line to mouse
+      return;
+    }
+
+    if (dragState.current.isDragging && dragState.current.nodeRoiId !== null && dragState.current.nodeIndex !== null) {
+      const roisCopy = [...rois];
+      const roiIdx = roisCopy.findIndex(r => r.id === dragState.current.nodeRoiId);
+      if (roiIdx >= 0) {
+         const coordsCopy = [...roisCopy[roiIdx].coordinates];
+         coordsCopy[dragState.current.nodeIndex] = {
+           x: Math.max(0, Math.min(100, pos.x)),
+           y: Math.max(0, Math.min(100, pos.y))
+         };
+         
+         const newRoi = { ...roisCopy[roiIdx], coordinates: coordsCopy };
+         roisCopy[roiIdx] = newRoi;
+         setRois(roisCopy); // State update handles redraw
+      }
+    }
+  };
+
+  const handlePointerUp = () => {
+    dragState.current = { nodeRoiId: null, nodeIndex: null, isDragging: false };
+  };
+
+  // End Drawing Actions
+  const finishDrawing = () => {
+    if (currentPolygon.length >= 3) {
+      const newRoi: ROI = {
+        id: `roi-${Date.now()}`,
+        name: `${activeFeature} ${rois.filter(r => r.type === activeFeature).length + 1}`,
+        type: activeFeature,
+        color: FEATURE_COLORS[activeFeature],
+        coordinates: currentPolygon
+      };
+      setRois([...rois, newRoi]);
+      setSelectedRoiId(newRoi.id);
+      toast.success(`${activeFeature} added.`);
+    } else {
+      toast.error('A region must have at least 3 points.');
+    }
+    setCurrentPolygon([]);
+    setIsDrawingMode(false);
+  };
+
+  const cancelDrawing = () => {
+    setCurrentPolygon([]);
+    setIsDrawingMode(false);
+  };
+
+  const removeROI = (id: string) => {
+    setRois(rois.filter(r => r.id !== id));
+    if (selectedRoiId === id) setSelectedRoiId(null);
+    toast.success('Region removed.');
+  };
+
+  const saveConfiguration = () => {
+    toast.success('Camera ROI configuration successfully saved to server.');
+  };
+
+  const updateRoiName = (id: string, newName: string) => {
+    setRois(rois.map(r => r.id === id ? { ...r, name: newName } : r));
+    setEditingRoiNameId(null);
+  };
 
   return (
-    <main className="flex-1 overflow-y-auto bg-transparent p-6 lg:p-8 text-gray-800 dark:text-gray-200 transition-colors custom-scrollbar">
-      <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-6 gap-4 border-b border-gray-200 dark:border-[#222] pb-6">
+    <main className="flex-1 overflow-hidden bg-transparent p-6 lg:p-8 text-gray-800 dark:text-gray-200 transition-colors h-full flex flex-col">
+      <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-6 gap-4 border-b border-gray-200 dark:border-[#222] pb-6 shrink-0">
         <div>
           <h1 className="text-sm font-bold tracking-tight text-gray-900 dark:text-white mb-1 flex items-center gap-2">
-            <VideoIcon size={16} className="text-[#52C5F3]" />
-            Video Generation Engine
+            <Target size={16} className="text-[#52C5F3]" />
+            Camera ROI Configuration
           </h1>
-          <p className="text-gray-600 dark:text-gray-400 text-xs font-medium">Create stunning AI-generated videos with Veo 2.0</p>
+          <p className="text-gray-600 dark:text-gray-400 text-xs font-medium">
+            Draw and manage detection zones, perimeters, and specialized areas of interest for AI analysis.
+          </p>
+        </div>
+        
+        <div className="flex items-center gap-3">
+          <div className="bg-gray-50 dark:bg-[#161616] border border-gray-200 dark:border-[#333] rounded-md px-3 py-1.5 flex items-center gap-2 shadow-sm">
+            <Camera size={14} className="text-gray-500" />
+            <select 
+              value={selectedCamera}
+              onChange={e => setSelectedCamera(e.target.value)}
+              className="bg-transparent text-xs font-bold text-gray-800 dark:text-gray-200 outline-none border-none cursor-pointer"
+            >
+              {CAMERAS.map(cam => (
+                <option key={cam.id} value={cam.id} className="bg-white dark:bg-[#111]">{cam.name} ({cam.id})</option>
+              ))}
+            </select>
+          </div>
+          <Button onClick={saveConfiguration}>
+            <Save size={14} /> Deploy
+          </Button>
         </div>
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 lg:gap-8">
-        {/* Left Column: Input and Settings */}
-        <div className="lg:col-span-1 space-y-6">
-          <div className="bg-white dark:bg-[#1e1e1e] border border-gray-200 dark:border-[#222] rounded-[11px] p-5 shadow-sm">
-             <div className="flex items-center justify-between mb-3">
-                 <label className="text-[10px] font-black uppercase tracking-widest text-gray-500 flex items-center gap-1.5">
-                    <Sparkles size={12} className="text-[#52C5F3]" />
-                    Prompt
-                 </label>
-             </div>
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 flex-1 min-h-0">
+        
+        {/* Left Sidebar - Configuration Tools */}
+        <div className="lg:col-span-3 flex flex-col h-full bg-white dark:bg-[#1e1e1e] border border-gray-200 dark:border-[#222] rounded-[11px] shadow-sm overflow-hidden shrink-0">
+          <div className="p-4 border-b border-gray-100 dark:border-[#222]">
+             <h3 className="text-[10px] font-black uppercase tracking-widest text-gray-400 mb-3">Annotation Tools</h3>
              
-             <textarea 
-               value={prompt}
-               onChange={(e) => setPrompt(e.target.value)}
-               placeholder="Describe the video you want to create... Try to include style, camera motion, and subject details."
-               className="w-full bg-gray-50 dark:bg-[#111] border border-gray-200 dark:border-white/5 rounded-lg p-3 text-xs font-medium text-gray-900 dark:text-gray-300 min-h-[120px] outline-none focus:ring-1 focus:ring-[#52C5F3]/50 focus:border-[#52C5F3]/50 transition-all resize-none custom-scrollbar"
-             />
-             
-             <div className="mt-4 pt-4 border-t border-gray-100 dark:border-[#222] space-y-4">
-                 <div>
-                    <label className="text-[10px] font-black uppercase tracking-widest text-gray-500 mb-2 block">Aspect Ratio</label>
-                    <div className="grid grid-cols-3 gap-2">
-                       {['16:9', '9:16', '1:1'].map((ratio) => (
-                           <button 
-                             key={ratio}
-                             onClick={() => setAspectRatio(ratio as any)}
-                             className={cn(
-                               "py-2 rounded-md border text-[11px] font-bold transition-all",
-                               aspectRatio === ratio 
-                                 ? "bg-[#52C5F3]/10 border-[#52C5F3]/30 text-[#52C5F3]" 
-                                 : "bg-gray-50 dark:bg-[#161616] border-gray-200 dark:border-[#333] text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-[#222]"
-                             )}
-                           >
-                              {ratio}
-                           </button>
-                       ))}
-                    </div>
-                 </div>
-                 
-                 <div>
-                    <label className="text-[10px] font-black uppercase tracking-widest text-gray-500 mb-2 block">Resolution</label>
-                    <div className="grid grid-cols-3 gap-2">
-                       {['720p', '1080p', '4k'].map((res) => (
-                           <button 
-                             key={res}
-                             onClick={() => setResolution(res as any)}
-                             className={cn(
-                               "py-2 rounded-md border text-[11px] font-bold transition-all",
-                               resolution === res 
-                                 ? "bg-[#52C5F3]/10 border-[#52C5F3]/30 text-[#52C5F3]" 
-                                 : "bg-gray-50 dark:bg-[#161616] border-gray-200 dark:border-[#333] text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-[#222]"
-                             )}
-                           >
-                              {res}
-                           </button>
-                       ))}
-                    </div>
-                 </div>
+             <div className="grid grid-cols-2 gap-2 mb-4">
+               {(Object.keys(FEATURE_COLORS) as FeatureType[]).map(feature => (
+                 <button
+                   key={feature}
+                   onClick={() => !isDrawingMode && setActiveFeature(feature)}
+                   disabled={isDrawingMode}
+                   className={cn(
+                     "relative flex flex-col items-start p-3 rounded-lg text-left transition-all border",
+                     activeFeature === feature
+                       ? `bg-[${FEATURE_COLORS[feature]}]/5 border-[${FEATURE_COLORS[feature]}]/30 shadow-sm ring-1 ring-[${FEATURE_COLORS[feature]}]/20`
+                       : "bg-gray-50 dark:bg-[#161616] border-gray-200 dark:border-[#333] hover:border-gray-300 dark:hover:border-gray-500",
+                     isDrawingMode && activeFeature !== feature && "opacity-50 cursor-not-allowed grayscale"
+                   )}
+                 >
+                   <div className="flex items-center gap-2 mb-1.5 w-full">
+                     <span className="w-2.5 h-2.5 rounded-full shadow-sm shrink-0" style={{ backgroundColor: FEATURE_COLORS[feature] }} />
+                     <span className={cn("text-xs font-bold leading-tight line-clamp-1", activeFeature === feature ? "text-gray-900 dark:text-white" : "text-gray-600 dark:text-gray-300")}>{feature}</span>
+                   </div>
+                 </button>
+               ))}
              </div>
 
-             <div className="mt-6">
-                <Button 
-                  onClick={generateVideo} 
-                  disabled={isGenerating || !prompt.trim()} 
-                  className="w-full flex items-center justify-center gap-2 h-10"
-                >
-                  {isGenerating ? (
-                    <>
-                      <Loader2 size={16} className="animate-spin" />
-                      Generating... {Math.round(generationProgress)}%
-                    </>
-                  ) : (
-                    <>
-                      <VideoIcon size={16} />
-                      Generate Video
-                    </>
-                  )}
-                </Button>
-             </div>
+             {/* Action Button */}
+             {!isDrawingMode ? (
+                 <Button 
+                   onClick={() => setIsDrawingMode(true)}
+                   className="w-full"
+                 >
+                   <Crosshair size={14} /> Start {activeFeature}
+                 </Button>
+             ) : (
+                <div className="flex gap-2">
+                   <Button 
+                     onClick={finishDrawing}
+                     className="flex-1 text-[#52C5F3]"
+                   >
+                     <Check size={14} /> Finish
+                   </Button>
+                   <Button 
+                     onClick={cancelDrawing}
+                     variant="outline"
+                     className="w-12 px-0 text-red-500 hover:text-red-600 border-gray-700 bg-[#1c1c1c] hover:bg-[#2a2a2a]"
+                   >
+                     <X size={14} />
+                   </Button>
+                </div>
+             )}
+          </div>
+          
+          <div className="p-4 flex-1 overflow-y-auto custom-scrollbar bg-gray-50/50 dark:bg-[#161616]/50">
+            <div className="flex items-center justify-between mb-4">
+              <h3 className="text-[10px] font-black uppercase tracking-widest text-gray-400">Configured Regions</h3>
+              <span className="text-[10px] bg-gray-200 dark:bg-[#333] text-gray-600 dark:text-gray-300 px-2 py-0.5 rounded-full font-bold">
+                {rois.length} Total
+              </span>
+            </div>
+            
+            <div className="space-y-2">
+              {rois.length === 0 ? (
+                <div className="flex flex-col flex-1 items-center justify-center p-8 text-center border border-dashed border-gray-300 dark:border-[#444] rounded-[11px] h-40">
+                  <Shapes size={24} className="text-gray-300 dark:text-gray-600 mb-2" />
+                  <p className="text-xs font-bold text-gray-500">No ROIs configured</p>
+                  <p className="text-[10px] text-gray-400 mt-1">Select a tool and start drawing</p>
+                </div>
+              ) : (
+                rois.map((roi) => (
+                  <div 
+                    key={roi.id} 
+                    onClick={() => !isDrawingMode && setSelectedRoiId(roi.id)}
+                    className={cn(
+                      "group flex flex-col gap-2 p-3 rounded-[11px] border transition-all cursor-pointer",
+                      selectedRoiId === roi.id 
+                        ? "bg-white dark:bg-[#222] border-blue-500/50 shadow-md ring-1 ring-blue-500/20" 
+                        : "bg-white dark:bg-[#1a1a1a] border-gray-100 dark:border-[#2a2a2a] hover:border-gray-300 dark:hover:border-gray-600 shadow-sm"
+                    )}
+                  >
+                    <div className="flex items-start justify-between gap-2">
+                       <div className="flex items-center gap-2 flex-1 min-w-0">
+                         <div className="w-3 h-3 rounded shadow-inner shrink-0" style={{ backgroundColor: roi.color }} />
+                         
+                         {editingRoiNameId === roi.id ? (
+                            <input 
+                              autoFocus
+                              defaultValue={roi.name}
+                              onBlur={(e) => updateRoiName(roi.id, e.target.value)}
+                              onKeyDown={(e) => {
+                                if (e.key === 'Enter') updateRoiName(roi.id, e.currentTarget.value);
+                                if (e.key === 'Escape') setEditingRoiNameId(null);
+                              }}
+                              className="flex-1 bg-gray-100 dark:bg-[#111] border border-gray-300 dark:border-[#444] rounded px-1.5 py-0.5 text-xs font-bold text-gray-900 dark:text-white outline-none w-full"
+                            />
+                         ) : (
+                            <p className="text-xs font-bold text-gray-900 dark:text-white truncate" title={roi.name}>{roi.name}</p>
+                         )}
+                       </div>
+                       
+                       <div className="flex items-center opacity-0 group-hover:opacity-100 transition-opacity">
+                         <button 
+                           onClick={(e) => { e.stopPropagation(); setEditingRoiNameId(roi.id); }}
+                           className="p-1 text-gray-400 hover:text-blue-500 transition-colors rounded"
+                         >
+                           <Edit2 size={12} />
+                         </button>
+                         <button 
+                           onClick={(e) => { e.stopPropagation(); removeROI(roi.id); }}
+                           className="p-1 text-gray-400 hover:text-red-500 transition-colors rounded"
+                         >
+                           <Trash2 size={12} />
+                         </button>
+                       </div>
+                    </div>
+                    
+                    <div className="flex items-center justify-between mt-1">
+                      <span className="text-[9px] font-bold bg-gray-100 dark:bg-[#111] text-gray-500 dark:text-gray-400 px-1.5 py-0.5 rounded tracking-wide uppercase">
+                         {roi.type}
+                      </span>
+                      <span className="text-[10px] text-gray-400 dark:text-gray-500 font-mono">
+                         {roi.coordinates.length} pts
+                      </span>
+                    </div>
+                  </div>
+                ))
+              )}
+            </div>
           </div>
         </div>
 
-        {/* Right Column: Preview and History */}
-        <div className="lg:col-span-2 space-y-6">
-           
-           {/* Main Display Area */}
-           <div className="bg-white dark:bg-[#1e1e1e] border border-gray-200 dark:border-[#222] rounded-[11px] overflow-hidden shadow-sm flex flex-col h-[400px]">
-              {currentMainVideo ? (
-                 <div className="relative w-full h-full flex items-center justify-center bg-black group">
-                    {currentMainVideo.status === 'generating' ? (
-                       <div className="flex flex-col items-center justify-center gap-4 text-[#52C5F3]">
-                          <div className="relative w-16 h-16 flex items-center justify-center">
-                             <div className="absolute inset-0 border-4 border-[#52C5F3]/20 rounded-full"></div>
-                             <div 
-                               className="absolute inset-0 border-4 border-[#52C5F3] rounded-full border-t-transparent animate-spin"
-                             ></div>
-                             <VideoIcon size={24} className="animate-pulse" />
-                          </div>
-                          <div className="text-center">
-                            <h3 className="text-sm font-bold text-white tracking-widest uppercase mb-1">Synthesizing</h3>
-                            <p className="text-xs text-gray-400 max-w-[250px] truncate">{currentMainVideo.prompt}</p>
-                          </div>
-                       </div>
-                    ) : (
-                       <>
-                          <video 
-                             width="100%" 
-                             height="100%" 
-                             controls 
-                             autoPlay 
-                             loop 
-                             poster={currentMainVideo.thumbnail}
-                             className="w-full h-full object-contain"
-                          >
-                             <source src={currentMainVideo.url} type="video/mp4" />
-                             Your browser does not support the video tag.
-                          </video>
-                          <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/80 to-transparent p-4 opacity-0 group-hover:opacity-100 transition-opacity">
-                              <p className="text-xs text-white/90 font-medium truncate mb-2">{currentMainVideo.prompt}</p>
-                              <div className="flex items-center gap-2">
-                                  <Button variant="ghost" className="h-8 bg-white/10 hover:bg-white/20 text-white border-none rounded-md px-3 text-[11px]">
-                                     <Download size={14} className="mr-1.5" /> Download
-                                  </Button>
-                                  <Button variant="ghost" onClick={() => { setPrompt(currentMainVideo.prompt); toast.success("Prompt copied to input!"); }} className="h-8 bg-white/10 hover:bg-white/20 text-white border-none rounded-md px-3 text-[11px]">
-                                     <Copy size={14} className="mr-1.5" /> Reuse Prompt
-                                  </Button>
-                              </div>
-                          </div>
-                       </>
-                    )}
-                 </div>
-              ) : (
-                 <div className="flex-1 flex flex-col items-center justify-center text-gray-400 dark:text-gray-500 bg-gray-50 dark:bg-[#161616]">
-                    <div className="w-16 h-16 rounded-full bg-white dark:bg-[#222] flex items-center justify-center border border-gray-200 dark:border-[#333] shadow-sm mb-4">
-                       <VideoIcon size={24} />
-                    </div>
-                    <p className="text-sm font-bold text-gray-900 dark:text-white mb-1">No Video Selected</p>
-                    <p className="text-xs">Generate a new video or select from your history</p>
-                 </div>
-              )}
-           </div>
+        {/* Right Area - Video Canvas Editor */}
+        <div className="lg:col-span-9 flex flex-col h-full bg-[#0a0a0a] rounded-[11px] shadow-lg border border-gray-800 overflow-hidden relative">
+          
+          {/* Status Overlay */}
+          <div className="absolute top-4 left-4 right-4 z-30 flex justify-between items-start pointer-events-none">
+             <div className="bg-black/60 backdrop-blur-md border border-white/10 rounded-lg p-3 flex flex-col gap-1 inline-block pointer-events-auto shadow-2xl">
+                <div className="flex items-center gap-3">
+                   <div className="relative flex items-center justify-center w-4 h-4">
+                     <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-400 opacity-60"></span>
+                     <span className="relative inline-flex rounded-full h-2 w-2 bg-red-500"></span>
+                   </div>
+                   <span className="text-xs font-black text-white uppercase tracking-widest">LIVE STREAM</span>
+                   <span className="text-[10px] text-gray-400 font-mono ml-2 border-l border-white/20 pl-3">1080p / 24fps / H264</span>
+                </div>
+             </div>
 
-           {/* History Grid */}
-           <div>
-              <div className="flex items-center justify-between mb-4">
-                 <h2 className="text-xs font-black uppercase tracking-widest text-gray-500">Recent Generations</h2>
-                 <span className="text-[10px] bg-[#52C5F3]/10 text-[#52C5F3] px-2 py-0.5 rounded font-bold border border-[#52C5F3]/20">{videos.filter(v => v.status === 'completed').length} Videos</span>
-              </div>
-              <div className="grid grid-cols-2 lg:grid-cols-3 gap-4">
-                 {videos.map((video, idx) => (
-                    <div 
-                      key={video.id} 
-                      className={cn(
-                        "group relative aspect-video bg-gray-100 dark:bg-[#1a1a1a] rounded-lg overflow-hidden border border-gray-200 dark:border-[#222] cursor-pointer transition-all",
-                        idx === 0 && currentMainVideo?.id === video.id ? "ring-2 ring-[#52C5F3] ring-offset-2 ring-offset-white dark:ring-offset-[#161616]" : "hover:border-gray-300 dark:hover:border-gray-600"
-                      )}
-                      onClick={() => {
-                        if (video.status === 'completed') {
-                            const newVideos = [...videos];
-                            const selected = newVideos.splice(idx, 1)[0];
-                            newVideos.unshift(selected);
-                            setVideos(newVideos);
-                        }
-                      }}
-                    >
-                       {video.status === 'completed' ? (
-                          <>
-                             <video 
-                                src={video.url} 
-                                poster={video.thumbnail}
-                                className="w-full h-full object-cover opacity-80 group-hover:opacity-100 transition-opacity"
-                             />
-                             <div className="absolute top-2 right-2 bg-black/60 backdrop-blur-sm text-white text-[9px] font-bold px-1.5 py-0.5 rounded flex items-center gap-1">
-                                <Clock size={10} /> {video.duration}
-                             </div>
-                             <div className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
-                                <div className="w-8 h-8 rounded-full bg-white/20 backdrop-blur flex items-center justify-center text-white">
-                                   <Play size={14} className="ml-0.5" />
-                                </div>
-                             </div>
-                          </>
-                       ) : (
-                          <div className="flex flex-col items-center justify-center h-full w-full gap-2">
-                             <Loader2 size={16} className="animate-spin text-[#52C5F3]" />
-                             <span className="text-[10px] font-bold text-gray-500 uppercase tracking-widest text-[#52C5F3]">Processing</span>
-                          </div>
-                       )}
-                       
-                       <div className="absolute bottom-0 inset-x-0 bg-gradient-to-t from-black/80 to-transparent p-2">
-                           <p className="text-[9px] text-white/90 truncate font-medium">{video.prompt}</p>
-                       </div>
-                    </div>
-                 ))}
-              </div>
-           </div>
+             {isDrawingMode && (
+                <div className="bg-[#52C5F3] text-[#0a0a0a] px-4 py-2 rounded-full font-bold text-xs shadow-lg shadow-[#52C5F3]/20 flex items-center gap-2 animate-bounce flex-shrink-0">
+                  <MousePointer2 size={14} /> 
+                  {currentPolygon.length === 0 ? "Click to start drawing" : "Click to add points, click 'Finish' when done"}
+                </div>
+             )}
+          </div>
+          
+          {/* Main Drawing Canvas Container */}
+          <div 
+            ref={containerRef} 
+            className={cn(
+               "flex-1 relative overflow-hidden w-full h-full",
+               isDrawingMode ? "cursor-crosshair" : "cursor-default"
+            )}
+            onPointerDown={handlePointerDown}
+            onPointerMove={handlePointerMove}
+            onPointerUp={handlePointerUp}
+            onPointerLeave={handlePointerUp}
+          >
+            {/* Background Simulated Video feed */}
+            <video 
+               key={selectedCamera}
+               src={`/api/proxy/stream?url=${encodeURIComponent(CAMERAS.find(c => c.id === selectedCamera)?.url || '')}`} 
+               className={cn(
+                 "absolute inset-0 w-full h-full object-cover transition-opacity duration-1000",
+                 isDrawingMode ? "opacity-40 grayscale-[30%]" : "opacity-80"
+               )}
+               autoPlay
+               loop
+               muted
+               playsInline
+            />
+            {/* Editor grid overlay for precision context */}
+            <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-transparent to-black/60 pointer-events-none" />
+            <div className="absolute inset-0 bg-[linear-gradient(rgba(255,255,255,0.03)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.03)_1px,transparent_1px)] bg-[size:40px_40px] pointer-events-none opacity-50" />
+            
+            {/* Interactive Canvas Layer */}
+            <canvas 
+              ref={canvasRef}
+              className="absolute inset-0 w-full h-full z-20 touch-none"
+              style={{ padding: 0 }}
+            />
+          </div>
+
+          {/* Bottom Tooltip Bar */}
+          <div className="h-8 bg-[#111] border-t border-gray-800 flex items-center px-4 justify-between z-30 shadow-inner">
+             <p className="text-[10px] text-gray-500 flex items-center gap-2">
+                {!isDrawingMode ? (
+                   <>Drag nodes to adjust regions. Click a region to select it.</>
+                ) : (
+                   <>Feature: <strong style={{ color: FEATURE_COLORS[activeFeature] }}>{activeFeature}</strong></>
+                )}
+             </p>
+             <p className="text-[10px] text-gray-500 font-mono">
+                {selectedCamera}
+             </p>
+          </div>
         </div>
       </div>
     </main>
   );
 };
+
+

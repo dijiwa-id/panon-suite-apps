@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { BrainCircuit, Server, Activity, CheckCircle, Clock, X, AlertCircle, ChevronDown } from 'lucide-react';
 import { cn } from '../lib/utils';
+import { Button } from '../components/ui/button';
 
 const models = [
   { id: '1', name: 'Model-2026-Security-80-001', version: 'v1.4.2' },
@@ -68,7 +69,7 @@ export const ModelDeployment = () => {
            </div>
         </div>
         <div className="mt-6 flex justify-end">
-           <button onClick={deploy} disabled={!selectedModel || !selectedNode} className="bg-accent hover:bg-accent/90 text-black h-8 rounded-full text-xs font-bold px-8 transition-colors shadow-[0_0_15px_rgba(82,197,243,0.3)] disabled:opacity-50 disabled:cursor-not-allowed">Deploy Model</button>
+           <Button variant="primary" onClick={deploy} disabled={!selectedModel || !selectedNode}>Deploy Model</Button>
         </div>
       </div>
 

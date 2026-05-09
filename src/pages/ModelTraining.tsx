@@ -97,9 +97,9 @@ export const ModelTraining = () => {
           <p className="text-gray-600 dark:text-gray-400 text-xs font-medium">Configure hyper-parameters and orchestrate training jobs.</p>
         </div>
         <div className="flex gap-3 w-full md:w-auto">
-          <button onClick={() => setIsModalOpen(true)} className="flex-1 md:flex-none flex justify-center items-center gap-2 bg-accent hover:bg-accent/90 text-black h-8 rounded-full text-xs font-bold px-5 transition-colors shadow-[0_0_15px_rgba(82,197,243,0.3)] leading-[12px]">
+          <Button variant="primary" onClick={() => setIsModalOpen(true)} className="flex-1 md:flex-none px-5">
             <Play size={14} className="fill-black" /> Start New Training
-          </button>
+          </Button>
         </div>
       </div>
 
@@ -116,9 +116,9 @@ export const ModelTraining = () => {
                      <h2 className="text-sm font-bold text-gray-900 dark:text-white">{activeJob.name}</h2>
                      <p className="text-xs text-gray-600 dark:text-gray-400 mt-1 font-mono">{activeJob.id} • Started recently</p>
                  </div>
-                 <button className="px-4 py-1.5 bg-red-500/10 text-red-500 hover:bg-red-500/20 border border-red-500/20 rounded-lg text-xs font-bold transition-colors flex items-center gap-2">
+                 <Button variant="danger" className="h-8">
                      <Square size={12} className="fill-red-500" /> Stop Job
-                 </button>
+                 </Button>
             </div>
             
             <div className="grid grid-cols-3 gap-4 mb-4">
