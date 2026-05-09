@@ -652,7 +652,7 @@ export const SetupGuide = () => {
               onClick={handlePrev}
               disabled={currentStep === 1}
               className={cn(
-                "px-6 text-xs transition-colors",
+                "h-[40px] px-6 text-xs transition-colors",
                 currentStep === 1 && "opacity-50 cursor-not-allowed"
               )}
             >
@@ -661,7 +661,7 @@ export const SetupGuide = () => {
             
             <Button
               onClick={handleNext}
-              className="px-8 text-xs bg-[#1c1c1c] dark:bg-accent text-white dark:text-gray-900 border border-gray-700 dark:border-accent hover:bg-[#2a2a2a] dark:hover:bg-accent/90"
+              className="h-[40px] px-8 text-xs bg-[#1c1c1c] dark:bg-accent text-white dark:text-gray-900 border border-gray-700 dark:border-accent hover:bg-[#2a2a2a] dark:hover:bg-accent/90"
             >
               {currentStep === 13 ? 'Launch Dashboard' : 'Continue'} <ChevronRight size={14} className="ml-1.5" />
             </Button>

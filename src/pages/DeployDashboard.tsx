@@ -113,7 +113,7 @@ export const DeployDashboard = () => {
                 <div className="relative w-full h-12 flex items-end justify-center mb-2">
                    <svg viewBox="0 0 100 50" className="w-[120px] h-[60px] overflow-visible absolute bottom-0">
                       <path d="M 10 50 A 40 40 0 0 1 90 50" fill="none" stroke={isDark ? "#2a2a2a" : "#f3f4f6"} strokeWidth="6" strokeLinecap="round" />
-                      <path d="M 10 50 A 40 40 0 0 1 12 40" fill="none" stroke="#52C5F3" strokeWidth="6" strokeLinecap="round" className="drop-shadow-md" />
+                      <path d="M 10 50 A 40 40 0 0 1 90 50" fill="none" stroke="#52C5F3" strokeWidth="6" strokeLinecap="round" pathLength="100" strokeDasharray="100" strokeDashoffset={`${100 - 0.2}`} className="drop-shadow-md transition-all duration-1000 ease-out" />
                    </svg>
                    <div className="text-[20px] font-black text-[#52C5F3] leading-[0px] h-0 flex items-center tracking-tight mb-2">0.2%</div>
                 </div>
@@ -185,7 +185,7 @@ export const DeployDashboard = () => {
             </div>
 
             {/* System Health */}
-            <div className="bg-white dark:bg-[#1e1e1e] border border-gray-100 dark:border-[#222] rounded-[11px] p-6 shadow-sm flex flex-col relative overflow-hidden group hover:border-[#8b5cf6]/50 transition-colors">
+            <div className="bg-white dark:bg-[#1e1e1e] border border-gray-100 dark:border-[#222] rounded-[11px] p-6 shadow-sm flex flex-col relative overflow-hidden group hover:border-[#10b981]/50 transition-colors">
               <div className="flex items-center justify-between mb-4 shrink-0 relative z-10 w-full text-gray-400 dark:text-gray-500">
                 <span className="text-[10px] font-black tracking-widest capitalize">System Health</span>
                 <Activity size={14} />
@@ -194,14 +194,12 @@ export const DeployDashboard = () => {
                 <div className="relative w-full h-12 flex items-end justify-center mb-2">
                    <svg viewBox="0 0 100 50" className="w-[120px] h-[60px] overflow-visible absolute bottom-0">
                       <path d="M 10 50 A 40 40 0 0 1 90 50" fill="none" stroke={isDark ? "#2a2a2a" : "#f3f4f6"} strokeWidth="6" strokeLinecap="round" />
-                      <path d="M 10 50 A 40 40 0 0 1 70 20" fill="none" stroke="#52C5F3" strokeWidth="6" strokeLinecap="round" className="drop-shadow-md" />
+                      <path d="M 10 50 A 40 40 0 0 1 90 50" fill="none" stroke="#10b981" strokeWidth="6" strokeLinecap="round" pathLength="100" strokeDasharray="100" strokeDashoffset={`${100 - 70}`} className="drop-shadow-md transition-all duration-1000 ease-out" />
                    </svg>
-                   <div className="text-[20px] font-black text-[#52C5F3] leading-[0px] h-0 flex items-center tracking-tight mb-2">70%</div>
+                   <div className="text-[20px] font-black text-[#10b981] leading-[0px] h-0 flex items-center tracking-tight mb-2">70%</div>
                 </div>
-                <div className="text-[10px] font-bold text-gray-500 tracking-wider text-center flex items-center justify-center gap-2">
-                   <span>CPU: <span className="text-gray-700 dark:text-gray-300">65%</span></span>
-                   <span className="w-1 h-1 rounded-full bg-gray-300 dark:bg-gray-700"></span>
-                   <span>RAM: <span className="text-gray-700 dark:text-gray-300">86%</span></span>
+                <div className="text-[10px] font-bold text-[#10b981] flex items-center justify-center gap-1">
+                   Stable <span className="text-gray-400 font-medium tracking-wide">CPU 65% • RAM 86%</span>
                 </div>
               </div>
             </div>

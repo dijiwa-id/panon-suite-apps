@@ -1,53 +1,36 @@
 import React, { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
-import { Mail, Lock, ArrowRight, AlertCircle, Loader2 } from 'lucide-react';
-import { cn } from '../lib/utils';
+import { useNavigate } from 'react-router-dom';
+import { ArrowRight, Loader2, Sparkles } from 'lucide-react';
 import { Logo } from '../components/Logo';
 import { useAppStore } from '../store';
 
 export const SignIn = () => {
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [errors, setErrors] = useState<{email?: string, password?: string}>({});
   const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
   const login = useAppStore(state => state.login);
+  const isAuthenticated = useAppStore(state => state.isAuthenticated);
 
-  const validate = () => {
-    let isValid = true;
-    const newErrors: {email?: string, password?: string} = {};
-    if (!email) {
-      newErrors.email = 'Email is required';
-      isValid = false;
-    } else if (!/\S+@\S+\.\S+/.test(email)) {
-      newErrors.email = 'Email is invalid';
-      isValid = false;
+  React.useEffect(() => {
+    if (isAuthenticated) {
+      navigate('/', { replace: true });
     }
-    if (!password) {
-      newErrors.password = 'Password is required';
-      isValid = false;
-    }
-    setErrors(newErrors);
-    return isValid;
-  };
+  }, [isAuthenticated, navigate]);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleQuickLogin = (e: React.FormEvent) => {
     e.preventDefault();
-    if (validate()) {
-      setIsLoading(true);
-      // Simulate auth
-      setTimeout(() => {
-        setIsLoading(false);
-        // Dispatch to global store
-        login({
-          id: 'user-1',
-          name: 'System Admin',
-          email: email,
-          role: 'admin'
-        });
-        navigate('/'); // Redirect to dashboard
-      }, 1000);
-    }
+    setIsLoading(true);
+    // Simulate short loading for smooth transition
+    setTimeout(() => {
+      setIsLoading(false);
+      // Dispatch to global store
+      login({
+        id: 'user-1',
+        name: 'System Admin',
+        email: 'admin@panonsuite.com',
+        role: 'admin'
+      });
+      navigate('/'); // Redirect to dashboard
+    }, 800);
   };
 
   return (
@@ -64,53 +47,30 @@ export const SignIn = () => {
                <span className="text-2xl tracking-tight text-gray-900 dark:text-white"><span className="font-bold">panon</span><span className="font-light">suite</span></span>
              </div>
           </div>
-          <h2 className="text-[18px] font-black text-gray-900 dark:text-white tracking-tight">Sign In</h2>
-          <p className="text-sm font-medium text-gray-500 tracking-wide">Enter your credentials to access the workspace.</p>
+          <h2 className="text-[18px] font-black text-gray-900 dark:text-white tracking-tight">Welcome to the Workspace</h2>
+          <p className="text-sm font-medium text-gray-500 tracking-wide">Experience the full platform without needing an account.</p>
         </div>
         
-        <div className="bg-white dark:bg-[#1e1e1e] border border-gray-100 dark:border-[#2a2a2a] rounded-2xl p-8 shadow-2xl shadow-black/5 dark:shadow-black/20">
-          <form onSubmit={handleSubmit} className="space-y-5">
-            <div className="space-y-1.5">
-              <label className="text-[11px] font-bold text-gray-700 dark:text-gray-300 uppercase tracking-widest">Email Address</label>
-              <div className="relative">
-                <input 
-                  type="email" 
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  className={cn("w-full bg-gray-50 dark:bg-[#161616] border rounded-xl py-2.5 pl-4 pr-10 text-xs text-gray-900 dark:text-white focus:ring-1 focus:ring-accent/50 outline-none transition-all placeholder:text-gray-400 dark:placeholder:text-gray-600 font-medium", errors.email ? "border-red-500 focus:border-red-500 bg-red-50/50 dark:bg-red-900/10" : "border-gray-200 dark:border-[#2a2a2a] focus:border-accent")} 
-                  placeholder="name@company.com" 
-                />
-                <Mail className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 dark:text-gray-500" size={16} />
-              </div>
-              {errors.email && <p className="text-red-500 text-[10px] mt-1 flex items-center gap-1 font-bold"><AlertCircle size={10} />{errors.email}</p>}
-            </div>
-            
-            <div className="space-y-1.5">
-              <div className="flex justify-between items-center">
-                <label className="text-[11px] font-bold text-gray-700 dark:text-gray-300 uppercase tracking-widest">Password</label>
-                <a href="#" className="text-[10px] text-[#52C5F3] hover:text-[#52C5F3]/80 font-bold tracking-wide transition-colors">Forgot password?</a>
-              </div>
-              <div className="relative">
-                <input 
-                  type="password" 
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                  className={cn("w-full bg-gray-50 dark:bg-[#161616] border rounded-xl py-2.5 pl-4 pr-10 text-xs text-gray-900 dark:text-white focus:ring-1 focus:ring-accent/50 outline-none transition-all placeholder:text-gray-400 dark:placeholder:text-gray-600 font-medium", errors.password ? "border-red-500 focus:border-red-500 bg-red-50/50 dark:bg-red-900/10" : "border-gray-200 dark:border-[#2a2a2a] focus:border-accent")} 
-                  placeholder="••••••••" 
-                />
-                <Lock className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 dark:text-gray-500" size={16} />
-              </div>
-              {errors.password && <p className="text-red-500 text-[10px] mt-1 flex items-center gap-1 font-bold"><AlertCircle size={10} />{errors.password}</p>}
-            </div>
+        <div className="bg-white dark:bg-[#1e1e1e] border border-gray-100 dark:border-[#2a2a2a] rounded-2xl p-8 shadow-2xl shadow-black/5 dark:shadow-black/20 flex flex-col items-center">
+          
+          <div className="w-12 h-12 bg-gray-50 dark:bg-[#252525] rounded-full flex items-center justify-center mb-6 border border-gray-200 dark:border-[#333]">
+            <Sparkles className="text-[#52C5F3]" size={20} />
+          </div>
+          
+          <h3 className="text-sm font-bold text-gray-900 dark:text-white mb-2 text-center">Interactive Demo</h3>
+          <p className="text-xs text-gray-500 text-center mb-8 font-medium">
+            Jump straight into the dashboard to explore the visual intelligence and AI management features.
+          </p>
 
-            <button type="submit" disabled={isLoading} className="w-full bg-gray-900 dark:bg-white text-white dark:text-black font-bold tracking-wide text-xs py-3 rounded-xl hover:bg-gray-800 dark:hover:bg-gray-200 flex items-center justify-center gap-2 transition-all mt-4 disabled:opacity-70 disabled:cursor-not-allowed">
-              {isLoading ? <Loader2 size={16} className="animate-spin" /> : <>Sign In <ArrowRight size={14} /></>}
+          <form onSubmit={handleQuickLogin} className="w-full">
+            <button type="submit" disabled={isLoading} className="w-full bg-gray-900 dark:bg-white text-white dark:text-black font-bold tracking-wide text-xs py-3.5 rounded-xl hover:bg-gray-800 dark:hover:bg-gray-200 flex items-center justify-center gap-2 transition-all disabled:opacity-70 disabled:cursor-not-allowed">
+              {isLoading ? <Loader2 size={16} className="animate-spin" /> : <>Access Dashboard <ArrowRight size={14} /></>}
             </button>
           </form>
         </div>
 
-        <p className="text-center text-xs text-gray-500 font-medium mt-8 tracking-wide">
-          Don't have an account? <Link to="/signup" className="text-gray-900 dark:text-white font-bold hover:underline transition-all">Request access</Link>
+        <p className="text-center text-[10px] text-gray-400 dark:text-gray-600 font-bold mt-8 tracking-widest uppercase">
+          Enterprise AI Agent Platform
         </p>
       </div>
     </div>

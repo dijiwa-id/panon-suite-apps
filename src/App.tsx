@@ -5,12 +5,10 @@
 
 import React, { useEffect } from 'react';
 import { BrowserRouter, Routes, Route, Navigate, Outlet, useLocation } from 'react-router-dom';
-import { ThemeProvider } from './context/ThemeContext';
 import { Sidebar } from './components/Sidebar';
 import { Header } from './components/Header';
 import { Dashboard } from './components/Dashboard';
 import { SignIn } from './pages/SignIn';
-import { SignUp } from './pages/SignUp';
 import { SystemAdminDashboard } from './pages/SystemAdminDashboard';
 import { SystemMonitoring } from './pages/SystemMonitoring';
 import { NetworkManagement } from './pages/NetworkManagement';
@@ -43,10 +41,7 @@ import { DeployReport } from './pages/DeployReport';
 import { Toaster } from 'sonner';
 
 import { ErrorBoundary } from './components/ErrorBoundary';
-import { DevelopProvider } from './context/DevelopContext';
-import { TrainProvider } from './context/TrainContext';
 import { useAppStore } from './store';
-import { useHydration } from './store/useHydration';
 
 import { SetupGuide } from './pages/SetupGuide';
 
@@ -76,14 +71,11 @@ const ThemeSync = () => {
 const AppLayout = () => {
   const isSidebarOpen = useAppStore(state => state.isSidebarOpen);
   const toggleSidebar = useAppStore(state => state.toggleSidebar);
-  const isHydrated = useHydration();
+  const isAuthenticated = useAppStore(state => state.isAuthenticated);
+  const location = useLocation();
 
-  if (!isHydrated) {
-      return (
-          <div className="flex items-center justify-center h-screen bg-gray-50 dark:bg-[#161616]">
-              <div className="w-8 h-8 rounded-full border-t-2 border-accent animate-spin" />
-          </div>
-      );
+  if (!isAuthenticated) {
+    return <Navigate to="/signin" state={{ from: location }} replace />;
   }
 
   return (
@@ -107,13 +99,11 @@ const AppLayout = () => {
 
 export default function App() {
   return (
-    <ThemeProvider>
-      <DevelopProvider>
-        <TrainProvider>
-          <BrowserRouter>
-            <Routes>
+    <>
+      <BrowserRouter>
+        <Routes>
               <Route path="/signin" element={<SignIn />} />
-              <Route path="/signup" element={<SignUp />} />
+              <Route path="/signup" element={<Navigate to="/signin" replace />} />
               
               <Route element={<AppLayout />}>
                 <Route path="/setup" element={<SetupGuide />} />
@@ -149,11 +139,9 @@ export default function App() {
                 <Route path="/system-admin/configuration" element={<Configuration />} />
                 <Route path="*" element={<Navigate to="/dashboard" replace />} />
               </Route>
-            </Routes>
-          </BrowserRouter>
-          <Toaster position="top-right" richColors />
-        </TrainProvider>
-      </DevelopProvider>
-    </ThemeProvider>
+        </Routes>
+      </BrowserRouter>
+      <Toaster position="top-right" richColors />
+    </>
   );
 }
