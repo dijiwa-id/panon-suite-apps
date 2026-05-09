@@ -174,7 +174,7 @@ export const DeployReport = () => {
                    <div className="border border-gray-100 dark:border-[#222] rounded-[11px] p-5 bg-gray-50 dark:bg-[#161616] shadow-sm flex flex-col">
                      <h3 className="text-xs font-black tracking-widest capitalize text-gray-900 dark:text-gray-200 mb-6">Trend Analysis</h3>
                      <div className="flex-1 w-full min-h-[220px]">
-                       <ResponsiveContainer width="100%" height="100%">
+                       <ResponsiveContainer width="100%" height="100%" minWidth={0} minHeight={0}>
                          <LineChart data={TREND_DATA} margin={{ top: 5, right: 10, left: -20, bottom: 20 }}>
                            <CartesianGrid strokeDasharray="3 3" vertical={false} stroke={isDark ? '#2a2a2a' : '#f3f4f6'} strokeOpacity={0.6} />
                            <XAxis 
@@ -203,7 +203,7 @@ export const DeployReport = () => {
                    <div className="border border-gray-100 dark:border-[#222] rounded-[11px] p-5 bg-gray-50 dark:bg-[#161616] shadow-sm flex flex-col">
                      <h3 className="text-xs font-black tracking-widest capitalize text-gray-900 dark:text-gray-200 mb-6">Violations Breakdown</h3>
                      <div className="flex-1 w-full min-h-[220px] flex items-center justify-center">
-                       <ResponsiveContainer width="100%" height="100%">
+                       <ResponsiveContainer width="100%" height="100%" minWidth={0} minHeight={0}>
                          <PieChart>
                            <Pie
                              data={BREAKDOWN_DATA}
@@ -238,7 +238,7 @@ export const DeployReport = () => {
                    <div className="border border-gray-100 dark:border-[#222] rounded-[11px] p-5 bg-gray-50 dark:bg-[#161616] shadow-sm flex flex-col">
                      <h3 className="text-xs font-black tracking-widest capitalize text-gray-900 dark:text-gray-200 mb-6">Area Distribution</h3>
                      <div className="flex-1 w-full min-h-[220px]">
-                       <ResponsiveContainer width="100%" height="100%">
+                       <ResponsiveContainer width="100%" height="100%" minWidth={0} minHeight={0}>
                          <BarChart data={AREA_DATA} margin={{ top: 5, right: 10, left: -20, bottom: 20 }} barSize={16}>
                            <CartesianGrid strokeDasharray="3 3" vertical={false} stroke={isDark ? '#2a2a2a' : '#f3f4f6'} strokeOpacity={0.6} />
                            <XAxis 
