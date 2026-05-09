@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { ChevronDown, ChevronUp, Save, Bell, Settings, Link, Server } from 'lucide-react';
 import { cn } from '../lib/utils';
 import { toast } from 'sonner';
-import { Card, Button, Input } from '../components/ui';
+import { Select, Card, Button, Input } from '../components/ui';
 
 export const Configuration = () => {
   const [openSection, setOpenSection] = useState<string>('System Parameter');
@@ -134,13 +134,13 @@ export const Configuration = () => {
                   <div>
                     <label className={labelClass}>Timezone</label>
                     <SelectWrapper>
-                      <select value={systemParams.timezone} onChange={(e) => setSystemParams({...systemParams, timezone: e.target.value})} className={selectClass}>
+                      <Select value={systemParams.timezone} onChange={(e) => setSystemParams({...systemParams, timezone: e.target.value})} className={selectClass}>
                         <option value="UTC">UTC</option>
                         <option value="America/New_York">Eastern Time (ET)</option>
                         <option value="Europe/London">London (GMT)</option>
                         <option value="Asia/Tokyo">Tokyo (JST)</option>
                         <option value="Asia/Jakarta">Jakarta (WIB)</option>
-                      </select>
+                      </Select>
                     </SelectWrapper>
                   </div>
                   <div>
@@ -204,11 +204,11 @@ export const Configuration = () => {
                     <div>
                       <label className={labelClass}>VMS Provider</label>
                       <SelectWrapper>
-                        <select value={integrationSettings.vmsType} onChange={(e) => setIntegrationSettings({...integrationSettings, vmsType: e.target.value})} className={selectClass}>
+                        <Select value={integrationSettings.vmsType} onChange={(e) => setIntegrationSettings({...integrationSettings, vmsType: e.target.value})} className={selectClass}>
                           <option value="Milestone">Milestone XProtect</option>
                           <option value="Genetec">Genetec Security Center</option>
                           <option value="None">None (Standalone)</option>
-                        </select>
+                        </Select>
                       </SelectWrapper>
                     </div>
                     <div>
@@ -298,20 +298,20 @@ export const Configuration = () => {
                           <div>
                             <label className={labelClass}>Delivery Method</label>
                             <SelectWrapper>
-                              <select value={emailConfig.deliveryMethod} onChange={(e) => setEmailConfig({...emailConfig, deliveryMethod: e.target.value})} className={selectClass}>
+                              <Select value={emailConfig.deliveryMethod} onChange={(e) => setEmailConfig({...emailConfig, deliveryMethod: e.target.value})} className={selectClass}>
                                 <option>SMTP</option>
                                 <option>API</option>
-                              </select>
+                              </Select>
                             </SelectWrapper>
                           </div>
                           <div>
                             <label className={labelClass}>SMTP Authentication</label>
                             <SelectWrapper>
-                              <select value={emailConfig.smtpAuth} onChange={(e) => setEmailConfig({...emailConfig, smtpAuth: e.target.value})} className={selectClass}>
+                              <Select value={emailConfig.smtpAuth} onChange={(e) => setEmailConfig({...emailConfig, smtpAuth: e.target.value})} className={selectClass}>
                                 <option>Login</option>
                                 <option>Plain</option>
                                 <option>None</option>
-                              </select>
+                              </Select>
                             </SelectWrapper>
                           </div>
                           <div className="pt-2 space-y-3">
@@ -407,10 +407,10 @@ export const Configuration = () => {
                            <div>
                              <label className={labelClass}>HTTP Method</label>
                              <SelectWrapper>
-                               <select value={webhookConfig.method} onChange={(e) => setWebhookConfig({...webhookConfig, method: e.target.value})} className={selectClass}>
+                               <Select value={webhookConfig.method} onChange={(e) => setWebhookConfig({...webhookConfig, method: e.target.value})} className={selectClass}>
                                  <option>POST</option>
                                  <option>PUT</option>
-                               </select>
+                               </Select>
                              </SelectWrapper>
                            </div>
                         </div>

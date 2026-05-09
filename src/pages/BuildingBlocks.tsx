@@ -2,7 +2,7 @@ import React, { useState, useRef, useMemo } from 'react';
 import { Layers, Video, BrainCircuit, ShieldCheck, Zap, Server, Code, Upload, X, Settings, Book, Activity, CheckCircle2, Play, Lock } from 'lucide-react';
 import { cn } from '../lib/utils';
 import { toast } from 'sonner';
-import { Card, Button, Input, Badge } from '../components/ui';
+import { Select, Card, Button, Input, Badge } from '../components/ui';
 import { useDevelop } from '../context/DevelopContext';
 
 export const BuildingBlocks = () => {
@@ -191,11 +191,11 @@ export const BuildingBlocks = () => {
                           <div className="grid grid-cols-2 gap-4">
                             <div className="space-y-2">
                                <label className="text-[10px] font-black text-gray-500 tracking-widest capitalize">Protocol</label>
-                               <select className="w-full bg-gray-50 dark:bg-[#161616] border border-gray-200 dark:border-[#333] rounded-lg px-4 py-2.5 text-xs font-bold text-gray-900 dark:text-white outline-none">
+                               <Select className="w-full bg-gray-50 dark:bg-[#161616] border border-gray-200 dark:border-[#333] rounded-lg px-4 py-2.5 text-xs font-bold text-gray-900 dark:text-white outline-none">
                                  <option>TCP</option>
                                  <option>UDP</option>
                                  <option>Multicast</option>
-                               </select>
+                               </Select>
                             </div>
                             <div className="space-y-2">
                                <label className="text-[10px] font-black text-gray-500 tracking-widest capitalize">Buffering (ms)</label>

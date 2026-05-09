@@ -46,6 +46,9 @@ import { ErrorBoundary } from './components/ErrorBoundary';
 import { DevelopProvider } from './context/DevelopContext';
 import { TrainProvider } from './context/TrainContext';
 import { useAppStore } from './store';
+import { useHydration } from './store/useHydration';
+
+import { SetupGuide } from './pages/SetupGuide';
 
 const RouteSync = () => {
   const location = useLocation();
@@ -73,6 +76,15 @@ const ThemeSync = () => {
 const AppLayout = () => {
   const isSidebarOpen = useAppStore(state => state.isSidebarOpen);
   const toggleSidebar = useAppStore(state => state.toggleSidebar);
+  const isHydrated = useHydration();
+
+  if (!isHydrated) {
+      return (
+          <div className="flex items-center justify-center h-screen bg-gray-50 dark:bg-[#161616]">
+              <div className="w-8 h-8 rounded-full border-t-2 border-accent animate-spin" />
+          </div>
+      );
+  }
 
   return (
     <div className="flex h-screen overflow-hidden font-sans bg-gray-50 dark:bg-[#161616] relative">
@@ -104,6 +116,7 @@ export default function App() {
               <Route path="/signup" element={<SignUp />} />
               
               <Route element={<AppLayout />}>
+                <Route path="/setup" element={<SetupGuide />} />
                 <Route path="/notifications" element={<Notifications />} />
                 <Route path="/dashboard" element={<Dashboard />} />
                 <Route path="/system-admin/dashboard" element={<SystemAdminDashboard />} />

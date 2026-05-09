@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Search, Plus, Settings, Filter, MoreVertical, X, Edit2, Trash2, ChevronDown } from 'lucide-react';
 import { cn } from '../lib/utils';
-import { Card, Button, Input, Badge, Table, TableHeader, TableRow, TableHead, TableBody, TableCell } from '../components/ui';
+import { Select, Card, Button, Input, Badge, Table, TableHeader, TableRow, TableHead, TableBody, TableCell } from '../components/ui';
 
 const initialRoles = [
   { id: '1', name: 'SysAdmin', users: 2, status: 'Active', description: 'System Administrator with full access' },
@@ -58,10 +58,10 @@ const RoleModal = ({ isOpen, onClose, role, onSave }: { isOpen: boolean; onClose
               <div className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 pointer-events-none">
                 <ChevronDown size={14} />
               </div>
-              <select value={formData.status} onChange={e => setFormData({...formData, status: e.target.value})} className="w-full bg-gray-50 dark:bg-[#161616] border border-gray-200 dark:border-[#222] rounded-lg pl-4 pr-9 h-[37px] text-[12px] font-bold text-gray-700 dark:text-gray-300 outline-none focus-visible:ring-1 focus-visible:ring-accent/50 transition-all appearance-none cursor-pointer">
+              <Select value={formData.status} onChange={e => setFormData({...formData, status: e.target.value})} className="w-full bg-gray-50 dark:bg-[#161616] border border-gray-200 dark:border-[#222] rounded-lg pl-4 pr-9 h-[37px] text-[12px] font-bold text-gray-700 dark:text-gray-300 outline-none focus-visible:ring-1 focus-visible:ring-accent/50 transition-all appearance-none cursor-pointer">
                 <option>Active</option>
                 <option>Inactive</option>
-              </select>
+              </Select>
             </div>
           </div>
           

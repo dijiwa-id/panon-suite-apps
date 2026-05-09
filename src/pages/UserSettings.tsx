@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { User, Shield, Save, Camera, Bell, Monitor, Globe, LogOut } from 'lucide-react';
 import { cn } from '../lib/utils';
-import { Card, Button, Input } from '../components/ui';
+import { Select, Card, Button, Input } from '../components/ui';
 
 export const UserSettings = () => {
   const [activeTab, setActiveTab] = useState('Profile');
@@ -145,11 +145,11 @@ export const UserSettings = () => {
                           <p className="text-[10px] font-medium text-gray-500 mt-1">System default (Auto Dark/Light).</p>
                         </div>
                       </div>
-                      <select className="bg-white dark:bg-[#1e1e1e] border border-gray-200 dark:border-[#222] text-xs font-bold text-gray-700 dark:text-gray-300 rounded-lg px-3 py-1.5 focus:outline-none focus:ring-1 focus:ring-accent/50">
+                      <Select className="bg-white dark:bg-[#1e1e1e] border border-gray-200 dark:border-[#222] text-xs font-bold text-gray-700 dark:text-gray-300 rounded-lg px-3 py-1.5 focus:outline-none focus:ring-1 focus:ring-accent/50">
                         <option>System Default</option>
                         <option>Dark Mode</option>
                         <option>Light Mode</option>
-                      </select>
+                      </Select>
                     </div>
                   </div>
                 </Card>

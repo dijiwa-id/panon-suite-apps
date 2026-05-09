@@ -2,7 +2,7 @@ import React, { useState, useMemo } from 'react';
 import { cn } from '../lib/utils';
 import { Filter, Calendar, ChevronDown, Eye, X, Download, RefreshCw, AlertCircle, Clock, Video } from 'lucide-react';
 import { toast } from 'sonner';
-import { Card, Button, Table, TableHeader, TableRow, TableHead, TableBody, TableCell } from '../components/ui';
+import { Select, Card, Button, Table, TableHeader, TableRow, TableHead, TableBody, TableCell } from '../components/ui';
 
 const MOCK_LOGS = [
   { id: 'THA1A-testing-20260429152512', time: '29 Apr 2026, 15:25:12', category: 'APD', module: 'ERM', camera: 'Rastek', cameraId: 'THA1A', personName: 'not recognized', image: 'https://images.unsplash.com/photo-1549880338-65dd4bd82f28?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80' },
@@ -66,7 +66,7 @@ export const DeployDetectionLog = () => {
                  
                  <div className="flex items-center gap-3">
                    <div className="relative">
-                     <select 
+                     <Select 
                        value={filterCategory}
                        onChange={(e) => setFilterCategory(e.target.value)}
                        className="appearance-none bg-gray-100 dark:bg-[#151515] border border-gray-200 dark:border-[#222] text-gray-700 dark:text-gray-300 text-[10px] uppercase font-bold h-[30px] rounded-[6px] pl-2 pr-6 focus:outline-none focus:ring-1 focus:ring-[#52C5F3] min-w-[80px] cursor-pointer"
@@ -75,12 +75,12 @@ export const DeployDetectionLog = () => {
                        <option>APD</option>
                        <option>Intrusion</option>
                        <option>Safety</option>
-                     </select>
+                     </Select>
                      <ChevronDown size={12} className="absolute right-2 top-1/2 -translate-y-1/2 text-gray-400 pointer-events-none" />
                    </div>
                    
                    <div className="relative">
-                     <select 
+                     <Select 
                        value={filterModule}
                        onChange={(e) => setFilterModule(e.target.value)}
                        className="appearance-none bg-gray-100 dark:bg-[#151515] border border-gray-200 dark:border-[#222] text-gray-700 dark:text-gray-300 text-[10px] uppercase font-bold h-[30px] rounded-[6px] pl-2 pr-6 focus:outline-none focus:ring-1 focus:ring-[#52C5F3] min-w-[80px] cursor-pointer"
@@ -88,15 +88,15 @@ export const DeployDetectionLog = () => {
                        <option>all</option>
                        <option>ERM</option>
                        <option>Safety</option>
-                     </select>
+                     </Select>
                      <ChevronDown size={12} className="absolute right-2 top-1/2 -translate-y-1/2 text-gray-400 pointer-events-none" />
                    </div>
                    
                    <div className="relative">
-                     <select className="appearance-none bg-gray-100 dark:bg-[#151515] border border-gray-200 dark:border-[#222] text-gray-700 dark:text-gray-300 text-[10px] uppercase font-bold h-[30px] rounded-[6px] pl-2 pr-6 focus:outline-none focus:ring-1 focus:ring-[#52C5F3] min-w-[80px] cursor-pointer">
+                     <Select className="appearance-none bg-gray-100 dark:bg-[#151515] border border-gray-200 dark:border-[#222] text-gray-700 dark:text-gray-300 text-[10px] uppercase font-bold h-[30px] rounded-[6px] pl-2 pr-6 focus:outline-none focus:ring-1 focus:ring-[#52C5F3] min-w-[80px] cursor-pointer">
                        <option>all</option>
                        <option>RASTEK</option>
-                     </select>
+                     </Select>
                      <ChevronDown size={12} className="absolute right-2 top-1/2 -translate-y-1/2 text-gray-400 pointer-events-none" />
                    </div>
                  </div>

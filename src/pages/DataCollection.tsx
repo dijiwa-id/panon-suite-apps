@@ -3,7 +3,7 @@ import { Search, Plus, Filter, Database, Play, Pause, MoreVertical, UploadCloud,
 import { useNavigate } from 'react-router-dom';
 import { cn } from '../lib/utils';
 import { toast } from 'sonner';
-import { Card, Button, Input, Badge, Table, TableHeader, TableRow, TableHead, TableBody, TableCell } from '../components/ui';
+import { Select, Card, Button, Input, Badge, Table, TableHeader, TableRow, TableHead, TableBody, TableCell } from '../components/ui';
 import { useTrain, type Dataset } from '../context/TrainContext';
 
 const DatasetDetailModal = ({ isOpen, onClose, dataset }: { isOpen: boolean; onClose: () => void; dataset: Dataset | null }) => {
@@ -123,7 +123,7 @@ const NewTaskModal = ({ isOpen, onClose, onCreate }: { isOpen: boolean; onClose:
                 <div className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 pointer-events-none">
                   <ChevronDown size={14} />
                 </div>
-                <select 
+                <Select 
                    className="w-full bg-gray-50 dark:bg-[#161616] border border-gray-200 dark:border-[#222] rounded-lg pl-4 pr-9 h-[37px] text-[12px] font-bold text-gray-700 dark:text-gray-300 outline-none focus-visible:ring-1 focus-visible:ring-accent/50 transition-all appearance-none cursor-pointer"
                    value={source}
                    onChange={(e) => setSource(e.target.value)}
@@ -131,7 +131,7 @@ const NewTaskModal = ({ isOpen, onClose, onCreate }: { isOpen: boolean; onClose:
                   <option value="CAM-001">CAM-001</option>
                   <option value="CAM-042">CAM-042</option>
                   <option value="CAM-015">CAM-015</option>
-                </select>
+                </Select>
               </div>
             </div>
             <div>
@@ -140,11 +140,11 @@ const NewTaskModal = ({ isOpen, onClose, onCreate }: { isOpen: boolean; onClose:
                 <div className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 pointer-events-none">
                   <ChevronDown size={14} />
                 </div>
-                <select className="w-full bg-gray-50 dark:bg-[#161616] border border-gray-200 dark:border-[#222] rounded-lg pl-4 pr-9 h-[37px] text-[12px] font-bold text-gray-700 dark:text-gray-300 outline-none focus-visible:ring-1 focus-visible:ring-accent/50 transition-all appearance-none cursor-pointer">
+                <Select className="w-full bg-gray-50 dark:bg-[#161616] border border-gray-200 dark:border-[#222] rounded-lg pl-4 pr-9 h-[37px] text-[12px] font-bold text-gray-700 dark:text-gray-300 outline-none focus-visible:ring-1 focus-visible:ring-accent/50 transition-all appearance-none cursor-pointer">
                   <option>Continuous</option>
                   <option>Scheduled</option>
                   <option>Batch</option>
-                </select>
+                </Select>
               </div>
             </div>
           </div>

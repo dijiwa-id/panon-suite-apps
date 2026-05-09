@@ -2,7 +2,7 @@ import React, { useState, useCallback, useRef, useMemo, useEffect } from 'react'
 import { Play, Save, Settings as SettingsIcon, Video, BrainCircuit, Server, Search, X } from 'lucide-react';
 import { cn } from '../lib/utils';
 import { useTheme } from '../context/ThemeContext';
-import { Button, Input } from '../components/ui';
+import { Select, Button, Input } from '../components/ui';
 import { useDevelop } from '../context/DevelopContext';
 import { toast } from 'sonner';
 import { useNavigate } from 'react-router-dom';
@@ -23,7 +23,7 @@ import {
 } from '@xyflow/react';
 import '@xyflow/react/dist/style.css';
 
-const CustomNode = ({ data, type, selected }: { data: any, type: string, selected?: boolean }) => {
+const CustomNode = ({ data, type, selected }: { data: Record<string, any>, type: string, selected?: boolean }) => {
   const isSource = type === 'sourceNode';
   const isSink = type === 'sinkNode';
   const isProcessor = type === 'processorNode';
@@ -182,19 +182,19 @@ export const NoCodeEditor = () => {
             <div className="grid grid-cols-2 gap-4">
                <div className="space-y-3">
                   <label className="text-[10px] font-black text-gray-500 uppercase tracking-widest block">Frame Rate</label>
-                  <select value={data.fps || '15'} onChange={(e) => updateNodeData('fps', e.target.value)} className="w-full bg-white dark:bg-[#111] border border-gray-200 dark:border-[#333] rounded-[8px] px-3 py-2 text-xs text-gray-900 dark:text-white outline-none focus:border-[#52C5F3] dark:focus:border-[#52C5F3] transition-colors shadow-sm cursor-pointer">
+                  <Select value={data.fps || '15'} onChange={(e) => updateNodeData('fps', e.target.value)} className="w-full bg-white dark:bg-[#111] border border-gray-200 dark:border-[#333] rounded-[8px] px-3 py-2 text-xs text-gray-900 dark:text-white outline-none focus:border-[#52C5F3] dark:focus:border-[#52C5F3] transition-colors shadow-sm cursor-pointer">
                       <option value="15">15 FPS</option>
                       <option value="30">30 FPS</option>
                       <option value="60">60 FPS</option>
-                  </select>
+                  </Select>
                </div>
                <div className="space-y-3">
                   <label className="text-[10px] font-black text-gray-500 uppercase tracking-widest block">Resolution</label>
-                  <select value={data.resolution || '1080p'} onChange={(e) => updateNodeData('resolution', e.target.value)} className="w-full bg-white dark:bg-[#111] border border-gray-200 dark:border-[#333] rounded-[8px] px-3 py-2 text-xs text-gray-900 dark:text-white outline-none focus:border-[#52C5F3] dark:focus:border-[#52C5F3] transition-colors shadow-sm cursor-pointer">
+                  <Select value={data.resolution || '1080p'} onChange={(e) => updateNodeData('resolution', e.target.value)} className="w-full bg-white dark:bg-[#111] border border-gray-200 dark:border-[#333] rounded-[8px] px-3 py-2 text-xs text-gray-900 dark:text-white outline-none focus:border-[#52C5F3] dark:focus:border-[#52C5F3] transition-colors shadow-sm cursor-pointer">
                       <option value="720p">720p</option>
                       <option value="1080p">1080p</option>
                       <option value="4k">4K (2160p)</option>
-                  </select>
+                  </Select>
                </div>
             </div>
           </>
@@ -225,11 +225,11 @@ export const NoCodeEditor = () => {
           <>
             <div className="space-y-3">
                <label className="text-[10px] font-black text-gray-500 uppercase tracking-widest block">Output Protocol</label>
-               <select value={data.sinkType || 'webhook'} onChange={(e) => updateNodeData('sinkType', e.target.value)} className="w-full bg-white dark:bg-[#111] border border-gray-200 dark:border-[#333] rounded-[8px] px-3 py-2 text-xs text-gray-900 dark:text-white outline-none focus:border-[#52C5F3] dark:focus:border-[#52C5F3] transition-colors shadow-sm cursor-pointer">
+               <Select value={data.sinkType || 'webhook'} onChange={(e) => updateNodeData('sinkType', e.target.value)} className="w-full bg-white dark:bg-[#111] border border-gray-200 dark:border-[#333] rounded-[8px] px-3 py-2 text-xs text-gray-900 dark:text-white outline-none focus:border-[#52C5F3] dark:focus:border-[#52C5F3] transition-colors shadow-sm cursor-pointer">
                    <option value="webhook">Webhook (HTTP POST)</option>
                    <option value="mqtt">MQTT Publisher</option>
                    <option value="webrtc">WebRTC Stream</option>
-               </select>
+               </Select>
             </div>
             <div className="space-y-3">
                <label className="text-[10px] font-black text-gray-500 uppercase tracking-widest block">Endpoint / Topic URL</label>
@@ -242,11 +242,11 @@ export const NoCodeEditor = () => {
            <>
              <div className="space-y-3">
                <label className="text-[10px] font-black text-gray-500 uppercase tracking-widest block">Rule Type</label>
-               <select value={data.logicType || 'intrusion'} onChange={(e) => updateNodeData('logicType', e.target.value)} className="w-full bg-white dark:bg-[#111] border border-gray-200 dark:border-[#333] rounded-[8px] px-3 py-2 text-xs text-gray-900 dark:text-white outline-none focus:border-[#52C5F3] dark:focus:border-[#52C5F3] transition-colors shadow-sm cursor-pointer">
+               <Select value={data.logicType || 'intrusion'} onChange={(e) => updateNodeData('logicType', e.target.value)} className="w-full bg-white dark:bg-[#111] border border-gray-200 dark:border-[#333] rounded-[8px] px-3 py-2 text-xs text-gray-900 dark:text-white outline-none focus:border-[#52C5F3] dark:focus:border-[#52C5F3] transition-colors shadow-sm cursor-pointer">
                    <option value="line_cross">Line Crossing</option>
                    <option value="intrusion">Region Intrusion</option>
                    <option value="loitering">Loitering Detection</option>
-               </select>
+               </Select>
             </div>
             <div className="space-y-3">
                <label className="text-[10px] font-black text-gray-500 uppercase tracking-widest block">Zone Coordinates</label>

@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Search, Plus, X, ChevronDown } from 'lucide-react';
 import { toast } from 'sonner';
 import { Button } from '../components/ui/button';
+import { Select } from '../components/ui';
 
 const packages = [
   { id: 'SECURITY', name: 'Security', context: 'Parkir Liar' },
@@ -66,7 +67,7 @@ const AddPackageModal = ({ isOpen, onClose }: { isOpen: boolean; onClose: () => 
                 <div className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 pointer-events-none">
                   <ChevronDown size={14} />
                 </div>
-                <select 
+                <Select 
                   required
                   value={formData.context}
                   onChange={(e) => setFormData({ ...formData, context: e.target.value })}
@@ -76,7 +77,7 @@ const AddPackageModal = ({ isOpen, onClose }: { isOpen: boolean; onClose: () => 
                   {['Parkir Liar', 'People Count', 'Kemacetan', 'Water Level'].map(opt => (
                     <option key={opt} value={opt} className="bg-white dark:bg-[#1e1e1e]">{opt}</option>
                   ))}
-                </select>
+                </Select>
             </div>
           </div>
 

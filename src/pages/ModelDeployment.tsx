@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { BrainCircuit, Server, Activity, CheckCircle, Clock, X, AlertCircle, ChevronDown } from 'lucide-react';
 import { cn } from '../lib/utils';
 import { Button } from '../components/ui/button';
+import { Select } from '../components/ui';
 
 const models = [
   { id: '1', name: 'Model-2026-Security-80-001', version: 'v1.4.2' },
@@ -49,10 +50,10 @@ export const ModelDeployment = () => {
                 <div className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 pointer-events-none">
                   <ChevronDown size={14} />
                 </div>
-                <select value={selectedModel} onChange={(e) => setSelectedModel(e.target.value)} className="w-full bg-gray-100 dark:bg-[#151515] border border-gray-200 dark:border-[#222] rounded-xl pl-4 pr-9 h-[37px] text-[12px] text-gray-900 dark:text-white outline-none focus:border-accent/50 focus:ring-1 focus:ring-accent/50 transition-all appearance-none cursor-pointer">
+                <Select value={selectedModel} onChange={(e) => setSelectedModel(e.target.value)} className="w-full bg-gray-100 dark:bg-[#151515] border border-gray-200 dark:border-[#222] rounded-xl pl-4 pr-9 h-[37px] text-[12px] text-gray-900 dark:text-white outline-none focus:border-accent/50 focus:ring-1 focus:ring-accent/50 transition-all appearance-none cursor-pointer">
                   <option value="">Choose a model...</option>
                   {models.map(m => <option key={m.id} value={m.id}>{m.name} ({m.version})</option>)}
-                </select>
+                </Select>
               </div>
            </div>
            <div className="space-y-2">
@@ -61,10 +62,10 @@ export const ModelDeployment = () => {
                 <div className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 pointer-events-none">
                   <ChevronDown size={14} />
                 </div>
-                <select value={selectedNode} onChange={(e) => setSelectedNode(e.target.value)} className="w-full bg-gray-100 dark:bg-[#151515] border border-gray-200 dark:border-[#222] rounded-xl pl-4 pr-9 h-[37px] text-[12px] text-gray-900 dark:text-white outline-none focus:border-accent/50 focus:ring-1 focus:ring-accent/50 transition-all appearance-none cursor-pointer">
+                <Select value={selectedNode} onChange={(e) => setSelectedNode(e.target.value)} className="w-full bg-gray-100 dark:bg-[#151515] border border-gray-200 dark:border-[#222] rounded-xl pl-4 pr-9 h-[37px] text-[12px] text-gray-900 dark:text-white outline-none focus:border-accent/50 focus:ring-1 focus:ring-accent/50 transition-all appearance-none cursor-pointer">
                   <option value="">Choose a node...</option>
                   {nodes.map(n => <option key={n.id} value={n.id}>{n.name} ({n.location})</option>)}
-                </select>
+                </Select>
               </div>
            </div>
         </div>

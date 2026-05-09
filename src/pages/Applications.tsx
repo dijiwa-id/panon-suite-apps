@@ -5,6 +5,7 @@ import { Button } from '../components/ui/button';
 import { toast } from 'sonner';
 import { useDevelop } from '../context/DevelopContext';
 import { useNavigate } from 'react-router-dom';
+import { Select } from '../components/ui';
 
 export const Applications = () => {
   const navigate = useNavigate();
@@ -199,7 +200,7 @@ export const Applications = () => {
                               <div className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 pointer-events-none">
                                   <ChevronDown size={14} />
                               </div>
-                              <select 
+                              <Select 
                                   value={inputStream}
                                   onChange={(e) => setInputStream(e.target.value)}
                                   className="w-full bg-gray-100 dark:bg-[#151515] border border-gray-200 dark:border-[#222] rounded-xl pl-4 pr-9 h-[37px] text-[12px] text-gray-900 dark:text-white focus:border-accent/50 focus:ring-1 focus:ring-accent/50 outline-none transition-all font-medium appearance-none cursor-pointer"
@@ -208,7 +209,7 @@ export const Applications = () => {
                                   <option>Cam-02 (Lobby Entrance)</option>
                                   <option>Cam-03 (Perimeter North)</option>
                                   <option>VMS Integration (Edge)</option>
-                              </select>
+                              </Select>
                           </div>
                       </div>
                       <div>
@@ -217,7 +218,7 @@ export const Applications = () => {
                               <div className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 pointer-events-none">
                                   <ChevronDown size={14} />
                               </div>
-                              <select 
+                              <Select 
                                   value={visionPipeline}
                                   onChange={(e) => setVisionPipeline(e.target.value)}
                                   className="w-full bg-gray-100 dark:bg-[#151515] border border-gray-200 dark:border-[#222] rounded-xl pl-4 pr-9 h-[37px] text-[12px] text-gray-900 dark:text-white focus:border-accent/50 focus:ring-1 focus:ring-accent/50 outline-none transition-all font-medium appearance-none cursor-pointer"
@@ -226,7 +227,7 @@ export const Applications = () => {
                                   {pipelines.map(p => (
                                       <option key={p.id} value={p.id}>{p.name}</option>
                                   ))}
-                              </select>
+                              </Select>
                           </div>
                       </div>
                   </div>

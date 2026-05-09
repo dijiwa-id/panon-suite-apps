@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { Search, Plus, HardDrive, Filter, Clock, CheckCircle2, X, ChevronDown } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { cn } from '../lib/utils';
-import { Card, Button, Input, Badge, Table, TableHeader, TableRow, TableHead, TableBody, TableCell } from '../components/ui';
+import { Select, Card, Button, Input, Badge, Table, TableHeader, TableRow, TableHead, TableBody, TableCell } from '../components/ui';
 import { useTrain } from '../context/TrainContext';
 
 export const DataSet = () => {
@@ -204,7 +204,7 @@ export const DataSet = () => {
                       <div className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 pointer-events-none">
                           <ChevronDown size={14} />
                       </div>
-                      <select 
+                      <Select 
                           value={newDataset.type}
                           onChange={(e) => setNewDataset({ ...newDataset, type: e.target.value })}
                           className="w-full bg-gray-50 dark:bg-[#161616] border border-gray-200 dark:border-[#222] rounded-lg pl-4 pr-9 h-[37px] text-[12px] text-gray-900 dark:text-white focus:border-accent/50 focus:ring-1 focus:ring-accent/50 outline-none transition-all font-medium appearance-none cursor-pointer"
@@ -214,7 +214,7 @@ export const DataSet = () => {
                           <option value="Optical Character Recognition">Optical Character Recognition</option>
                           <option value="Image Classification">Image Classification</option>
                           <option value="Instance Segmentation">Instance Segmentation</option>
-                      </select>
+                      </Select>
                   </div>
                </div>
                <div>

@@ -3,6 +3,7 @@ import { AreaChart, Area, LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip,
 import { cn } from '../lib/utils';
 import { HardDrive, Activity, Monitor, Network, ShieldCheck, ChevronDown } from 'lucide-react';
 import { useTheme } from '../context/ThemeContext';
+import { Select } from '../components/ui';
 
 const memoryData = [
   { time: '08:00', value: 78.4 }, { time: '09:00', value: 82.1 }, { time: '10:00', value: 80.5 }, 
@@ -32,7 +33,7 @@ export const SystemMonitoring = () => {
   const { theme } = useTheme();
   const isDark = theme === 'dark';
 
-  const CustomTooltip = ({ active, payload, label }: any) => {
+  const CustomTooltip = ({ active, payload, label }: { active?: boolean; payload?: any[]; label?: string }) => {
     if (active && payload && payload.length) {
       const entry = payload[0];
       return (
@@ -60,9 +61,9 @@ export const SystemMonitoring = () => {
              <div className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 pointer-events-none">
                   <ChevronDown size={14} />
              </div>
-             <select className="w-full bg-gray-100 dark:bg-[#151515] border border-gray-200 dark:border-[#222] rounded-xl pl-4 pr-9 h-[37px] text-[12px] font-semibold text-gray-800 dark:text-gray-200 outline-none focus:border-accent/50 focus:ring-1 focus:ring-accent/50 transition-all cursor-pointer appearance-none">
+             <Select className="w-full bg-gray-100 dark:bg-[#151515] border border-gray-200 dark:border-[#222] rounded-xl pl-4 pr-9 h-[37px] text-[12px] font-semibold text-gray-800 dark:text-gray-200 outline-none focus:border-accent/50 focus:ring-1 focus:ring-accent/50 transition-all cursor-pointer appearance-none">
                 <option>Analytic Workstation</option>
-             </select>
+             </Select>
           </div>
         </div>
       </div>

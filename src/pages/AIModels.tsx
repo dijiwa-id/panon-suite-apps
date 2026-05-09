@@ -3,6 +3,7 @@ import { Search, Box, Copy, Download, Info, CheckCircle2, AlertTriangle, Loader 
 import { cn } from '../lib/utils';
 import { toast } from 'sonner';
 import { useTrain } from '../context/TrainContext';
+import { Select } from '../components/ui';
 
 export const AIModels = () => {
   const { models } = useTrain();
@@ -36,7 +37,7 @@ export const AIModels = () => {
           </h2>
           <div className="flex w-full sm:w-auto gap-3 flex-wrap sm:flex-nowrap">
              <div className="flex items-center gap-2 w-full sm:w-auto">
-               <select 
+               <Select 
                  className="w-full sm:w-auto bg-gray-100 dark:bg-[#151515] border border-gray-200 dark:border-[#222] rounded-xl px-3 h-[36px] text-xs font-bold text-gray-700 dark:text-gray-300 outline-none focus-visible:ring-1 focus-visible:ring-accent/50 transition-all"
                  value={selectedStatus}
                  onChange={(e) => setSelectedStatus(e.target.value)}
@@ -45,9 +46,9 @@ export const AIModels = () => {
                  <option value="ready">Ready</option>
                  <option value="deployed">Deployed</option>
                  <option value="investigating">Investigating</option>
-               </select>
+               </Select>
 
-               <select 
+               <Select 
                  className="w-full sm:w-auto bg-gray-100 dark:bg-[#151515] border border-gray-200 dark:border-[#222] rounded-xl px-3 h-[36px] text-xs font-bold text-gray-700 dark:text-gray-300 outline-none focus-visible:ring-1 focus-visible:ring-accent/50 transition-all"
                  value={selectedTag}
                  onChange={(e) => setSelectedTag(e.target.value)}
@@ -56,7 +57,7 @@ export const AIModels = () => {
                  {allTags.map(tag => (
                    <option key={tag as string} value={tag as string}>{tag as string}</option>
                  ))}
-               </select>
+               </Select>
              </div>
              <div className="bg-gray-100 dark:bg-[#151515] px-4 py-2 rounded-xl border border-gray-200 dark:border-[#222] flex items-center gap-2 flex-1 sm:flex-none focus-within:border-accent/50 focus-within:ring-1 focus-within:ring-accent/50 transition-all">
                 <Search className="text-gray-600 dark:text-gray-400" size={16} />

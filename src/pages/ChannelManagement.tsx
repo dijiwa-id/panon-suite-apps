@@ -3,7 +3,7 @@ import { cn } from '../lib/utils';
 import { Play, Settings, Save, RefreshCw, Maximize, Video, Activity, Info, StopCircle, Eye, AlertTriangle, ChevronDown } from 'lucide-react';
 import { useParams } from 'react-router-dom';
 import { toast } from 'sonner';
-import { Card, Button, Input, Badge, Table, TableHeader, TableRow, TableHead, TableBody, TableCell } from '../components/ui';
+import { Select, Card, Button, Input, Badge, Table, TableHeader, TableRow, TableHead, TableBody, TableCell } from '../components/ui';
 
 type DetectionLog = {
     id: number;
@@ -128,11 +128,11 @@ export const ChannelManagement = () => {
                                     <div className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 pointer-events-none">
                                         <ChevronDown size={14} />
                                     </div>
-                                    <select value={sourceCamera} onChange={handleSourceChange} className="w-full bg-gray-50 dark:bg-[#161616] border border-gray-200 dark:border-[#222] rounded-lg pl-4 pr-9 h-[37px] text-[12px] font-medium text-gray-800 dark:text-gray-200 outline-none focus-visible:ring-1 focus-visible:ring-accent/50 transition-all cursor-pointer appearance-none">
+                                    <Select value={sourceCamera} onChange={handleSourceChange} className="w-full bg-gray-50 dark:bg-[#161616] border border-gray-200 dark:border-[#222] rounded-lg pl-4 pr-9 h-[37px] text-[12px] font-medium text-gray-800 dark:text-gray-200 outline-none focus-visible:ring-1 focus-visible:ring-accent/50 transition-all cursor-pointer appearance-none">
                                         <option>CAM-001 (Main Gate)</option>
                                         <option>CAM-002 (Lobby)</option>
                                         <option>Custom RTSP URL</option>
-                                    </select>
+                                    </Select>
                                 </div>
                             </div>
                             <div>
@@ -161,11 +161,11 @@ export const ChannelManagement = () => {
                                     <div className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 pointer-events-none">
                                         <ChevronDown size={14} />
                                     </div>
-                                    <select value={algoPackage} onChange={e => setAlgoPackage(e.target.value)} className="w-full bg-gray-50 dark:bg-[#161616] border border-gray-200 dark:border-[#222] rounded-lg pl-4 pr-9 h-[37px] text-[12px] font-medium text-gray-800 dark:text-gray-200 outline-none focus-visible:ring-1 focus-visible:ring-accent/50 transition-all cursor-pointer appearance-none">
+                                    <Select value={algoPackage} onChange={e => setAlgoPackage(e.target.value)} className="w-full bg-gray-50 dark:bg-[#161616] border border-gray-200 dark:border-[#222] rounded-lg pl-4 pr-9 h-[37px] text-[12px] font-medium text-gray-800 dark:text-gray-200 outline-none focus-visible:ring-1 focus-visible:ring-accent/50 transition-all cursor-pointer appearance-none">
                                         <option>Security & Intrusion</option>
                                         <option>Workplace Safety (PPE)</option>
                                         <option>Traffic Monitoring</option>
-                                    </select>
+                                    </Select>
                                 </div>
                             </div>
                             

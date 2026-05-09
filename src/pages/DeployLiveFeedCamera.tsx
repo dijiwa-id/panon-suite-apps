@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { cn } from '../lib/utils';
 import { Camera, Search, Plus, Maximize2, MoreVertical, LayoutGrid, LayoutList, Signal, SignalHigh, SignalMedium, X, Link as LinkIcon, Server, MapPin, Settings, Power, ArrowUpDown, Save } from 'lucide-react';
 import { toast } from 'sonner';
-import { Button, Input, Card, Badge, Table, TableHeader, TableRow, TableHead, TableBody, TableCell } from '../components/ui';
+import { Select, Button, Input, Card, Badge, Table, TableHeader, TableRow, TableHead, TableBody, TableCell } from '../components/ui';
 
 // Dummy data for camera feeds
 const INITIAL_CAMERAS = [
@@ -624,7 +624,7 @@ export const DeployLiveFeedCamera = () => {
                         <div className="grid grid-cols-2 gap-3">
                            <div>
                               <label className="block text-[10px] font-black text-gray-500 mb-1.5 uppercase tracking-widest">Resolution</label>
-                              <select 
+                              <Select 
                                 value={settingsFormData.resolution}
                                 onChange={(e) => setSettingsFormData({...settingsFormData, resolution: e.target.value})}
                                 className="w-full bg-white dark:bg-[#1e1e1e] border border-gray-200 dark:border-[#222] rounded-lg pl-3 pr-8 h-[37px] text-[12px] font-medium text-gray-800 dark:text-gray-200 outline-none focus-visible:ring-1 focus-visible:ring-[#52C5F3]/50 transition-all cursor-pointer appearance-none"
@@ -632,7 +632,7 @@ export const DeployLiveFeedCamera = () => {
                                   <option>720p</option>
                                   <option>1080p</option>
                                   <option>4K</option>
-                              </select>
+                              </Select>
                            </div>
                            <div>
                               <label className="block text-[10px] font-black text-gray-500 mb-1.5 uppercase tracking-widest">FPS</label>

@@ -57,7 +57,7 @@ export const DeployDashboard = () => {
   const { theme } = useTheme();
   const isDark = theme === 'dark';
 
-  const CustomTooltip = ({ active, payload, label }: any) => {
+  const CustomTooltip = ({ active, payload, label }: { active?: boolean; payload?: any[]; label?: string }) => {
     if (active && payload && payload.length) {
       return (
         <div className="bg-white/90 dark:bg-[#161616]/90 backdrop-blur-sm border border-gray-100 dark:border-[#2a2a2a] text-gray-900 dark:text-white text-[10px] px-3 py-2 rounded-lg shadow-xl font-bold translate-y-[-10px]">

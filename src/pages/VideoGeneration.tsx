@@ -3,6 +3,7 @@ import { Camera, Save, Trash2, Crosshair, Target, Shapes, MousePointer2, Check, 
 import { cn } from '../lib/utils';
 import { Button } from '../components/ui/button';
 import { toast } from 'sonner';
+import { Select } from '../components/ui';
 
 type FeatureType = 'Perimeter' | 'Detection Area' | 'ROI Counting' | 'Heat Detection' | 'Crowd Detection' | 'Crowd Counting';
 
@@ -314,7 +315,7 @@ export const VideoGeneration = () => {
         <div className="flex items-center gap-3">
           <div className="bg-gray-50 dark:bg-[#161616] border border-gray-200 dark:border-[#333] rounded-md px-3 py-1.5 flex items-center gap-2 shadow-sm">
             <Camera size={14} className="text-gray-500" />
-            <select 
+            <Select 
               value={selectedCamera}
               onChange={e => setSelectedCamera(e.target.value)}
               className="bg-transparent text-xs font-bold text-gray-800 dark:text-gray-200 outline-none border-none cursor-pointer"
@@ -322,7 +323,7 @@ export const VideoGeneration = () => {
               {CAMERAS.map(cam => (
                 <option key={cam.id} value={cam.id} className="bg-white dark:bg-[#111]">{cam.name} ({cam.id})</option>
               ))}
-            </select>
+            </Select>
           </div>
           <Button onClick={saveConfiguration}>
             <Save size={14} /> Deploy

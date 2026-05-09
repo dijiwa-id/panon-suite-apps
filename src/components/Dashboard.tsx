@@ -1,12 +1,12 @@
 import React, { useState } from 'react';
-import { AccuracyLineChart, AccuracyCircularCard } from './ChartCards';
+import { AccuracyLineChart, AccuracyCircularCard, PerformanceLineChart, GenericAreaChart, GenericLineChart, GenericCircularCard } from './ChartCards';
 import { StatsGrid } from './StatsGrid';
 import { ImageAnnotationTable, AnomalyTable, RequestList, TableCard } from './Tables';
 import { ApplicationTab } from './ApplicationTab';
 import { ImageAnnotationDetail } from './ImageAnnotation';
 import { Search, Grid, List, MoreVertical, Activity, X, GripVertical, Plus } from 'lucide-react';
 import { cn } from '../lib/utils';
-import { Button, Input } from './ui';
+import { Button, Input, Select, Dropdown } from './ui';
 
 const initialLayout = [
   { id: '1', name: 'Accuracy Timeline', type: 'chart' },
@@ -21,6 +21,8 @@ export const Dashboard = () => {
   const [activeTab, setActiveTab] = useState<'application' | 'dashboard'>('dashboard');
   const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid');
   const [searchQuery, setSearchQuery] = useState('');
+  const [industry, setIndustry] = useState<'general' | 'manufacturing' | 'banking' | 'telco'>('general');
+  const [filters, setFilters] = useState<string[]>([]);
   
   const [isCustomModalOpen, setIsCustomModalOpen] = useState(false);
   const [layoutItems, setLayoutItems] = useState(initialLayout);
@@ -123,7 +125,7 @@ export const Dashboard = () => {
         </div>
 
         {/* Filter Bar */}
-        <div className="flex items-center gap-2.5 mb-4">
+        <div className="flex items-center flex-wrap gap-2.5 mb-4">
           <Button 
              variant="outline"
              onClick={() => setActiveTab('application')}
@@ -131,15 +133,53 @@ export const Dashboard = () => {
           >
              Type All
           </Button>
-          <Button variant="outline" className="text-[11px] px-4">+ Add Filter</Button>
-          <div className="relative group ml-1 h-8 w-48 hidden md:block">
+          <div className="w-48">
+            <Select 
+              value={industry}
+              onChange={(e) => setIndustry(e.target.value as any)}
+            >
+              <option value="general">General AI Dashboard</option>
+              <option value="manufacturing">Manufacturing & Industry</option>
+              <option value="banking">Banking & Finance</option>
+              <option value="telco">Telecommunications</option>
+            </Select>
+          </div>
+          
+          {filters.map(filter => (
+            <span key={filter} className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-[8px] bg-accent/10 border border-accent/20 text-accent text-[10px] font-bold">
+              {filter}
+              <X size={12} className="cursor-pointer hover:text-white" onClick={() => setFilters(filters.filter(f => f !== filter))} />
+            </span>
+          ))}
+
+          <Dropdown 
+            trigger={<Button variant="outline" className="text-[11px] px-4">+ Add Filter</Button>}
+            align="left"
+            width="w-56"
+            items={[
+               { id: 'status_active', label: 'Status: Active', checked: filters.includes('Status: Active') },
+               { id: 'status_warning', label: 'Status: Warning', checked: filters.includes('Status: Warning') },
+               { id: 'time_24h', label: 'Time: Last 24 Hours', checked: filters.includes('Time: Last 24 Hours') },
+               { id: 'time_7d', label: 'Time: Last 7 Days', checked: filters.includes('Time: Last 7 Days') },
+               { id: 'cam_high_res', label: 'Camera: High Res Only', checked: filters.includes('Camera: High Res Only') },
+            ]}
+            onSelect={(item) => {
+               if (filters.includes(item.label)) {
+                 setFilters(filters.filter(f => f !== item.label));
+               } else {
+                 setFilters([...filters, item.label]);
+               }
+            }}
+          />
+
+          <div className="relative group ml-auto h-8 w-48 hidden md:block">
             <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-500" size={10} />
             <Input 
               type="text"
               placeholder="Search data..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="pl-8 text-[11px] rounded-full h-full border-gray-300 dark:border-[#2a2a2a]"
+              className="pl-8 text-[11px] rounded-[8px] h-full border-gray-300 dark:border-[#2a2a2a]"
             />
           </div>
         </div>
@@ -149,38 +189,188 @@ export const Dashboard = () => {
           <ApplicationTab searchQuery={searchQuery} viewMode={viewMode} />
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4 lg:gap-4">
-            {/* Row 1 */}
-            <div className="lg:col-span-2 h-full min-h-[220px]">
-                <AccuracyLineChart />
-            </div>
-            <div className="lg:col-span-1 h-full min-h-[220px]">
-                <AccuracyCircularCard />
-            </div>
-            <div className="lg:col-span-2 h-full min-h-[220px]">
-                <StatsGrid />
-            </div>
+            {industry === 'general' && (
+              <>
+                <div className="lg:col-span-2 h-full min-h-[220px]">
+                    <AccuracyLineChart />
+                </div>
+                <div className="lg:col-span-1 h-full min-h-[220px]">
+                    <AccuracyCircularCard />
+                </div>
+                <div className="lg:col-span-2 h-full min-h-[220px]">
+                    <StatsGrid />
+                </div>
+                <div className="lg:col-span-2 h-full min-h-[300px]">
+                  <ImageAnnotationDetail />
+                </div>
+                <div className="lg:col-span-2 h-full min-h-[300px]">
+                  <ImageAnnotationTable />
+                </div>
+                <div className="lg:col-span-1 h-full min-h-[300px]">
+                  <AnomalyTable />
+                </div>
+                <div className="lg:col-span-2 h-full min-h-[300px]">
+                  <PerformanceLineChart />
+                </div>
+                <div className="lg:col-span-3 h-full min-h-[300px]">
+                  <RequestList />
+                </div>
+              </>
+            )}
 
-            {/* Row 2 */}
-            <div className="lg:col-span-2 h-full">
-              <ImageAnnotationTable />
-            </div>
-            <div className="lg:col-span-1 h-full">
-              <AnomalyTable />
-            </div>
-            <div className="lg:col-span-2 h-full">
-              <RequestList />
-            </div>
+            {industry === 'manufacturing' && (
+              <>
+                <div className="lg:col-span-2 h-full min-h-[220px]">
+                    <GenericAreaChart 
+                      title="Defect Rate Timeline" 
+                      data={[
+                        { name: 'Mon', value: 3.2 }, { name: 'Tue', value: 2.8 }, 
+                        { name: 'Wed', value: 3.5 }, { name: 'Thu', value: 1.9 }, 
+                        { name: 'Fri', value: 2.1 }
+                      ]} 
+                      domain={[0, 5]} 
+                      yAxisFormatter={(v: any) => `${v}%`}
+                      strokeColor="#EC3292"
+                      gradientId="defectColor"
+                    />
+                </div>
+                <div className="lg:col-span-1 h-full min-h-[220px]">
+                    <GenericCircularCard 
+                       title="Quality Yield" 
+                       stat1Label="Total Processed" stat1Value="14,204" 
+                       stat2Label="Yield Target" stat2Value="98.5%" stat2Color="text-[#52C5F3]" 
+                    />
+                </div>
+                <div className="lg:col-span-2 h-full min-h-[220px]">
+                    <StatsGrid />
+                </div>
+                <div className="lg:col-span-3 h-full min-h-[300px]">
+                  <TableCard 
+                    title="Assembly Line Anomalies" 
+                    columns={['Line ID', 'Anomaly Type', 'Confidence', 'Action']}
+                    data={[
+                      ['Line A01', 'Micro-scratch', '94.2%', 'Flagged'],
+                      ['Line B03', 'Misalignment', '89.1%', 'Rework'],
+                      ['Line A02', 'Paint Defect', '98.5%', 'Rejected'],
+                    ]}
+                    className="h-full"
+                  />
+                </div>
+                <div className="lg:col-span-2 h-full min-h-[300px]">
+                  <TableCard 
+                    title="Equipment Downtime" 
+                    columns={['Machine', 'Downtime', 'Status']}
+                    data={[
+                      ['CNC-104', '2h 14m', 'Maintenance'],
+                      ['Arm-2A', '0h 45m', 'Calibrating'],
+                    ]}
+                    className="h-full"
+                  />
+                </div>
+              </>
+            )}
 
-            {/* Row 3 */}
-            <div className="lg:col-span-2 h-full min-h-[300px]">
-              <ImageAnnotationDetail />
-            </div>
-            <div className="lg:col-span-2 h-full min-h-[300px]">
-              <ImageAnnotationTable isRow3 />
-            </div>
-            <div className="lg:col-span-1 h-full min-h-[300px]">
-              <AnomalyTable isRow3 />
-            </div>
+            {industry === 'banking' && (
+              <>
+                <div className="lg:col-span-2 h-full min-h-[220px]">
+                    <GenericAreaChart 
+                      title="Fraudulent Transactions" 
+                      data={[
+                        { name: 'Week 1', value: 120 }, { name: 'Week 2', value: 95 }, 
+                        { name: 'Week 3', value: 154 }, { name: 'Week 4', value: 89 }
+                      ]} 
+                      domain={[0, 200]} 
+                      yAxisFormatter={(v: any) => v}
+                      strokeColor="#fbbf24"
+                      gradientId="fraudColor"
+                    />
+                </div>
+                <div className="lg:col-span-1 h-full min-h-[220px]">
+                    <GenericCircularCard 
+                       title="Risk Assessment" 
+                       stat1Label="Total Scanned" stat1Value="2.4M" 
+                       stat2Label="High Risk" stat2Value="0.04%" stat2Color="text-red-400" 
+                    />
+                </div>
+                <div className="lg:col-span-2 h-full min-h-[220px]">
+                    <StatsGrid />
+                </div>
+                <div className="lg:col-span-3 h-full min-h-[300px]">
+                  <TableCard 
+                    title="Suspicious Activities" 
+                    columns={['Account ID', 'Location', 'Risk Score', 'Status']}
+                    data={[
+                      ['ACC-9923', 'Russia', '98', 'Blocked'],
+                      ['ACC-1044', 'Brazil', '85', 'Review'],
+                      ['ACC-8821', 'Nigeria', '92', 'Blocked'],
+                    ]}
+                    className="h-full"
+                  />
+                </div>
+                <div className="lg:col-span-2 h-full min-h-[300px]">
+                    <GenericLineChart 
+                      title="Transaction Volume" 
+                      subtitle="Millions per hour"
+                      data={[
+                        { name: '08:00', val: 1.2 }, { name: '10:00', val: 2.8 },
+                        { name: '12:00', val: 3.5 }, { name: '14:00', val: 3.1 }
+                      ]}
+                      dataKey="val"
+                      domain={[0, 4]}
+                    />
+                </div>
+              </>
+            )}
+
+            {industry === 'telco' && (
+              <>
+                <div className="lg:col-span-2 h-full min-h-[220px]">
+                    <GenericAreaChart 
+                      title="Network Latency Spikes" 
+                      data={[
+                        { name: '00:00', value: 24 }, { name: '04:00', value: 22 }, 
+                        { name: '08:00', value: 89 }, { name: '12:00', value: 120 },
+                        { name: '16:00', value: 95 }, { name: '20:00', value: 180 }
+                      ]} 
+                      domain={[0, 200]} 
+                      yAxisFormatter={(v: any) => `${v}ms`}
+                      strokeColor="#52C5F3"
+                      gradientId="latencyColor"
+                    />
+                </div>
+                <div className="lg:col-span-1 h-full min-h-[220px]">
+                    <GenericCircularCard 
+                       title="Uptime Reliability" 
+                       stat1Label="Active Nodes" stat1Value="8,402" 
+                       stat2Label="Global Uptime" stat2Value="99.99%" stat2Color="text-green-400" 
+                    />
+                </div>
+                <div className="lg:col-span-2 h-full min-h-[220px]">
+                  <TableCard 
+                    title="Cell Tower Outages" 
+                    columns={['Tower ID', 'Region', 'Downtime']}
+                    data={[
+                      ['TWR-JKT-01', 'Jakarta South', '14m'],
+                      ['TWR-SBY-04', 'Surabaya East', '02m'],
+                    ]}
+                    className="h-full"
+                  />
+                </div>
+                <div className="lg:col-span-5 h-full min-h-[300px]">
+                  <TableCard 
+                    title="Traffic Anomaly Reports" 
+                    columns={['Segment', 'Traffic Type', 'Deviation', 'Root Cause AI']}
+                    data={[
+                      ['Core BB-01', 'DDoS suspect', '+450%', 'Botnet pattern detected'],
+                      ['Edge NW-14', 'Video Streaming', '+120%', 'Local event gathering'],
+                      ['Core BB-04', 'P2P Transfer', '+80%', 'Unknown'],
+                    ]}
+                    className="h-full"
+                  />
+                </div>
+              </>
+            )}
+
           </div>
         )}
       </div>
@@ -222,17 +412,17 @@ export const Dashboard = () => {
                     </div>
                     <div>
                       <label className="block text-[10px] font-bold text-gray-700 dark:text-gray-300 uppercase tracking-widest mb-1.5">Card Type</label>
-                      <select 
+                      <Select 
                         value={newCardType}
                         onChange={(e) => setNewCardType(e.target.value)}
-                        className="w-full bg-white dark:bg-[#111] border border-gray-200 dark:border-[#333] rounded-[8px] px-3 py-2 text-xs text-gray-900 dark:text-white focus:outline-none focus:ring-1 focus:ring-[#52C5F3] focus:border-[#52C5F3] outline-none transition-all appearance-none cursor-pointer"
+                        className="bg-white dark:bg-[#111] border-gray-200 dark:border-[#333] shadow-none py-2"
                       >
                         <option value="chart">Line Chart</option>
                         <option value="donut">Donut Chart</option>
                         <option value="stats">Summary Stats</option>
                         <option value="table">Data Table</option>
                         <option value="list">Recent List</option>
-                      </select>
+                      </Select>
                     </div>
                     <div className="flex justify-end gap-2 mt-2">
                        <Button 

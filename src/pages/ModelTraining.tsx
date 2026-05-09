@@ -5,7 +5,7 @@ import { AreaChart, Area, ResponsiveContainer, YAxis, Tooltip, CartesianGrid } f
 import { useTheme } from '../context/ThemeContext';
 import { PerformanceLineChart } from '../components/ChartCards';
 import { useTrain } from '../context/TrainContext';
-import { Input, Button } from '../components/ui';
+import { Select, Input, Button } from '../components/ui';
 
 const mockLoss = Array.from({ length: 40 }).map((_, i) => ({ val: Math.max(0.2, 2.5 * Math.exp(-i / 8) + (Math.random() * 0.2)) }));
 
@@ -42,7 +42,7 @@ const NewTrainingModal = ({ isOpen, onClose, datasets, onCreate }: any) => {
           
           <div>
             <label className="block text-[10px] font-black text-gray-500 mb-2 uppercase tracking-widest">Select Dataset ({datasets.filter((d: any) => d.status === 'ready').length} Ready)</label>
-            <select 
+            <Select 
                className="w-full bg-gray-50 dark:bg-[#161616] border border-gray-200 dark:border-[#222] rounded-lg pl-4 pr-9 h-[37px] text-[12px] font-bold text-gray-700 dark:text-gray-300 outline-none focus-visible:ring-1 focus-visible:ring-accent/50 transition-all cursor-pointer"
                value={dataset}
                onChange={(e) => setDataset(e.target.value)}
@@ -51,7 +51,7 @@ const NewTrainingModal = ({ isOpen, onClose, datasets, onCreate }: any) => {
               {datasets.filter((d: any)=>d.status === 'ready').map((d: any) => (
                   <option key={d.id} value={d.name}>{d.name} ({d.annotations} annotations)</option>
               ))}
-            </select>
+            </Select>
           </div>
 
           <div className="flex justify-between mt-8 pt-4 border-t border-gray-200 dark:border-[#222] items-center">
@@ -76,7 +76,7 @@ export const ModelTraining = () => {
 
   const activeJob = trainingJobs.find(job => job.status === 'training') || trainingJobs[0];
 
-  const CustomTooltip = ({ active, payload, label }: any) => {
+  const CustomTooltip = ({ active, payload, label }: { active?: boolean; payload?: any[]; label?: string }) => {
     if (active && payload && payload.length) {
       return (
         <div className="bg-[#1e1e1e] border border-[#222] text-white text-[10px] px-2.5 py-1.5 rounded shadow-md font-bold">

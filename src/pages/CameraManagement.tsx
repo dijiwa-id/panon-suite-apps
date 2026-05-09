@@ -3,7 +3,7 @@ import React, { useState } from 'react';
 import { Search, Plus, Check, X, Camera, MapPin, Hash, Link as LinkIcon, Settings, Activity, ChevronDown, Pencil, Trash2 } from 'lucide-react';
 import { cn } from '../lib/utils';
 import { toast } from 'sonner';
-import { Card, Button, Input, Badge, Table, TableHeader, TableRow, TableHead, TableBody, TableCell } from '../components/ui';
+import { Select, Card, Button, Input, Badge, Table, TableHeader, TableRow, TableHead, TableBody, TableCell } from '../components/ui';
 
 const initialCameras = [
   { id: 'CAM-001', name: 'Camera 001 / Main Gate', location: 'Perempatan Jalan', coordinate: '-6.9391256, 107.6284992', url: 'rtsp://admin:QRT.../av_stream', resolution: '1080p', fps: 15, onvif: true, active: false },
@@ -157,7 +157,7 @@ const CameraModal = ({ isOpen, onClose, onSave, editingCamera }: { isOpen: boole
                                 <div className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 pointer-events-none">
                                     <ChevronDown size={14} />
                                 </div>
-                                <select 
+                                <Select 
                                     value={formData.fps}
                                     onChange={(e) => setFormData({...formData, fps: e.target.value})}
                                     className="w-full bg-gray-100 dark:bg-[#151515] border border-gray-200 dark:border-[#222] rounded-xl pl-4 pr-9 h-[37px] text-[12px] font-bold text-gray-700 dark:text-gray-300 outline-none focus:border-accent/50 focus:ring-1 focus:ring-accent/50 transition-all cursor-pointer appearance-none"
@@ -165,7 +165,7 @@ const CameraModal = ({ isOpen, onClose, onSave, editingCamera }: { isOpen: boole
                                     <option>15 FPS</option>
                                     <option>30 FPS</option>
                                     <option>60 FPS</option>
-                                </select>
+                                </Select>
                             </div>
                         </div>
                         <div>
@@ -174,7 +174,7 @@ const CameraModal = ({ isOpen, onClose, onSave, editingCamera }: { isOpen: boole
                                 <div className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 pointer-events-none">
                                     <ChevronDown size={14} />
                                 </div>
-                                <select 
+                                <Select 
                                     value={formData.resolution}
                                     onChange={(e) => setFormData({...formData, resolution: e.target.value})}
                                     className="w-full bg-gray-100 dark:bg-[#151515] border border-gray-200 dark:border-[#222] rounded-xl pl-4 pr-9 h-[37px] text-[12px] font-bold text-gray-700 dark:text-gray-300 outline-none focus:border-accent/50 focus:ring-1 focus:ring-accent/50 transition-all cursor-pointer appearance-none"
@@ -182,7 +182,7 @@ const CameraModal = ({ isOpen, onClose, onSave, editingCamera }: { isOpen: boole
                                     <option>720p</option>
                                     <option>1080p</option>
                                     <option>4K</option>
-                                </select>
+                                </Select>
                             </div>
                         </div>
                     </div>

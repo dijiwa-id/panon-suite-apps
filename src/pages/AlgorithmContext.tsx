@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Search, Plus, X, ChevronDown } from 'lucide-react';
 import { toast } from 'sonner';
 import { Button } from '../components/ui/button';
+import { Select } from '../components/ui';
 
 const algorithmContexts = [
   { id: 'PARKIR_LIAR', name: 'Parkir Liar', algorithm: 'Lingering', model: 'Model-2026-Security-80-001', class: 'Vehicle' },
@@ -69,7 +70,7 @@ const AddContextModal = ({ isOpen, onClose }: { isOpen: boolean; onClose: () => 
                 <div className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 pointer-events-none">
                   <ChevronDown size={14} />
                 </div>
-                <select 
+                <Select 
                   required
                   value={formData.algorithm}
                   onChange={(e) => setFormData({ ...formData, algorithm: e.target.value })}
@@ -79,7 +80,7 @@ const AddContextModal = ({ isOpen, onClose }: { isOpen: boolean; onClose: () => 
                   {['Lingering', 'Enter-Count', 'Color Detection', 'Move-In'].map(opt => (
                     <option key={opt} value={opt}>{opt}</option>
                   ))}
-                </select>
+                </Select>
               </div>
             </div>
             <div>
@@ -88,7 +89,7 @@ const AddContextModal = ({ isOpen, onClose }: { isOpen: boolean; onClose: () => 
                 <div className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 pointer-events-none">
                   <ChevronDown size={14} />
                 </div>
-                <select 
+                <Select 
                   required
                   value={formData.model}
                   onChange={(e) => setFormData({ ...formData, model: e.target.value })}
@@ -98,7 +99,7 @@ const AddContextModal = ({ isOpen, onClose }: { isOpen: boolean; onClose: () => 
                   {['Model-2026-Security-80-001', 'Model-2026-PailScale-90-001'].map(opt => (
                     <option key={opt} value={opt}>{opt}</option>
                   ))}
-                </select>
+                </Select>
               </div>
             </div>
           </div>

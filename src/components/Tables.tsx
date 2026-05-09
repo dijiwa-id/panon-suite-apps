@@ -7,7 +7,7 @@ interface TableCardProps {
   title: string;
   tabs?: string[];
   columns: string[];
-  data: any[];
+  data: Record<string, any>[];
   className?: string;  
   isLoading?: boolean;
 }
@@ -47,7 +47,7 @@ export const TableCard = ({ title, tabs, columns, data, className, isLoading }: 
   const showLoading = isLoading || data.length === 0;
 
   return (
-    <Card className={cn("p-5 flex flex-col group/table shadow-sm border border-gray-200 dark:border-[#222]", className)}>
+    <Card className={cn("p-5 flex flex-col group/table h-full", className)}>
       <div className="flex items-center justify-between mb-4 shrink-0">
         <h3 className="text-sm font-bold text-gray-900 dark:text-white tracking-tight leading-none">{title}</h3>
         {tabs && (
@@ -143,7 +143,7 @@ const ChevronDownIcon = () => (
   </svg>
 );
 
-export const AnomalyTable = ({ isRow3 }: { isRow3?: boolean }) => {
+export const AnomalyTable = () => {
   const data = [
     { object: 'Person', confidence: '98.5%', status: <CheckCircle2 size={12} className="text-secondary" /> },
     { object: 'Vehicle', confidence: '92.1%', status: <CheckCircle2 size={12} className="text-accent" /> },
@@ -157,12 +157,12 @@ export const AnomalyTable = ({ isRow3 }: { isRow3?: boolean }) => {
       title="Anomaly Events" 
       columns={['Object', 'Confidence', 'Status']} 
       data={data}
-      className={isRow3 ? "border-none shadow-none bg-transparent h-full pb-0 dark:bg-transparent" : "col-span-1 h-full"}
+      className="h-full"
     />
   );
 }
 
-export const ImageAnnotationTable = ({ isRow3 }: { isRow3?: boolean }) => {
+export const ImageAnnotationTable = () => {
   const data = [
     { camera: 'Cam 03', target: 'Vehicle', duration: '12m 04s' },
     { camera: 'Cam 08', target: 'Person', duration: '02m 01s', active: true },
@@ -177,7 +177,7 @@ export const ImageAnnotationTable = ({ isRow3 }: { isRow3?: boolean }) => {
       tabs={['All', 'Vehicles', 'Persons']}
       columns={['Camera ID', 'Target', 'Duration']} 
       data={data}
-      className={isRow3 ? "border-none shadow-none bg-transparent h-full pb-0 dark:bg-transparent" : "col-span-2 h-full"}
+      className="h-full"
     />
   );
 }
@@ -213,7 +213,7 @@ export const RequestList = () => {
   });
 
   return (
-    <Card className="p-5 flex flex-col col-span-2 shadow-sm h-full border border-gray-200 dark:border-[#222]">
+    <Card className="p-5 flex flex-col h-full">
        <div className="flex items-center justify-between mb-4">
           <div className="flex items-center gap-2">
              <div className="w-5 h-5 flex items-center justify-center rounded bg-gray-100 dark:bg-white/5 border border-gray-200 dark:border-white/10">

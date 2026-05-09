@@ -343,7 +343,7 @@ export const Sidebar = ({
 
       <div className="p-4 border-t border-gray-200 dark:border-[#2a2a2a] space-y-4">
         {!isCollapsed && (
-          <div className="flex items-center gap-3 px-4 py-3 bg-gray-100 dark:bg-[#1e1e1e]/50 rounded-xl border border-gray-200 dark:border-[#2a2a2a] cursor-pointer group hover:bg-gray-200 dark:hover:bg-[#1e1e1e] transition-colors">
+          <Link to="/setup" className="flex items-center gap-3 px-4 py-3 bg-gray-100 dark:bg-[#1e1e1e]/50 rounded-xl border border-gray-200 dark:border-[#2a2a2a] cursor-pointer group hover:bg-gray-200 dark:hover:bg-[#1e1e1e] transition-colors block">
             <div className="w-10 h-10 rounded-full border-2 border-accent flex items-center justify-center text-accent font-black text-sm shrink-0 shadow-[0_0_10px_rgba(82,197,243,0.3)]">
               4
             </div>
@@ -353,7 +353,7 @@ export const Sidebar = ({
               </p>
               <p className="text-[11px] text-gray-500 mt-1">4 Remaining Tasks</p>
             </div>
-          </div>
+          </Link>
         )}
         <div
           onClick={toggleSidebar}
