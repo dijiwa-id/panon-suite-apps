@@ -7,6 +7,8 @@ import { ImageAnnotationDetail } from './ImageAnnotation';
 import { Search, Grid, List, MoreVertical, Activity, X, GripVertical, Plus } from 'lucide-react';
 import { cn } from '../lib/utils';
 import { Button, Input, Select, Dropdown } from './ui';
+import { useAppStore } from '../store';
+import { toast } from 'sonner';
 
 const initialLayout = [
   { id: '1', name: 'Accuracy Timeline', type: 'chart' },
@@ -18,7 +20,11 @@ const initialLayout = [
 ];
 
 export const Dashboard = () => {
-  const [activeTab, setActiveTab] = useState<'application' | 'dashboard'>('dashboard');
+  const globalPlatformName = useAppStore(state => state.platformName);
+  const globalPlatformLogo = useAppStore(state => state.platformLogo);
+  const setPlatformConfiguration = useAppStore(state => state.setPlatformConfiguration);
+
+  const [activeTab, setActiveTab] = useState<'application' | 'dashboard' | 'settings'>('dashboard');
   const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid');
   const [searchQuery, setSearchQuery] = useState('');
   const [industry, setIndustry] = useState<'general' | 'manufacturing' | 'banking' | 'telco'>('general');
@@ -32,6 +38,52 @@ export const Dashboard = () => {
   const [isAddingCard, setIsAddingCard] = useState(false);
   const [newCardName, setNewCardName] = useState('');
   const [newCardType, setNewCardType] = useState('chart');
+
+  // General Settings State
+  const [platformName, setPlatformName] = useState(globalPlatformName);
+  const [platformDescription, setPlatformDescription] = useState('Enterprise AI Agent Platform');
+  const [svgLogo, setSvgLogo] = useState<string | null>(globalPlatformLogo?.startsWith('data:image/svg+xml') ? globalPlatformLogo : null);
+  const [pngLogo, setPngLogo] = useState<string | null>(globalPlatformLogo?.startsWith('data:image/png') ? globalPlatformLogo : null);
+  const [primaryColor, setPrimaryColor] = useState('#52C5F3');
+  const [maintenanceMode, setMaintenanceMode] = useState(false);
+
+  React.useEffect(() => {
+    setPlatformName(globalPlatformName);
+    if (globalPlatformLogo?.startsWith('data:image/svg+xml')) {
+      setSvgLogo(globalPlatformLogo);
+    } else if (globalPlatformLogo?.startsWith('data:image/png')) {
+      setPngLogo(globalPlatformLogo);
+    }
+  }, [globalPlatformName, globalPlatformLogo]);
+
+  const handleSaveSettings = () => {
+    // If both are selected somehow, prioritize SVG over PNG, or whichever is available
+    const finalLogo = svgLogo || pngLogo || null;
+    setPlatformConfiguration(platformName, finalLogo);
+    toast.success('Settings saved successfully!');
+  };
+
+  const handleSvgUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file && file.type === 'image/svg+xml') {
+      const reader = new FileReader();
+      reader.onload = (event) => setSvgLogo(event.target?.result as string);
+      reader.readAsDataURL(file);
+    } else {
+      alert("Please upload a valid SVG file.");
+    }
+  };
+
+  const handlePngUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file && file.type === 'image/png') {
+      const reader = new FileReader();
+      reader.onload = (event) => setPngLogo(event.target?.result as string);
+      reader.readAsDataURL(file);
+    } else {
+      alert("Please upload a valid PNG file.");
+    }
+  };
 
   const handleDragStart = (e: React.DragEvent, id: string) => {
     setDraggedId(id);
@@ -97,6 +149,16 @@ export const Dashboard = () => {
               >
                 Application
                 {activeTab === 'application' && <span className="absolute bottom-[-1px] w-full h-[1px] bg-accent transition-transform"></span>}
+              </button>
+              <button 
+                onClick={() => setActiveTab('settings')}
+                className={cn(
+                  "text-[11px] tracking-tight font-bold transition-colors pb-2.5 relative flex flex-col items-center group",
+                  activeTab === 'settings' ? "text-accent" : "text-gray-500 hover:text-gray-900 dark:hover:text-white"
+                )}
+              >
+                Settings
+                {activeTab === 'settings' && <span className="absolute bottom-[-1px] w-full h-[1px] bg-accent transition-transform"></span>}
               </button>
             </div>
           </div>
@@ -185,7 +247,113 @@ export const Dashboard = () => {
         </div>
 
         {/* Main Content */}
-        {activeTab === 'application' ? (
+        {activeTab === 'settings' ? (
+          <div className="bg-white dark:bg-[#1e1e1e] border border-gray-200 dark:border-[#222] rounded-[11px] p-6 shadow-sm max-w-4xl max-h-min">
+            <h3 className="text-sm font-black text-gray-900 dark:text-white mb-6">General Platform Settings</h3>
+            
+            <div className="space-y-6">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div className="space-y-1.5">
+                   <label className="text-[11px] font-bold text-gray-700 dark:text-gray-300 ml-1">Platform Name</label>
+                   <Input 
+                      value={platformName}
+                      onChange={(e) => setPlatformName(e.target.value)}
+                      className="bg-gray-50 dark:bg-[#161616]"
+                   />
+                </div>
+                <div className="space-y-1.5">
+                   <label className="text-[11px] font-bold text-gray-700 dark:text-gray-300 ml-1">Platform Description</label>
+                   <Input 
+                      value={platformDescription}
+                      onChange={(e) => setPlatformDescription(e.target.value)}
+                      className="bg-gray-50 dark:bg-[#161616]"
+                   />
+                </div>
+              </div>
+
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6 pt-4 border-t border-gray-100 dark:border-[#2a2a2a]">
+                 <div className="space-y-3">
+                   <label className="text-[11px] font-bold text-gray-700 dark:text-gray-300 ml-1">Upload SVG Logo</label>
+                   <div className="flex items-center gap-4">
+                     {svgLogo ? (
+                       <img src={svgLogo} alt="SVG Preview" className="h-10 w-10 object-contain p-1 border border-gray-200 dark:border-[#333] rounded-lg" />
+                     ) : (
+                       <div className="h-10 w-10 border border-dashed border-gray-300 dark:border-[#444] rounded-lg flex items-center justify-center text-gray-400 text-[10px]">No SVG</div>
+                     )}
+                     <div className="flex-1">
+                       <input 
+                          type="file" 
+                          accept=".svg" 
+                          onChange={handleSvgUpload}
+                          className="block w-full text-xs text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-[10px] file:font-semibold file:bg-gray-100 file:text-gray-700 hover:file:bg-gray-200 dark:file:bg-[#252525] dark:file:text-gray-300 dark:hover:file:bg-[#333] transition-all cursor-pointer"
+                        />
+                     </div>
+                   </div>
+                 </div>
+
+                 <div className="space-y-3">
+                   <label className="text-[11px] font-bold text-gray-700 dark:text-gray-300 ml-1">Upload PNG Logo</label>
+                   <div className="flex items-center gap-4">
+                     {pngLogo ? (
+                       <img src={pngLogo} alt="PNG Preview" className="h-10 w-10 object-cover p-1 border border-gray-200 dark:border-[#333] rounded-lg" />
+                     ) : (
+                       <div className="h-10 w-10 border border-dashed border-gray-300 dark:border-[#444] rounded-lg flex items-center justify-center text-gray-400 text-[10px]">No PNG</div>
+                     )}
+                     <div className="flex-1">
+                       <input 
+                          type="file" 
+                          accept=".png" 
+                          onChange={handlePngUpload}
+                          className="block w-full text-xs text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-[10px] file:font-semibold file:bg-gray-100 file:text-gray-700 hover:file:bg-gray-200 dark:file:bg-[#252525] dark:file:text-gray-300 dark:hover:file:bg-[#333] transition-all cursor-pointer"
+                        />
+                     </div>
+                   </div>
+                 </div>
+              </div>
+
+              <div className="pt-4 border-t border-gray-100 dark:border-[#2a2a2a]">
+                 <div className="flex items-center justify-between">
+                    <div>
+                      <span className="block text-xs font-bold text-gray-900 dark:text-white">Primary Brand Color</span>
+                      <span className="block text-[10px] text-gray-500 mt-1 uppercase tracking-widest">Base accent color for UI elements</span>
+                    </div>
+                    <div className="flex items-center gap-3">
+                       <Input 
+                         type="text" 
+                         value={primaryColor} 
+                         onChange={(e) => setPrimaryColor(e.target.value)} 
+                         className="w-24 text-center font-mono text-xs h-9 uppercase"
+                       />
+                       <div 
+                         className="w-9 h-9 rounded-lg border border-gray-200 dark:border-[#333] shadow-sm relative overflow-hidden flex-shrink-0"
+                         style={{ backgroundColor: primaryColor }}
+                       >
+                         <input type="color" value={primaryColor} onChange={(e) => setPrimaryColor(e.target.value)} className="absolute inset-[-10px] w-20 h-20 opacity-0 cursor-pointer" />
+                       </div>
+                    </div>
+                 </div>
+              </div>
+              
+              <div className="pt-4 border-t border-gray-100 dark:border-[#2a2a2a]">
+                 <div className="flex items-center gap-3">
+                   <span className="relative inline-block w-10 h-5 flex-shrink-0">
+                     <input type="checkbox" className="peer sr-only" checked={maintenanceMode} readOnly id="maintenanceToggle" />
+                     <span className="block w-10 h-5 bg-gray-200 dark:bg-[#333] rounded-full peer-checked:bg-red-500 transition-colors" onClick={() => setMaintenanceMode(!maintenanceMode)}></span>
+                     <span className="absolute left-1 top-1 w-3 h-3 bg-white rounded-full transition-transform peer-checked:translate-x-5 pointer-events-none"></span>
+                   </span>
+                   <div>
+                     <label htmlFor="maintenanceToggle" className="text-xs font-bold text-gray-900 dark:text-white cursor-pointer" onClick={() => setMaintenanceMode(!maintenanceMode)}>Enable Maintenance Mode</label>
+                     <p className="text-[10px] text-gray-500 font-medium tracking-wide">When enabled, only administrators can access the platform.</p>
+                   </div>
+                 </div>
+              </div>
+
+              <div className="pt-6 mt-6 border-t border-gray-100 dark:border-[#2a2a2a] flex justify-end">
+                <Button onClick={handleSaveSettings}>Save Settings</Button>
+              </div>
+            </div>
+          </div>
+        ) : activeTab === 'application' ? (
           <ApplicationTab searchQuery={searchQuery} viewMode={viewMode} />
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4 lg:gap-4">

@@ -1,7 +1,16 @@
 import React from 'react';
 import { cn } from '../lib/utils';
+import { useAppStore } from '../store';
 
 export const Logo = ({ className }: { className?: string }) => {
+  const globalPlatformLogo = useAppStore(state => state.platformLogo);
+
+  if (globalPlatformLogo) {
+    return (
+       <img src={globalPlatformLogo} alt="Logo" className={cn("w-8 h-8 object-contain", className)} />
+    );
+  }
+
   return (
     <svg 
       viewBox="0 0 100 100" 

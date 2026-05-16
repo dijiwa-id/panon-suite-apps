@@ -6,6 +6,7 @@ import { useAppStore } from '../store';
 import { Input } from '../components/ui';
 
 export const SignIn = () => {
+  const globalPlatformName = useAppStore(state => state.platformName);
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
@@ -53,7 +54,7 @@ export const SignIn = () => {
           <div className="flex justify-center mb-6">
              <div className="flex items-center gap-3">
                <Logo className="w-10 h-10" />
-               <span className="text-2xl tracking-tight text-gray-900 dark:text-white"><span className="font-bold">panon</span><span className="font-light">suite</span></span>
+               <span className="text-2xl tracking-tight text-gray-900 dark:text-white font-bold">{globalPlatformName}</span>
              </div>
           </div>
           <h2 className="text-[18px] font-black text-gray-900 dark:text-white tracking-tight">System Authentication</h2>
@@ -109,17 +110,10 @@ export const SignIn = () => {
             </button>
           </form>
           
-          <div className="w-full mt-6 pt-5 border-t border-gray-100 dark:border-[#2a2a2a]">
-            <p className="text-[10px] text-gray-500 text-center font-medium">
-              Demo Credentials:<br/>
-              <span className="font-mono text-gray-800 dark:text-gray-300">Email: <span className="font-bold">admin@panonsuite.com</span></span><br/>
-              <span className="font-mono text-gray-800 dark:text-gray-300">Password: <span className="font-bold">admin123</span></span>
-            </p>
-          </div>
         </div>
 
         <p className="text-center text-[10px] text-gray-400 dark:text-gray-600 font-bold mt-8 tracking-widest uppercase">
-          Enterprise AI Agent Platform
+          {globalPlatformName} Environment
         </p>
       </div>
     </div>

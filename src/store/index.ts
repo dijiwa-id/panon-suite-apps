@@ -26,6 +26,11 @@ interface AppState {
   setSidebarOpen: (isOpen: boolean) => void;
   activePath: string;
   setActivePath: (path: string) => void;
+
+  // Global Settings State
+  platformName: string;
+  platformLogo: string | null;
+  setPlatformConfiguration: (name: string, logo: string | null) => void;
 }
 
 export const useAppStore = create<AppState>()(
@@ -48,10 +53,21 @@ export const useAppStore = create<AppState>()(
       setSidebarOpen: (isSidebarOpen) => set({ isSidebarOpen }),
       activePath: '/',
       setActivePath: (activePath) => set({ activePath }),
+
+      // Global Settings
+      platformName: 'PT Rastek Teknologi Indonesia',
+      platformLogo: null,
+      setPlatformConfiguration: (name, logo) => set({ platformName: name, platformLogo: logo }),
     }),
     {
       name: 'panon-suite-storage',
-      partialize: (state) => ({ theme: state.theme, isAuthenticated: state.isAuthenticated, user: state.user }),
+      partialize: (state) => ({ 
+        theme: state.theme, 
+        isAuthenticated: state.isAuthenticated, 
+        user: state.user,
+        platformName: state.platformName,
+        platformLogo: state.platformLogo
+      }),
     }
   )
 );
