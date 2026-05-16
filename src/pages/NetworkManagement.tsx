@@ -57,8 +57,8 @@ export const NetworkManagement = () => {
                 </div>
              </div>
           </div>
-          <div className="h-64 pb-2 flex-1 w-full mt-2">
-            <ResponsiveContainer width="100%" height="100%" minWidth={0} minHeight={0}>
+          <div className="min-h-0 min-w-0 h-64 pb-2 flex-1 w-full mt-2">
+            <ResponsiveContainer width="100%" height="100%" minWidth={1} minHeight={1}>
               <AreaChart data={networkData} margin={{ top: 10, right: 0, left: -25, bottom: 0 }}>
                 <defs>
                   <linearGradient id="colorUpload" x1="0" y1="0" x2="0" y2="1">

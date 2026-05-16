@@ -105,8 +105,13 @@ const NavItem: React.FC<NavItemProps & { subItems?: SubItem[]; isOpen?: boolean;
               ? "text-gray-500 hover:text-gray-900 dark:hover:text-white hover:bg-gray-100 dark:hover:bg-white/[0.02] border border-transparent"
               : "",
           )}
-          title={isCollapsed ? label : undefined}
         >
+          {isCollapsed && (
+            <div className="absolute left-full top-1/2 -translate-y-1/2 ml-4 px-2.5 py-1.5 bg-gray-900 dark:bg-white text-white dark:text-gray-900 text-[10px] font-bold tracking-wide whitespace-nowrap rounded-md opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-[100] shadow-xl pointer-events-none border border-gray-800 dark:border-gray-200 flex items-center">
+              <div className="absolute top-1/2 -left-1 -translate-y-1/2 w-2 h-2 bg-gray-900 dark:bg-white rotate-45 border-b border-l border-gray-800 dark:border-gray-200"></div>
+              <span className="relative z-10">{label}</span>
+            </div>
+          )}
           <div
             className={cn(
               "flex items-center",
@@ -210,12 +215,18 @@ export const Sidebar = ({
         >
           <div
             className={cn(
-              "flex items-center gap-3 rounded-[11px] cursor-pointer transition-all group/profile",
+              "flex items-center gap-3 rounded-[11px] cursor-pointer transition-all group/profile relative",
               isCollapsed
                 ? "flex-col justify-center py-2 hover:bg-gray-100 dark:hover:bg-[#1e1e1e] border border-gray-200 dark:border-[#222]"
                 : "p-2 hover:bg-gray-100 dark:hover:bg-[#1e1e1e] border border-gray-200 dark:border-[#222]"
             )}
           >
+            {isCollapsed && (
+              <div className="absolute left-full top-1/2 -translate-y-1/2 ml-4 px-2.5 py-1.5 bg-gray-900 dark:bg-white text-white dark:text-gray-900 text-[10px] font-bold tracking-wide whitespace-nowrap rounded-md opacity-0 invisible group-hover/profile:opacity-100 group-hover/profile:visible transition-all duration-200 z-[100] shadow-xl pointer-events-none border border-gray-800 dark:border-gray-200 flex items-center">
+                <div className="absolute top-1/2 -left-1 -translate-y-1/2 w-2 h-2 bg-gray-900 dark:bg-white rotate-45 border-b border-l border-gray-800 dark:border-gray-200"></div>
+                <span className="relative z-10">{user ? user.name : "System User"}</span>
+              </div>
+            )}
             <div
               className={cn(
                 "rounded-lg bg-accent/10 flex items-center justify-center p-0.5 overflow-hidden ring-1 ring-accent/20 group-hover/profile:scale-105 transition-transform",
@@ -358,12 +369,18 @@ export const Sidebar = ({
         <div
           onClick={toggleSidebar}
           className={cn(
-            "flex items-center text-gray-500 hover:text-gray-900 dark:hover:text-white transition-colors cursor-pointer group rounded-lg hover:bg-white/5",
+            "flex items-center text-gray-500 hover:text-gray-900 dark:hover:text-white transition-colors cursor-pointer group rounded-lg hover:bg-white/5 relative",
             isCollapsed
               ? "justify-center p-2 mx-1"
               : "justify-between px-4 py-2",
           )}
         >
+          {isCollapsed && (
+            <div className="absolute left-full top-1/2 -translate-y-1/2 ml-4 px-2.5 py-1.5 bg-gray-900 dark:bg-white text-white dark:text-gray-900 text-[10px] font-bold tracking-wide whitespace-nowrap rounded-md opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-[100] shadow-xl pointer-events-none border border-gray-800 dark:border-gray-200 flex items-center">
+              <div className="absolute top-1/2 -left-1 -translate-y-1/2 w-2 h-2 bg-gray-900 dark:bg-white rotate-45 border-b border-l border-gray-800 dark:border-gray-200"></div>
+              <span className="relative z-10">Expand</span>
+            </div>
+          )}
           <div className="flex items-center gap-3">
             <ChevronLeft
               size={14}
@@ -407,10 +424,16 @@ const NavSection = ({
       <div
         onClick={() => setIsOpen(!isOpen)}
         className={cn(
-          "px-6 flex items-center justify-between cursor-pointer group hover:text-gray-800 dark:hover:text-gray-400 mt-1 mb-1",
+          "px-6 flex items-center justify-between cursor-pointer group hover:text-gray-800 dark:hover:text-gray-400 mt-1 mb-1 relative",
           isCollapsed && "justify-center px-0",
         )}
       >
+        {isCollapsed && (
+          <div className="absolute left-full top-1/2 -translate-y-1/2 ml-4 px-2.5 py-1.5 bg-gray-900 dark:bg-white text-white dark:text-gray-900 text-[10px] font-bold tracking-wide whitespace-nowrap rounded-md opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-[100] shadow-xl pointer-events-none border border-gray-800 dark:border-gray-200 flex items-center">
+            <div className="absolute top-1/2 -left-1 -translate-y-1/2 w-2 h-2 bg-gray-900 dark:bg-white rotate-45 border-b border-l border-gray-800 dark:border-gray-200"></div>
+            <span className="relative z-10">{title}</span>
+          </div>
+        )}
         {!isCollapsed && <span className="text-[9px] font-bold tracking-widest uppercase text-gray-400 dark:text-gray-500">{title}</span>}
         {!isCollapsed && (
           <motion.div

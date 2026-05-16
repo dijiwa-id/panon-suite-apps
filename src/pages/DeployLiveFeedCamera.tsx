@@ -333,8 +333,8 @@ export const DeployLiveFeedCamera = () => {
                       <div className="flex items-center justify-between mb-1.5">
                          <div className="flex items-center gap-2">
                            <div className={cn(
-                             "w-1.5 h-1.5 rounded-full shrink-0",
-                             cam.status === 'online' ? "bg-green-500 shadow-[0_0_8px_rgba(34,197,94,0.4)]" : "bg-red-500 shadow-[0_0_8px_rgba(239,68,68,0.4)]"
+                             "w-2 h-2 rounded-full shrink-0",
+                             cam.status === 'online' ? "bg-green-500" : "bg-red-500"
                            )}></div>
                            <h4 className="text-xs font-bold text-gray-900 dark:text-white tracking-tight leading-none group-hover:text-[#52C5F3] transition-colors truncate" title={cam.name}>{cam.name}</h4>
                          </div>
@@ -395,8 +395,8 @@ export const DeployLiveFeedCamera = () => {
                          <TableCell>
                            <div className="flex items-center gap-3 cursor-pointer group" onClick={() => setMaximizedCamera(cam)}>
                              <div className={cn(
-                               "w-1.5 h-1.5 rounded-full",
-                               cam.status === 'online' ? "bg-green-500 shadow-[0_0_8px_rgba(34,197,94,0.4)]" : "bg-red-500 shadow-[0_0_8px_rgba(239,68,68,0.4)]"
+                               "w-2 h-2 rounded-full shrink-0",
+                               cam.status === 'online' ? "bg-green-500" : "bg-red-500"
                              )}></div>
                              <div className="flex flex-col">
                                <span className="text-sm font-bold text-gray-900 dark:text-gray-100 group-hover:text-[#52C5F3] transition-colors">{cam.name}</span>

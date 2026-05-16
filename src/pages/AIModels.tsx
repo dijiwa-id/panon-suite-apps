@@ -13,6 +13,28 @@ export const AIModels = () => {
 
   const allTags = Array.from(new Set(models.flatMap((m: any) => m.tags)));
 
+  const handleExport = (model: any) => {
+    toast.promise(new Promise<void>(resolve => {
+      setTimeout(() => {
+        const content = `Mock ONNX model artifact for ${model.name} (${model.version})`;
+        const blob = new Blob([content], { type: 'text/plain' });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = `${model.name}-${model.version}.onnx`;
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        URL.revokeObjectURL(url);
+        resolve();
+      }, 1000);
+    }), { 
+        loading: `Exporting ONNX for ${model.name}...`, 
+        success: `Export completed for ${model.name}`,
+        error: `Failed to export ${model.name}`
+    });
+  };
+
   const filteredModels = models.filter((model: any) => {
      const matchQuery = model.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
                         model.tags.some((tag: string) => tag.toLowerCase().includes(searchQuery.toLowerCase()));
@@ -76,7 +98,7 @@ export const AIModels = () => {
             <thead>
                 <tr className="border-b border-gray-200 dark:border-[#222] bg-gray-50/50 dark:bg-transparent">
                 <th className="px-5 py-4 whitespace-nowrap">Model Name & Ver</th>
-                <th className="px-5 py-4 whitespace-nowrap">Architecture / Params</th>
+                <th className="px-5 py-4 whitespace-nowrap">Model Details</th>
                 <th className="px-5 py-4 whitespace-nowrap">Evaluation (mAP)</th>
                 <th className="px-5 py-4 whitespace-nowrap">Tags</th>
                 <th className="px-5 py-4 whitespace-nowrap">State</th>
@@ -127,7 +149,7 @@ export const AIModels = () => {
                       <button onClick={() => toast.info(`Viewing details for ${model.name}`)} className="p-1.5 bg-[#1c1c1c] border border-gray-700 rounded-lg text-white/70 hover:text-white hover:bg-[#2a2a2a] transition-all" title="View details">
                           <Info size={14} />
                       </button>
-                      <button onClick={() => toast.promise(new Promise(r => setTimeout(r, 1000)), { loading: `Exporting ONNX for ${model.name}...`, success: `Export completed for ${model.name}` })} className="p-1.5 bg-[#1c1c1c] border border-accent/20 rounded-lg text-accent hover:bg-accent hover:text-[#161616] transition-all shadow-sm" title="Export ONNX">
+                      <button onClick={() => handleExport(model)} className="p-1.5 bg-[#1c1c1c] border border-accent/20 rounded-lg text-accent hover:bg-accent hover:text-[#161616] transition-all shadow-sm" title="Export ONNX">
                           <Download size={14} />
                       </button>
                     </div>

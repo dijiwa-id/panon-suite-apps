@@ -88,8 +88,8 @@ export const SystemAdminDashboard = () => {
                 <div className="text-[10px] tracking-widest uppercase font-black text-gray-500 mt-1">Latest Detections</div>
              </div>
           </div>
-          <div className="h-48 pb-2 flex-1 w-full mt-2">
-            <ResponsiveContainer width="100%" height="100%" minWidth={0} minHeight={0}>
+          <div className="min-h-0 min-w-0 h-48 pb-2 flex-1 w-full mt-2">
+            <ResponsiveContainer width="100%" height="100%" minWidth={1} minHeight={1}>
               <AreaChart data={inferenceData} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
                 <defs>
                   <linearGradient id="colorDetections" x1="0" y1="0" x2="0" y2="1">
@@ -137,8 +137,8 @@ export const SystemAdminDashboard = () => {
                 </div>
              </div>
           </div>
-          <div className="h-48 pb-2 flex-1 w-full mt-2">
-            <ResponsiveContainer width="100%" height="100%" minWidth={0} minHeight={0}>
+          <div className="min-h-0 min-w-0 h-48 pb-2 flex-1 w-full mt-2">
+            <ResponsiveContainer width="100%" height="100%" minWidth={1} minHeight={1}>
               <AreaChart data={statusData} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
                 <defs>
                   <linearGradient id="colorActive" x1="0" y1="0" x2="0" y2="1">

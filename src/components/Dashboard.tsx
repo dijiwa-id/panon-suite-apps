@@ -401,12 +401,11 @@ export const Dashboard = () => {
                   <div className="flex flex-col gap-3">
                     <div>
                       <label className="block text-[10px] font-bold text-gray-700 dark:text-gray-300 uppercase tracking-widest mb-1.5">Card Name</label>
-                      <input 
+                      <Input 
                         type="text" 
                         value={newCardName}
                         onChange={(e) => setNewCardName(e.target.value)}
                         placeholder="e.g. Daily Anomalies"
-                        className="w-full bg-white dark:bg-[#111] border border-gray-200 dark:border-[#333] rounded-[8px] px-3 py-2 text-xs text-gray-900 dark:text-white focus:outline-none focus:ring-1 focus:ring-[#52C5F3] focus:border-[#52C5F3] outline-none transition-all placeholder:text-gray-400"
                         autoFocus
                       />
                     </div>

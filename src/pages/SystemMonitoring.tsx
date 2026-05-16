@@ -1,9 +1,14 @@
 import React from 'react';
 import { AreaChart, Area, LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
 import { cn } from '../lib/utils';
-import { HardDrive, Activity, Monitor, Network, ShieldCheck, ChevronDown } from 'lucide-react';
+import { HardDrive, Activity, Monitor, Network, ShieldCheck, ChevronDown, Cpu } from 'lucide-react';
 import { useTheme } from '../context/ThemeContext';
 import { Select } from '../components/ui';
+
+const detectedGPUs = [
+  { name: 'NVIDIA RTX 4090', totalVRAM: '24GB', utilization: 82.5 },
+  { name: 'NVIDIA RTX 4090', totalVRAM: '24GB', utilization: 45.2 },
+];
 
 const memoryData = [
   { time: '08:00', value: 78.4 }, { time: '09:00', value: 82.1 }, { time: '10:00', value: 80.5 }, 
@@ -119,6 +124,27 @@ export const SystemMonitoring = () => {
         </div>
       </div>
 
+      {/* GPU Utilization Section */}
+      <div className="card-glass p-5 mb-4">
+        <div className="flex items-center gap-3 mb-4 pb-4 border-b border-gray-200 dark:border-[#222]">
+          <div className="h-8 w-8 rounded-lg bg-gray-100 dark:bg-[#151515] border border-gray-200 dark:border-[#222] flex items-center justify-center">
+            <Cpu className="text-accent" size={16} />
+          </div>
+          <h3 className="text-sm font-bold text-gray-900 dark:text-white">GPU Utilization</h3>
+        </div>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          {detectedGPUs.map((gpu, idx) => (
+            <ProgressBar 
+               key={idx} 
+               label={`${gpu.name} (${gpu.totalVRAM})`} 
+               value={gpu.utilization} 
+               max={100} 
+               colorClass="bg-[#52C5F3]" 
+            />
+          ))}
+        </div>
+      </div>
+
       {/* Charts */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 mb-4">
         {/* Memory Usage Card */}
@@ -133,8 +159,8 @@ export const SystemMonitoring = () => {
                 <div className="text-[10px] tracking-widest uppercase font-black text-gray-500 mt-1">/ 32.0 GB Total</div>
              </div>
           </div>
-          <div className="h-48 pb-2 flex-1 w-full mt-2">
-            <ResponsiveContainer width="100%" height="100%" minWidth={0} minHeight={0}>
+          <div className="min-h-0 min-w-0 h-48 pb-2 flex-1 w-full mt-2">
+            <ResponsiveContainer width="100%" height="100%" minWidth={1} minHeight={1}>
               <LineChart data={memoryData} margin={{ top: 10, right: 10, left: -25, bottom: 0 }}>
                 <defs>
                   <filter id="shadowMemory" height="200%">
@@ -163,8 +189,8 @@ export const SystemMonitoring = () => {
                 <div className="text-[10px] tracking-widest uppercase font-black text-gray-500 mt-1">Status: Normal</div>
              </div>
           </div>
-          <div className="h-48 pb-2 flex-1 w-full mt-2">
-            <ResponsiveContainer width="100%" height="100%" minWidth={0} minHeight={0}>
+          <div className="min-h-0 min-w-0 h-48 pb-2 flex-1 w-full mt-2">
+            <ResponsiveContainer width="100%" height="100%" minWidth={1} minHeight={1}>
               <LineChart data={diskData} margin={{ top: 10, right: 10, left: -25, bottom: 0 }}>
                 <defs>
                   <filter id="shadowDisk" height="200%">

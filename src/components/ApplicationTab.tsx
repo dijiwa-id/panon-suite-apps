@@ -5,6 +5,7 @@ import {
   Card,
   Button,
   Badge,
+  IconBadge,
   Table,
   TableHeader,
   TableBody,
@@ -159,7 +160,7 @@ export const ApplicationTab = ({
   if (viewMode === "list") {
     return (
       <div className="flex flex-col">
-        <Card className="rounded-[11px] overflow-hidden shadow-sm">
+        <Card>
           <Table>
             <TableHeader>
               <TableRow>
@@ -182,19 +183,7 @@ export const ApplicationTab = ({
                     </div>
                   </TableCell>
                   <TableCell>
-                    <Badge
-                      variant={getBadgeVariant(app.status) as any}
-                      className="gap-1.5"
-                    >
-                      {app.status === "Running" && (
-                        <div className="w-1.5 h-1.5 rounded-full bg-green-500 animate-pulse" />
-                      )}
-                      {app.status === "Warning" && (
-                        <div className="w-1.5 h-1.5 rounded-full bg-yellow-500 animate-pulse" />
-                      )}
-                      {app.status === "Stopped" && (
-                        <div className="w-1.5 h-1.5 rounded-full bg-red-500" />
-                      )}
+                    <Badge variant={getBadgeVariant(app.status) as any} dot>
                       {app.status}
                     </Badge>
                   </TableCell>
@@ -216,17 +205,14 @@ export const ApplicationTab = ({
                   <TableCell>
                     <div className="flex flex-wrap gap-1.5 max-w-[200px]">
                       {app.models.slice(0, 2).map((m, i) => (
-                        <span
-                          key={i}
-                          className="inline-flex items-center gap-1 px-1.5 py-0.5 rounded bg-gray-100 dark:bg-white/5 border border-gray-200 dark:border-white/10 text-[9px] font-bold text-gray-600 dark:text-gray-300"
-                        >
+                        <Badge key={i} variant="secondary" className="text-[9px]">
                           <Box size={8} /> {m}
-                        </span>
+                        </Badge>
                       ))}
                       {app.models.length > 2 && (
-                        <span className="inline-flex items-center px-1.5 py-0.5 rounded bg-gray-100 dark:bg-white/5 border border-gray-200 dark:border-white/10 text-[9px] font-bold text-gray-600 dark:text-gray-300">
+                        <Badge variant="secondary" className="text-[9px]">
                           +{app.models.length - 2}
-                        </span>
+                        </Badge>
                       )}
                     </div>
                   </TableCell>
@@ -267,22 +253,10 @@ export const ApplicationTab = ({
             className="p-5 flex flex-col group hover:border-gray-300 dark:hover:border-[#333] transition-all"
           >
             <div className="flex justify-between items-start mb-4">
-              <div className="w-10 h-10 rounded-lg bg-gray-100 dark:bg-[#151515] border border-gray-200 dark:border-[#222] flex items-center justify-center text-accent">
+              <IconBadge>
                 <Activity size={20} />
-              </div>
-              <Badge
-                variant={getBadgeVariant(app.status) as any}
-                className="gap-1.5"
-              >
-                {app.status === "Running" && (
-                  <div className="w-1.5 h-1.5 rounded-full bg-green-500 animate-pulse" />
-                )}
-                {app.status === "Warning" && (
-                  <div className="w-1.5 h-1.5 rounded-full bg-yellow-500 animate-pulse" />
-                )}
-                {app.status === "Stopped" && (
-                  <div className="w-1.5 h-1.5 rounded-full bg-red-500" />
-                )}
+              </IconBadge>
+              <Badge variant={getBadgeVariant(app.status) as any} dot>
                 {app.status}
               </Badge>
             </div>
@@ -296,12 +270,9 @@ export const ApplicationTab = ({
 
             <div className="flex flex-wrap gap-1.5 mb-5">
               {app.models.map((m, i) => (
-                <span
-                  key={i}
-                  className="inline-flex items-center gap-1 px-1.5 py-0.5 rounded bg-gray-100 dark:bg-white/5 border border-gray-200 dark:border-white/10 text-[9px] font-bold text-gray-600 dark:text-gray-300"
-                >
+                <Badge key={i} variant="secondary" className="text-[9px]">
                   <Box size={8} /> {m}
-                </span>
+                </Badge>
               ))}
             </div>
 

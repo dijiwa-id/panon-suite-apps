@@ -218,8 +218,8 @@ export const DeployDashboard = () => {
                  </div>
                  <Activity size={14} />
                </div>
-               <div className="h-40 w-full flex-1 min-w-0">
-                 <ResponsiveContainer width="100%" height="100%" minWidth={0} minHeight={0}>
+               <div className="min-h-0 min-w-0 h-40 w-full flex-1 min-w-0">
+                 <ResponsiveContainer width="100%" height="100%" minWidth={1} minHeight={1}>
                    <AreaChart data={violationTrends} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
                      <defs>
                         {Object.entries(colorMap).map(([key, color]) => (
@@ -255,8 +255,8 @@ export const DeployDashboard = () => {
                  <span className="text-[10px] font-black tracking-widest capitalize text-gray-900 dark:text-white">Violations Types</span>
                  <LayoutGrid size={14} />
                </div>
-               <div className="flex-1 w-full flex items-center justify-center min-h-[160px] drop-shadow-sm">
-                 <ResponsiveContainer width="100%" height="100%" minWidth={0} minHeight={0}>
+               <div className="min-h-0 min-w-0 flex-1 w-full flex items-center justify-center min-h-[160px] drop-shadow-sm">
+                 <ResponsiveContainer width="100%" height="100%" minWidth={1} minHeight={1}>
                    <PieChart>
                      <Pie data={violationTypes} innerRadius={50} outerRadius={65} paddingAngle={4} cornerRadius={4} dataKey="value" stroke="none">
                        {violationTypes.map((entry, index) => (
@@ -326,8 +326,8 @@ export const DeployDashboard = () => {
                     </div>
                   </div>
                </div>
-               <div className="h-48 w-full">
-                  <ResponsiveContainer width="100%" height="100%" minWidth={0} minHeight={0}>
+               <div className="min-h-0 min-w-0 h-48 w-full">
+                  <ResponsiveContainer width="100%" height="100%" minWidth={1} minHeight={1}>
                     <BarChart data={areaViolations} margin={{ top: 0, right: 0, left: -20, bottom: 0 }} barSize={40}>
                       <CartesianGrid strokeDasharray="3 3" stroke={isDark ? '#2a2a2a' : '#f3f4f6'} vertical={false} strokeOpacity={0.6} />
                       <XAxis dataKey="name" axisLine={false} tickLine={false} tick={{fontSize: 10, fill: '#888', fontWeight: 600}} dy={10} />
