@@ -1,4 +1,5 @@
 import { create } from 'zustand';
+import { persist } from 'zustand/middleware';
 import { toast } from 'sonner';
 
 export interface Dataset {
@@ -67,83 +68,90 @@ const defaultModels: Model[] = [
   { id: 'MOD-2026-004', name: 'Perimeter-Night', version: 'v0.9.1', architecture: 'YOLOv8-s', map: 0.450, param: '11.1M', size: '22 MB', status: 'investigating', tags: ['Object Detection', 'Night Vision'] },
 ];
 
-export const useTrainStore = create<TrainState>((set) => ({
-  datasets: defaultDatasets,
-  trainingJobs: defaultJobs,
-  models: defaultModels,
+export const useTrainStore = create<TrainState>()(
+  persist(
+    (set) => ({
+      datasets: defaultDatasets,
+      trainingJobs: defaultJobs,
+      models: defaultModels,
 
-  addDataset: (ds) => set((state) => {
-    const newEntry: Dataset = {
-      ...ds,
-      id: `DS-2026-00${state.datasets.length + 1}`,
-      samples: 0,
-      annotations: 0,
-      size: '0 MB',
-      lastUpdated: 'Just now',
-      status: 'collecting'
-    };
-    toast.success("Dataset created successfully");
-    return { datasets: [newEntry, ...state.datasets] };
-  }),
-
-  updateDatasetStatus: (id, status) => set((state) => ({
-    datasets: state.datasets.map(ds => ds.id === id ? { ...ds, status } : ds)
-  })),
-
-  incrementDatasetSamples: (id, numFrames) => set((state) => ({
-    datasets: state.datasets.map(ds => {
-      if (ds.id === id) {
-        return {
+      addDataset: (ds) => set((state) => {
+        const newEntry: Dataset = {
           ...ds,
-          samples: ds.samples + numFrames,
-          size: `${((ds.samples + numFrames) * 0.5).toFixed(1)} MB`,
-          lastUpdated: 'Just now'
-        }
-      }
-      return ds;
-    })
-  })),
-
-  incrementDatasetAnnotations: (id, count) => set((state) => ({
-    datasets: state.datasets.map(ds => {
-      if (ds.id === id) {
-        return {
-          ...ds,
-          annotations: ds.annotations + count,
+          id: `DS-2026-00${state.datasets.length + 1}`,
+          samples: 0,
+          annotations: 0,
+          size: '0 MB',
           lastUpdated: 'Just now',
-          status: 'annotating'
-        }
-      }
-      return ds;
-    })
-  })),
+          status: 'collecting'
+        };
+        toast.success("Dataset created successfully");
+        return { datasets: [newEntry, ...state.datasets] };
+      }),
 
-  addTrainingJob: (job) => set((state) => {
-    const newJob: TrainingJob = {
-      ...job,
-      id: `TR-09${state.trainingJobs.length + 3}`,
-      status: 'training',
-      timeRemaining: 'Calculating...',
-      epoch: '0/100',
-      map: 0.0
-    };
-    toast.success(`Training job ${newJob.name} started`);
-    
-    const newModel: Model = {
-      id: `MOD-2026-00${state.models.length + 1}`,
-      name: newJob.name,
-      version: 'v1.0.0',
-      architecture: 'YOLOv8-m',
-      map: 0,
-      param: '25.9M',
-      size: '50 MB',
-      status: 'training',
-      tags: [newJob.dataset]
-    };
-    
-    return {
-      trainingJobs: [newJob, ...state.trainingJobs],
-      models: [newModel, ...state.models]
-    };
-  })
-}));
+      updateDatasetStatus: (id, status) => set((state) => ({
+        datasets: state.datasets.map(ds => ds.id === id ? { ...ds, status } : ds)
+      })),
+
+      incrementDatasetSamples: (id, numFrames) => set((state) => ({
+        datasets: state.datasets.map(ds => {
+          if (ds.id === id) {
+            return {
+              ...ds,
+              samples: ds.samples + numFrames,
+              size: `${((ds.samples + numFrames) * 0.5).toFixed(1)} MB`,
+              lastUpdated: 'Just now'
+            }
+          }
+          return ds;
+        })
+      })),
+
+      incrementDatasetAnnotations: (id, count) => set((state) => ({
+        datasets: state.datasets.map(ds => {
+          if (ds.id === id) {
+            return {
+              ...ds,
+              annotations: ds.annotations + count,
+              lastUpdated: 'Just now',
+              status: 'annotating'
+            }
+          }
+          return ds;
+        })
+      })),
+
+      addTrainingJob: (job) => set((state) => {
+        const newJob: TrainingJob = {
+          ...job,
+          id: `TR-09${state.trainingJobs.length + 3}`,
+          status: 'training',
+          timeRemaining: 'Calculating...',
+          epoch: '0/100',
+          map: 0.0
+        };
+        toast.success(`Training job ${newJob.name} started`);
+        
+        const newModel: Model = {
+          id: `MOD-2026-00${state.models.length + 1}`,
+          name: newJob.name,
+          version: 'v1.0.0',
+          architecture: 'YOLOv8-m',
+          map: 0,
+          param: '25.9M',
+          size: '50 MB',
+          status: 'training',
+          tags: [newJob.dataset]
+        };
+        
+        return {
+          trainingJobs: [newJob, ...state.trainingJobs],
+          models: [newModel, ...state.models]
+        };
+      })
+    }),
+    {
+      name: 'panon-train-storage'
+    }
+  )
+);

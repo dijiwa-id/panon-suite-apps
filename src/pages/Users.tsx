@@ -4,18 +4,18 @@ import { cn } from '../lib/utils';
 import { Select, Card, Button, Input, Table, TableHeader, TableRow, TableHead, TableBody, TableCell } from '../components/ui';
 
 const initialUsers = [
-  { id: 'USR-001', name: 'M Iqbal', email: 'iqbal@panon.com', role: 'SysAdmin', status: 'Active', lastLogin: '2 mins ago' },
-  { id: 'USR-002', name: 'John Doe', email: 'john@panon.com', role: 'Admin', status: 'Active', lastLogin: '1 hour ago' },
-  { id: 'USR-003', name: 'Jane Smith', email: 'jane@panon.com', role: 'User', status: 'Inactive', lastLogin: '2 days ago' },
-  { id: 'USR-004', name: 'Alex Wong', email: 'alex@panon.com', role: 'Operator', status: 'Active', lastLogin: '12 mins ago' },
-  { id: 'USR-005', name: 'Sarah Lee', email: 'sarah@panon.com', role: 'User', status: 'Active', lastLogin: '5 mins ago' },
+  { id: 'USR-001', name: 'M Iqbal', email: 'iqbal@panon.com', role: 'SysAdmin', organization: 'Panon', status: 'Active', lastLogin: '2 mins ago' },
+  { id: 'USR-002', name: 'John Doe', email: 'john@panon.com', role: 'Admin', organization: 'Acme Corp', status: 'Active', lastLogin: '1 hour ago' },
+  { id: 'USR-003', name: 'Jane Smith', email: 'jane@panon.com', role: 'User', organization: 'Acme Corp', status: 'Inactive', lastLogin: '2 days ago' },
+  { id: 'USR-004', name: 'Alex Wong', email: 'alex@panon.com', role: 'Operator', organization: 'Globex Inc', status: 'Active', lastLogin: '12 mins ago' },
+  { id: 'USR-005', name: 'Sarah Lee', email: 'sarah@panon.com', role: 'User', organization: 'Globex Inc', status: 'Active', lastLogin: '5 mins ago' },
 ];
 
 const UserModal = ({ isOpen, onClose, user, onSave }: { isOpen: boolean; onClose: () => void; user: any; onSave: (u: any) => void }) => {
-  const [formData, setFormData] = useState(user || { name: '', email: '', role: 'User', status: 'Active' });
+  const [formData, setFormData] = useState(user || { name: '', email: '', role: 'User', organization: 'Acme Corp', status: 'Active' });
 
   React.useEffect(() => {
-    setFormData(user || { name: '', email: '', role: 'User', status: 'Active' });
+    setFormData(user || { name: '', email: '', role: 'User', organization: 'Acme Corp', status: 'Active' });
   }, [user, isOpen]);
 
   if (!isOpen) return null;
@@ -54,6 +54,20 @@ const UserModal = ({ isOpen, onClose, user, onSave }: { isOpen: boolean; onClose
           
           <div className="grid grid-cols-2 gap-4">
             <div>
+              <label className="block text-[10px] font-black text-gray-500 mb-2 uppercase tracking-widest">Organization</label>
+              <div className="relative">
+                <div className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 pointer-events-none">
+                  <ChevronDown size={14} />
+                </div>
+                <Select value={formData.organization} onChange={e => setFormData({...formData, organization: e.target.value})} className="w-full bg-gray-50 dark:bg-[#161616] border border-gray-200 dark:border-[#222] rounded-lg pl-4 pr-9 h-[37px] text-[12px] font-bold text-gray-700 dark:text-gray-300 outline-none focus-visible:ring-1 focus-visible:ring-accent/50 transition-all appearance-none cursor-pointer">
+                  <option>Panon</option>
+                  <option>Acme Corp</option>
+                  <option>Globex Inc</option>
+                  <option>Stark Industries</option>
+                </Select>
+              </div>
+            </div>
+            <div>
               <label className="block text-[10px] font-black text-gray-500 mb-2 uppercase tracking-widest">Role</label>
               <div className="relative">
                 <div className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 pointer-events-none">
@@ -67,17 +81,17 @@ const UserModal = ({ isOpen, onClose, user, onSave }: { isOpen: boolean; onClose
                 </Select>
               </div>
             </div>
-            <div>
-              <label className="block text-[10px] font-black text-gray-500 mb-2 uppercase tracking-widest">Status</label>
-              <div className="relative">
-                <div className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 pointer-events-none">
-                  <ChevronDown size={14} />
-                </div>
-                <Select value={formData.status} onChange={e => setFormData({...formData, status: e.target.value})} className="w-full bg-gray-50 dark:bg-[#161616] border border-gray-200 dark:border-[#222] rounded-lg pl-4 pr-9 h-[37px] text-[12px] font-bold text-gray-700 dark:text-gray-300 outline-none focus-visible:ring-1 focus-visible:ring-accent/50 transition-all appearance-none cursor-pointer">
-                  <option>Active</option>
-                  <option>Inactive</option>
-                </Select>
+          </div>
+          <div>
+            <label className="block text-[10px] font-black text-gray-500 mb-2 uppercase tracking-widest">Status</label>
+            <div className="relative">
+              <div className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 pointer-events-none">
+                <ChevronDown size={14} />
               </div>
+              <Select value={formData.status} onChange={e => setFormData({...formData, status: e.target.value})} className="w-full bg-gray-50 dark:bg-[#161616] border border-gray-200 dark:border-[#222] rounded-lg pl-4 pr-9 h-[37px] text-[12px] font-bold text-gray-700 dark:text-gray-300 outline-none focus-visible:ring-1 focus-visible:ring-accent/50 transition-all appearance-none cursor-pointer">
+                <option>Active</option>
+                <option>Inactive</option>
+              </Select>
             </div>
           </div>
           <div className="pt-4 flex gap-3">
@@ -120,7 +134,8 @@ export const Users = () => {
   const filteredUsers = users.filter(user => 
     user.name.toLowerCase().includes(searchQuery.toLowerCase()) || 
     user.email.toLowerCase().includes(searchQuery.toLowerCase()) ||
-    user.role.toLowerCase().includes(searchQuery.toLowerCase())
+    user.role.toLowerCase().includes(searchQuery.toLowerCase()) ||
+    user.organization.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
   return (
@@ -160,6 +175,7 @@ export const Users = () => {
               <TableHeader>
                 <TableRow>
                   <TableHead className="pl-5">User</TableHead>
+                  <TableHead>Organization</TableHead>
                   <TableHead>Role</TableHead>
                   <TableHead>Status</TableHead>
                   <TableHead>Last Login</TableHead>
@@ -178,6 +194,11 @@ export const Users = () => {
                           <div className="font-bold text-xs text-gray-900 dark:text-white">{user.name}</div>
                           <div className="text-[9px] text-gray-500 font-mono flex items-center gap-1 mt-0.5"><Mail size={8} /> {user.email}</div>
                         </div>
+                      </div>
+                    </TableCell>
+                    <TableCell>
+                      <div className="inline-flex items-center gap-1.5 px-2 py-0.5 rounded bg-[#1c1c1c] border border-gray-700 text-[10px] font-bold text-white tracking-widest uppercase">
+                        {user.organization}
                       </div>
                     </TableCell>
                     <TableCell>

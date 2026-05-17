@@ -62,6 +62,12 @@ export const ImageAnnotation = () => {
       handleNext();
   };
 
+  const handleSaveProgress = () => {
+      // In a real scenario, this would post to a backend
+      localStorage.setItem(`annotations_progress_${currentImage.name}`, JSON.stringify(annotations));
+      toast.success('Progress saved');
+  };
+
   const [classes, setClasses] = useState<AnnotationClass[]>(initialClasses);
   const [activeTool, setActiveTool] = useState('box');
   const [activeClass, setActiveClass] = useState('1');
@@ -78,22 +84,40 @@ export const ImageAnnotation = () => {
   const [zoom, setZoom] = useState(100);
   const [isAddingClass, setIsAddingClass] = useState(false);
   const [newClassName, setNewClassName] = useState('');
+  const [newClassColor, setNewClassColor] = useState('#10b981');
   const [annotationToDelete, setAnnotationToDelete] = useState<string | null>(null);
 
   const containerRef = useRef<HTMLDivElement>(null);
 
+  React.useEffect(() => {
+    const saved = localStorage.getItem(`annotations_progress_${currentImage.name}`);
+    if (saved) {
+      try {
+        setAnnotations(JSON.parse(saved));
+      } catch (e) {
+        console.error("Failed to parse saved annotations", e);
+      }
+    } else {
+      // Assuming initial annotations for the first image or empty array
+      setAnnotations(currentImageIndex === 0 ? [
+        { id: 'a1', classId: '1', x: 30, y: 20, width: 20, height: 40 },
+        { id: 'a2', classId: '2', x: 60, y: 60, width: 15, height: 15 }
+      ] : []);
+    }
+    setSelectedAnnotationId(null);
+  }, [currentImage.name, currentImageIndex]);
+
   const handleAddClass = () => {
     if (newClassName.trim()) {
-      const colors = ['#10b981', '#8b5cf6', '#ef4444', '#14b8a6', '#f43f5e'];
-      const randomColor = colors[Math.floor(Math.random() * colors.length)];
       const newClass = {
         id: Math.random().toString(36).substr(2, 6),
         name: newClassName.trim(),
-        color: randomColor
+        color: newClassColor
       };
       setClasses([...classes, newClass]);
       setActiveClass(newClass.id);
       setNewClassName('');
+      setNewClassColor('#10b981');
       setIsAddingClass(false);
     }
   };
@@ -222,7 +246,13 @@ export const ImageAnnotation = () => {
           ))}
         </div>
 
-        <div className="flex gap-3">
+        <div className="flex gap-2">
+          <button 
+             onClick={handleSaveProgress}
+             className="flex items-center gap-2 bg-gray-50/50 dark:bg-[#1a1a1a] border border-gray-200 dark:border-[#222] hover:bg-gray-100 dark:hover:bg-[#202020] text-gray-900 dark:text-gray-300 h-[32px] rounded-lg text-xs font-bold px-4 transition-colors"
+          >
+            <Save size={14} /> Save Progress
+          </button>
           <button 
              onClick={handleSaveNext}
              disabled={currentImageIndex === images.length - 1}
@@ -350,15 +380,21 @@ export const ImageAnnotation = () => {
               <div className="mt-3 bg-gray-50/50 dark:bg-[#1a1a1a] p-2 rounded-lg border border-gray-200 dark:border-[#222]">
                 <div className="flex items-center gap-2 mb-2">
                   <input
+                    type="color"
+                    value={newClassColor}
+                    onChange={(e) => setNewClassColor(e.target.value)}
+                    className="w-6 h-6 rounded cursor-pointer border-0 p-0 bg-transparent shrink-0"
+                  />
+                  <input
                     autoFocus
                     type="text"
                     placeholder="Class name..."
                     value={newClassName}
                     onChange={(e) => setNewClassName(e.target.value)}
                     onKeyDown={(e) => e.key === 'Enter' && handleAddClass()}
-                    className="flex-1 bg-transparent border-none text-xs text-gray-900 dark:text-white placeholder-gray-500 focus:outline-none"
+                    className="flex-1 bg-transparent border-none text-xs text-gray-900 dark:text-white placeholder-gray-500 focus:outline-none min-w-0"
                   />
-                  <button onClick={() => setIsAddingClass(false)} className="text-gray-500 hover:text-white p-1">
+                  <button onClick={() => setIsAddingClass(false)} className="text-gray-500 hover:text-white p-1 shrink-0">
                     <X size={12} />
                   </button>
                 </div>

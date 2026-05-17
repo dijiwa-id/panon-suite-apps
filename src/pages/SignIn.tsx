@@ -75,7 +75,8 @@ export const SignIn = () => {
         id: 'user-1',
         name: 'System Admin',
         email: adminCredentials.email,
-        role: 'admin'
+        role: 'SysAdmin',
+        organization: 'Panon'
       });
       navigate('/'); // Redirect to dashboard
     }, 800);

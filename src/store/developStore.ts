@@ -1,4 +1,5 @@
 import { create } from 'zustand';
+import { persist } from 'zustand/middleware';
 import { toast } from 'sonner';
 
 export interface Block {
@@ -86,58 +87,65 @@ const defaultApplications: Application[] = [
   { id: 'APP-03', name: 'Parking Lot Monitor', desc: 'ALPR scanning', status: 'stopped', type: 'ALPR & Counting', nodesCount: 5, uptime: '-', endpoint: '-', pipelineId: 'p1', inputStream: 'Cam-03 (Perimeter North)', computeTarget: 'Edge Node Alpha' },
 ];
 
-export const useDevelopStore = create<DevelopState>((set) => ({
-  blocks: defaultBlocks,
-  pipelines: defaultPipelines,
-  applications: defaultApplications,
-  activePipelineId: null,
+export const useDevelopStore = create<DevelopState>()(
+  persist(
+    (set) => ({
+      blocks: defaultBlocks,
+      pipelines: defaultPipelines,
+      applications: defaultApplications,
+      activePipelineId: null,
 
-  addBlock: (block) => set((state) => ({
-    blocks: [...state.blocks, { ...block, id: `b-${Date.now()}` }]
-  })),
+      addBlock: (block) => set((state) => ({
+        blocks: [...state.blocks, { ...block, id: `b-${Date.now()}` }]
+      })),
 
-  savePipeline: (pipeline) => set((state) => {
-    const existing = state.pipelines.find(p => p.name === pipeline.name);
-    const now = new Date().toISOString();
-    
-    if (existing) {
-      toast.success("Pipeline updated successfully");
-      return {
-        pipelines: state.pipelines.map(p => p.id === existing.id ? { ...p, ...pipeline, updatedAt: now } : p)
-      };
-    } else {
-      const newId = `p-${Date.now()}`;
-      toast.success("Pipeline created successfully");
-      return {
-        pipelines: [...state.pipelines, { ...pipeline, id: newId, updatedAt: now }]
-      };
+      savePipeline: (pipeline) => set((state) => {
+        const existing = state.pipelines.find(p => p.name === pipeline.name);
+        const now = new Date().toISOString();
+        
+        if (existing) {
+          toast.success("Pipeline updated successfully");
+          return {
+            pipelines: state.pipelines.map(p => p.id === existing.id ? { ...p, ...pipeline, updatedAt: now } : p)
+          };
+        } else {
+          const newId = `p-${Date.now()}`;
+          toast.success("Pipeline created successfully");
+          return {
+            pipelines: [...state.pipelines, { ...pipeline, id: newId, updatedAt: now }]
+          };
+        }
+      }),
+
+      addApplication: (app) => set((state) => {
+        const pipeline = state.pipelines.find(p => p.id === app.pipelineId);
+        
+        const newApp: Application = {
+          ...app,
+          id: `APP-0${state.applications.length + 1}`,
+          status: 'stopped',
+          uptime: '-',
+          endpoint: `/api/v1/app-${Date.now().toString().slice(-4)}`,
+          nodesCount: pipeline ? pipeline.nodes.length : 0,
+        };
+        
+        return {
+          applications: [newApp, ...state.applications]
+        };
+      }),
+
+      toggleApplicationStatus: (id) => set((state) => ({
+        applications: state.applications.map(app => 
+          app.id === id 
+            ? { ...app, status: app.status === 'running' ? 'stopped' : 'running', uptime: app.status === 'stopped' ? '0d 0h' : '-' } 
+            : app
+        )
+      })),
+
+      setActivePipelineId: (id) => set({ activePipelineId: id })
+    }),
+    {
+      name: 'panon-develop-storage',
     }
-  }),
-
-  addApplication: (app) => set((state) => {
-    const pipeline = state.pipelines.find(p => p.id === app.pipelineId);
-    
-    const newApp: Application = {
-      ...app,
-      id: `APP-0${state.applications.length + 1}`,
-      status: 'stopped',
-      uptime: '-',
-      endpoint: `/api/v1/app-${Date.now().toString().slice(-4)}`,
-      nodesCount: pipeline ? pipeline.nodes.length : 0,
-    };
-    
-    return {
-      applications: [newApp, ...state.applications]
-    };
-  }),
-
-  toggleApplicationStatus: (id) => set((state) => ({
-    applications: state.applications.map(app => 
-      app.id === id 
-        ? { ...app, status: app.status === 'running' ? 'stopped' : 'running', uptime: app.status === 'stopped' ? '0d 0h' : '-' } 
-        : app
-    )
-  })),
-
-  setActivePipelineId: (id) => set({ activePipelineId: id })
-}));
+  )
+);
