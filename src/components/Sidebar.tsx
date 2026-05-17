@@ -27,7 +27,6 @@ import {
 } from "lucide-react";
 import { cn } from "../lib/utils";
 import { motion } from "motion/react";
-import { useAppStore } from "../store";
 
 const iconMap: Record<string, React.ReactNode> = {
   Dashboard: <LayoutDashboard size={12} />,

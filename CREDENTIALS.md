@@ -9,6 +9,8 @@ To access the platform's full capabilities during the development and demonstrat
 - **Email Address:** `admin@panonsuite.com`
 - **Password:** `admin123`
 
+*Note: For security reasons, you will be required to configure a new secure password upon your first login.*
+
 ### Notes on Local Authentication
 - Authentication is currently handled locally in a fixed configuration inside `src/pages/SignIn.tsx`.
 - Real authentication, token management, and session validation (e.g., via OAuth, JWT, or database-backed authentication) should be integrated prior to deploying into a real production environment. 

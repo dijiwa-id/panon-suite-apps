@@ -17,8 +17,10 @@ interface AppState {
   // Auth State
   isAuthenticated: boolean;
   user: User | null;
+  adminCredentials: { email: string; pass: string; isFirstLogin: boolean };
   login: (user: User) => void;
   logout: () => void;
+  updateAdminCredentials: (pass: string) => void;
 
   // Navigation State
   isSidebarOpen: boolean;
@@ -44,8 +46,16 @@ export const useAppStore = create<AppState>()(
       // Auth initial state
       isAuthenticated: false,
       user: null,
+      adminCredentials: {
+        email: 'admin@panonsuite.com',
+        pass: 'admin123',
+        isFirstLogin: true
+      },
       login: (user) => set({ isAuthenticated: true, user }),
       logout: () => set({ isAuthenticated: false, user: null }),
+      updateAdminCredentials: (pass) => set((state) => ({
+        adminCredentials: { ...state.adminCredentials, pass, isFirstLogin: false }
+      })),
 
       // Navigation initial state
       isSidebarOpen: true,
@@ -65,6 +75,7 @@ export const useAppStore = create<AppState>()(
         theme: state.theme, 
         isAuthenticated: state.isAuthenticated, 
         user: state.user,
+        adminCredentials: state.adminCredentials,
         platformName: state.platformName,
         platformLogo: state.platformLogo
       }),

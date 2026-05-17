@@ -85,17 +85,17 @@ export const ApplicationTab = ({
     setCurrentPage(1);
   }, [searchQuery, viewMode]);
 
-  const filteredApps = apps.filter(
+  const filteredApps = React.useMemo(() => apps.filter(
     (app) =>
       app.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
       app.status.toLowerCase().includes(searchQuery.toLowerCase()),
-  );
+  ), [apps, searchQuery]);
 
   const totalPages = Math.ceil(filteredApps.length / itemsPerPage);
-  const paginatedApps = filteredApps.slice(
+  const paginatedApps = React.useMemo(() => filteredApps.slice(
     (currentPage - 1) * itemsPerPage,
     currentPage * itemsPerPage
-  );
+  ), [filteredApps, currentPage, itemsPerPage]);
 
   const getBadgeVariant = (status: string) => {
     switch (status) {

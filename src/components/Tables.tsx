@@ -26,7 +26,7 @@ export const TableCard = ({ title, tabs, columns, data, className, isLoading }: 
     }
   };
 
-  const sortedData = [...data].sort((a, b) => {
+  const sortedData = React.useMemo(() => [...data].sort((a, b) => {
     const colKeys = Object.keys(a);
     const colIndex = columns.indexOf(sortCol);
     if (colIndex === -1 || colIndex >= colKeys.length) return 0;
@@ -42,7 +42,7 @@ export const TableCard = ({ title, tabs, columns, data, className, isLoading }: 
     // Basic string comparison, handle numbers appropriately if needed
     const compare = String(aVal).localeCompare(String(bVal), undefined, {numeric: true});
     return sortAsc ? compare : -compare;
-  });
+  }), [data, columns, sortCol, sortAsc]);
 
   const showLoading = isLoading || data.length === 0;
 
@@ -144,13 +144,13 @@ const ChevronDownIcon = () => (
 );
 
 export const AnomalyTable = () => {
-  const data = [
+  const data = React.useMemo(() => [
     { object: 'Person', confidence: '98.5%', status: <CheckCircle2 size={12} className="text-secondary" /> },
     { object: 'Vehicle', confidence: '92.1%', status: <CheckCircle2 size={12} className="text-accent" /> },
     { object: 'Vehicle', confidence: '88.3%', status: <CheckCircle2 size={12} className="text-accent" /> },
     { object: 'Bicycle', confidence: '74.2%', status: <div className="w-3 h-3 rounded-full border border-gray-300 dark:border-gray-500"></div> },
     { object: 'Person', confidence: '95.8%', status: <CheckCircle2 size={12} className="text-secondary" /> },
-  ];
+  ], []);
 
   return (
     <TableCard 
@@ -163,13 +163,13 @@ export const AnomalyTable = () => {
 }
 
 export const ImageAnnotationTable = () => {
-  const data = [
+  const data = React.useMemo(() => [
     { camera: 'Cam 03', target: 'Vehicle', duration: '12m 04s' },
     { camera: 'Cam 08', target: 'Person', duration: '02m 01s', active: true },
     { camera: 'Cam 01', target: 'Truck', duration: '45m 12s' },
     { camera: 'Cam 02', target: 'Person', duration: '01m 20s' },
     { camera: 'Cam 03', target: 'Vehicle', duration: '10m 05s' },
-  ];
+  ], []);
 
   return (
     <TableCard 
@@ -187,11 +187,11 @@ export const RequestList = () => {
   const [sortCol, setSortCol] = useState('Timestamp');
   const [sortAsc, setSortAsc] = useState(false);
 
-  const data = [
+  const data = React.useMemo(() => [
     { from: 'Cam 01', time: <div className="flex items-center gap-3 text-[10px] text-gray-500 uppercase tracking-widest font-black">Processing <div className="w-16 h-[2px] bg-gray-200 dark:bg-[#2a2a2a] rounded-none overflow-hidden"><div className="w-1/3 h-full bg-secondary"></div></div></div>, sum: '12:45:03' },
     { from: 'Cam 04', time: <div className="flex items-center gap-3 text-[10px] text-accent">Tracking <div className="w-16 h-[2px] bg-accent/20 rounded-none overflow-hidden"><div className="w-2/3 h-full bg-accent"></div></div></div>, sum: '12:44:12' },
     { from: 'Cam 08', time: <div className="flex items-center gap-3 text-[10px] text-accent">Tracking <div className="w-16 h-[2px] bg-accent/20 rounded-none overflow-hidden"><div className="w-3/4 h-full bg-accent"></div></div></div>, sum: '12:42:55' },
-  ];
+  ], []);
 
   const handleSort = (col: string) => {
     if (sortCol === col) {
@@ -202,7 +202,7 @@ export const RequestList = () => {
     }
   };
 
-  const sortedData = [...data].sort((a, b) => {
+  const sortedData = React.useMemo(() => [...data].sort((a, b) => {
      let aVal, bVal;
      if (sortCol === 'Source') { aVal = a.from; bVal = b.from; }
      else if (sortCol === 'Status') { return 0; } // Assuming we don't sort by the JSX element for now
@@ -210,7 +210,7 @@ export const RequestList = () => {
      
      const compare = String(aVal).localeCompare(String(bVal), undefined, {numeric: true});
      return sortAsc ? compare : -compare;
-  });
+  }), [data, sortCol, sortAsc]);
 
   return (
     <Card className="p-5 flex flex-col h-full">

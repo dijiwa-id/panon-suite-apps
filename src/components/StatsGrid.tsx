@@ -3,21 +3,21 @@ import { cn } from '../lib/utils';
 import { ArrowDownToLine } from 'lucide-react';
 import { Card } from './ui';
 
-export const StatsGrid = () => {
-  const stats = [
-    { label: "Vehicle Rate", value: "160" },
-    { label: "Total Vehicle", value: "222" },
-    { label: "FPS", value: "30" },
-    { label: "Stream", value: "23" },
-  ];
+const stats = [
+  { label: "Vehicle Rate", value: "160" },
+  { label: "Total Vehicle", value: "222" },
+  { label: "FPS", value: "30" },
+  { label: "Stream", value: "23" },
+];
 
-  const detections = [
-    { label: "People Detection", color: "bg-accent", width: "85%" },
-    { label: "Vehicles", color: "bg-[#EC3292]", width: "70%" },
-    { label: "Anomaly", color: "bg-[#f59e0b]", width: "80%" },
-    { label: "Objects", color: "bg-gray-400 dark:bg-gray-600", width: "25%" },
-  ];
+const detections = [
+  { label: "People Detection", color: "bg-accent", width: "85%" },
+  { label: "Vehicles", color: "bg-[#EC3292]", width: "70%" },
+  { label: "Anomaly", color: "bg-[#f59e0b]", width: "80%" },
+  { label: "Objects", color: "bg-gray-400 dark:bg-gray-600", width: "25%" },
+];
 
+export const StatsGrid = React.memo(() => {
   return (
     <Card className="flex flex-col justify-between h-full p-0">
       {/* Top Stats */}
@@ -69,5 +69,5 @@ export const StatsGrid = () => {
       </div>
     </Card>
   );
-};
+});
 

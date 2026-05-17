@@ -9,6 +9,7 @@ import { cn } from '../lib/utils';
 import { Button, Input, Select, Dropdown } from './ui';
 import { useAppStore } from '../store';
 import { toast } from 'sonner';
+import { motion, AnimatePresence } from 'motion/react';
 
 const initialLayout = [
   { id: '1', name: 'Accuracy Timeline', type: 'chart' },
@@ -120,6 +121,15 @@ export const Dashboard = () => {
 
   const handleRemoveCard = (id: string) => {
     setLayoutItems(layoutItems.filter(item => item.id !== id));
+  };
+
+  const containerVariants = {
+    hidden: { opacity: 0 },
+    show: { opacity: 1, transition: { staggerChildren: 0.05 } }
+  };
+  const itemVariants = {
+    hidden: { opacity: 0, scale: 0.98, y: 10 },
+    show: { opacity: 1, scale: 1, y: 0, transition: { duration: 0.3 } }
   };
 
   return (
@@ -248,7 +258,12 @@ export const Dashboard = () => {
 
         {/* Main Content */}
         {activeTab === 'settings' ? (
-          <div className="bg-white dark:bg-[#1e1e1e] border border-gray-200 dark:border-[#222] rounded-[11px] p-6 shadow-sm max-w-4xl max-h-min">
+          <motion.div 
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -10 }}
+            className="bg-white dark:bg-[#1e1e1e] border border-gray-200 dark:border-[#222] rounded-[11px] p-6 shadow-sm max-w-4xl max-h-min"
+          >
             <h3 className="text-sm font-black text-gray-900 dark:text-white mb-6">General Platform Settings</h3>
             
             <div className="space-y-6">
@@ -352,43 +367,54 @@ export const Dashboard = () => {
                 <Button onClick={handleSaveSettings}>Save Settings</Button>
               </div>
             </div>
-          </div>
+          </motion.div>
         ) : activeTab === 'application' ? (
-          <ApplicationTab searchQuery={searchQuery} viewMode={viewMode} />
+          <motion.div
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -10 }}
+          >
+            <ApplicationTab searchQuery={searchQuery} viewMode={viewMode} />
+          </motion.div>
         ) : (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4 lg:gap-4">
+          <motion.div 
+            variants={containerVariants}
+            initial="hidden"
+            animate="show"
+            className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4 lg:gap-4"
+          >
             {industry === 'general' && (
               <>
-                <div className="lg:col-span-2 h-full min-h-[220px]">
+                <motion.div variants={itemVariants} className="lg:col-span-2 h-full min-h-[220px]">
                     <AccuracyLineChart />
-                </div>
-                <div className="lg:col-span-1 h-full min-h-[220px]">
+                </motion.div>
+                <motion.div variants={itemVariants} className="lg:col-span-1 h-full min-h-[220px]">
                     <AccuracyCircularCard />
-                </div>
-                <div className="lg:col-span-2 h-full min-h-[220px]">
+                </motion.div>
+                <motion.div variants={itemVariants} className="lg:col-span-2 h-full min-h-[220px]">
                     <StatsGrid />
-                </div>
-                <div className="lg:col-span-2 h-full min-h-[300px]">
+                </motion.div>
+                <motion.div variants={itemVariants} className="lg:col-span-2 h-full min-h-[300px]">
                   <ImageAnnotationDetail />
-                </div>
-                <div className="lg:col-span-2 h-full min-h-[300px]">
+                </motion.div>
+                <motion.div variants={itemVariants} className="lg:col-span-2 h-full min-h-[300px]">
                   <ImageAnnotationTable />
-                </div>
-                <div className="lg:col-span-1 h-full min-h-[300px]">
+                </motion.div>
+                <motion.div variants={itemVariants} className="lg:col-span-1 h-full min-h-[300px]">
                   <AnomalyTable />
-                </div>
-                <div className="lg:col-span-2 h-full min-h-[300px]">
+                </motion.div>
+                <motion.div variants={itemVariants} className="lg:col-span-2 h-full min-h-[300px]">
                   <PerformanceLineChart />
-                </div>
-                <div className="lg:col-span-3 h-full min-h-[300px]">
+                </motion.div>
+                <motion.div variants={itemVariants} className="lg:col-span-3 h-full min-h-[300px]">
                   <RequestList />
-                </div>
+                </motion.div>
               </>
             )}
 
             {industry === 'manufacturing' && (
               <>
-                <div className="lg:col-span-2 h-full min-h-[220px]">
+                <motion.div variants={itemVariants} className="lg:col-span-2 h-full min-h-[220px]">
                     <GenericAreaChart 
                       title="Defect Rate Timeline" 
                       data={[
@@ -401,18 +427,18 @@ export const Dashboard = () => {
                       strokeColor="#EC3292"
                       gradientId="defectColor"
                     />
-                </div>
-                <div className="lg:col-span-1 h-full min-h-[220px]">
+                </motion.div>
+                <motion.div variants={itemVariants} className="lg:col-span-1 h-full min-h-[220px]">
                     <GenericCircularCard 
                        title="Quality Yield" 
                        stat1Label="Total Processed" stat1Value="14,204" 
                        stat2Label="Yield Target" stat2Value="98.5%" stat2Color="text-[#52C5F3]" 
                     />
-                </div>
-                <div className="lg:col-span-2 h-full min-h-[220px]">
+                </motion.div>
+                <motion.div variants={itemVariants} className="lg:col-span-2 h-full min-h-[220px]">
                     <StatsGrid />
-                </div>
-                <div className="lg:col-span-3 h-full min-h-[300px]">
+                </motion.div>
+                <motion.div variants={itemVariants} className="lg:col-span-3 h-full min-h-[300px]">
                   <TableCard 
                     title="Assembly Line Anomalies" 
                     columns={['Line ID', 'Anomaly Type', 'Confidence', 'Action']}
@@ -423,8 +449,8 @@ export const Dashboard = () => {
                     ]}
                     className="h-full"
                   />
-                </div>
-                <div className="lg:col-span-2 h-full min-h-[300px]">
+                </motion.div>
+                <motion.div variants={itemVariants} className="lg:col-span-2 h-full min-h-[300px]">
                   <TableCard 
                     title="Equipment Downtime" 
                     columns={['Machine', 'Downtime', 'Status']}
@@ -434,13 +460,13 @@ export const Dashboard = () => {
                     ]}
                     className="h-full"
                   />
-                </div>
+                </motion.div>
               </>
             )}
 
             {industry === 'banking' && (
               <>
-                <div className="lg:col-span-2 h-full min-h-[220px]">
+                <motion.div variants={itemVariants} className="lg:col-span-2 h-full min-h-[220px]">
                     <GenericAreaChart 
                       title="Fraudulent Transactions" 
                       data={[
@@ -452,18 +478,18 @@ export const Dashboard = () => {
                       strokeColor="#fbbf24"
                       gradientId="fraudColor"
                     />
-                </div>
-                <div className="lg:col-span-1 h-full min-h-[220px]">
+                </motion.div>
+                <motion.div variants={itemVariants} className="lg:col-span-1 h-full min-h-[220px]">
                     <GenericCircularCard 
                        title="Risk Assessment" 
                        stat1Label="Total Scanned" stat1Value="2.4M" 
                        stat2Label="High Risk" stat2Value="0.04%" stat2Color="text-red-400" 
                     />
-                </div>
-                <div className="lg:col-span-2 h-full min-h-[220px]">
+                </motion.div>
+                <motion.div variants={itemVariants} className="lg:col-span-2 h-full min-h-[220px]">
                     <StatsGrid />
-                </div>
-                <div className="lg:col-span-3 h-full min-h-[300px]">
+                </motion.div>
+                <motion.div variants={itemVariants} className="lg:col-span-3 h-full min-h-[300px]">
                   <TableCard 
                     title="Suspicious Activities" 
                     columns={['Account ID', 'Location', 'Risk Score', 'Status']}
@@ -474,8 +500,8 @@ export const Dashboard = () => {
                     ]}
                     className="h-full"
                   />
-                </div>
-                <div className="lg:col-span-2 h-full min-h-[300px]">
+                </motion.div>
+                <motion.div variants={itemVariants} className="lg:col-span-2 h-full min-h-[300px]">
                     <GenericLineChart 
                       title="Transaction Volume" 
                       subtitle="Millions per hour"
@@ -486,13 +512,13 @@ export const Dashboard = () => {
                       dataKey="val"
                       domain={[0, 4]}
                     />
-                </div>
+                </motion.div>
               </>
             )}
 
             {industry === 'telco' && (
               <>
-                <div className="lg:col-span-2 h-full min-h-[220px]">
+                <motion.div variants={itemVariants} className="lg:col-span-2 h-full min-h-[220px]">
                     <GenericAreaChart 
                       title="Network Latency Spikes" 
                       data={[
@@ -505,15 +531,15 @@ export const Dashboard = () => {
                       strokeColor="#52C5F3"
                       gradientId="latencyColor"
                     />
-                </div>
-                <div className="lg:col-span-1 h-full min-h-[220px]">
+                </motion.div>
+                <motion.div variants={itemVariants} className="lg:col-span-1 h-full min-h-[220px]">
                     <GenericCircularCard 
                        title="Uptime Reliability" 
                        stat1Label="Active Nodes" stat1Value="8,402" 
                        stat2Label="Global Uptime" stat2Value="99.99%" stat2Color="text-green-400" 
                     />
-                </div>
-                <div className="lg:col-span-2 h-full min-h-[220px]">
+                </motion.div>
+                <motion.div variants={itemVariants} className="lg:col-span-2 h-full min-h-[220px]">
                   <TableCard 
                     title="Cell Tower Outages" 
                     columns={['Tower ID', 'Region', 'Downtime']}
@@ -523,8 +549,8 @@ export const Dashboard = () => {
                     ]}
                     className="h-full"
                   />
-                </div>
-                <div className="lg:col-span-5 h-full min-h-[300px]">
+                </motion.div>
+                <motion.div variants={itemVariants} className="lg:col-span-5 h-full min-h-[300px]">
                   <TableCard 
                     title="Traffic Anomaly Reports" 
                     columns={['Segment', 'Traffic Type', 'Deviation', 'Root Cause AI']}
@@ -535,11 +561,11 @@ export const Dashboard = () => {
                     ]}
                     className="h-full"
                   />
-                </div>
+                </motion.div>
               </>
             )}
 
-          </div>
+          </motion.div>
         )}
       </div>
 

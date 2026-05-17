@@ -15,7 +15,7 @@ import { cn } from '../lib/utils';
 import { useTheme } from '../context/ThemeContext';
 import { Card } from './ui';
 
-export const GenericLineChart = ({ title, subtitle, data, dataKey = 'value', xAxisKey = 'name', domain = [0, 100], strokeColor = '#52C5F3' }: any) => {
+export const GenericLineChart = React.memo(({ title, subtitle, data, dataKey = 'value', xAxisKey = 'name', domain = [0, 100], strokeColor = '#52C5F3' }: any) => {
   const { theme } = useTheme();
   const isDark = theme === 'dark';
 
@@ -61,8 +61,8 @@ export const GenericLineChart = ({ title, subtitle, data, dataKey = 'value', xAx
       </div>
     </Card>
   );
-};
-export const PerformanceLineChart = () => {
+});
+export const PerformanceLineChart = React.memo(() => {
   const { theme } = useTheme();
   const isDark = theme === 'dark';
 
@@ -118,9 +118,9 @@ export const PerformanceLineChart = () => {
       </div>
     </Card>
   );
-};
+});
 
-export const GenericAreaChart = ({ title, data, dataKey = 'value', xAxisKey = 'name', domain = [0, 6000], strokeColor = '#52C5F3', gradientId = 'colorValue', yAxisFormatter }: any) => {
+export const GenericAreaChart = React.memo(({ title, data, dataKey = 'value', xAxisKey = 'name', domain = [0, 6000], strokeColor = '#52C5F3', gradientId = 'colorValue', yAxisFormatter }: any) => {
   const { theme } = useTheme();
   const isDark = theme === 'dark';
 
@@ -187,9 +187,9 @@ export const GenericAreaChart = ({ title, data, dataKey = 'value', xAxisKey = 'n
       </div>
     </Card>
   );
-};
+});
 
-export const AccuracyLineChart = () => {
+export const AccuracyLineChart = React.memo(() => {
   const { theme } = useTheme();
   const isDark = theme === 'dark';
 
@@ -268,9 +268,9 @@ export const AccuracyLineChart = () => {
       </div>
     </Card>
   );
-};
+});
 
-export const GenericCircularCard = ({ title, stat1Label, stat1Value, stat2Label, stat2Value, stat2Color = "text-accent" }: any) => {
+export const GenericCircularCard = React.memo(({ title, stat1Label, stat1Value, stat2Label, stat2Value, stat2Color = "text-accent" }: any) => {
   return (
     <Card className="p-5 h-full flex flex-col justify-between group">
       <div className="flex items-center justify-between shrink-0 mb-4">
@@ -292,9 +292,9 @@ export const GenericCircularCard = ({ title, stat1Label, stat1Value, stat2Label,
       </div>
     </Card>
   );
-};
+});
 
-export const AccuracyCircularCard = () => {
+export const AccuracyCircularCard = React.memo(() => {
   return (
     <Card className="p-5 h-full flex flex-col justify-between group">
       <div className="flex items-center justify-between shrink-0 mb-4">
@@ -316,5 +316,5 @@ export const AccuracyCircularCard = () => {
       </div>
     </Card>
   );
-};
+});
 
