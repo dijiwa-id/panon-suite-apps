@@ -1,4 +1,5 @@
 import React from "react";
+import * as Tooltip from '@radix-ui/react-tooltip';
 import { Link, useLocation } from "react-router-dom";
 import { Logo } from './Logo';
 import { useAppStore } from '../store';
@@ -58,6 +59,23 @@ const iconMap: Record<string, React.ReactNode> = {
   "Report": <FileText size={12} />,
 };
 
+const SidebarTooltip = ({ children, content, isCollapsed }: { children: React.ReactNode, content: string, isCollapsed: boolean }) => {
+  if (!isCollapsed) return <>{children}</>;
+  return (
+    <Tooltip.Root>
+      <Tooltip.Trigger asChild>
+        {children}
+      </Tooltip.Trigger>
+      <Tooltip.Portal>
+        <Tooltip.Content side="right" sideOffset={16} className="px-2.5 py-1.5 bg-gray-900 dark:bg-white text-white dark:text-gray-900 text-[10px] font-bold tracking-wide rounded-md z-[100] shadow-xl border border-gray-800 dark:border-gray-200">
+          {content}
+          <Tooltip.Arrow className="fill-gray-900 dark:fill-white" />
+        </Tooltip.Content>
+      </Tooltip.Portal>
+    </Tooltip.Root>
+  );
+};
+
 interface NavItemProps {
   icon: string;
   label: string;
@@ -86,6 +104,7 @@ const NavItem: React.FC<NavItemProps & { subItems?: SubItem[]; isOpen?: boolean;
   return (
     <div>
       <Link to={hasSubItems ? "#" : path} className="block" onClick={hasSubItems ? onToggle : undefined}>
+        <SidebarTooltip content={label} isCollapsed={isCollapsed}>
         <div
           className={cn(
             "flex items-center py-2 cursor-pointer transition-all duration-300 group relative",
@@ -106,12 +125,6 @@ const NavItem: React.FC<NavItemProps & { subItems?: SubItem[]; isOpen?: boolean;
               : "",
           )}
         >
-          {isCollapsed && (
-            <div className="absolute left-full top-1/2 -translate-y-1/2 ml-4 px-2.5 py-1.5 bg-gray-900 dark:bg-white text-white dark:text-gray-900 text-[10px] font-bold tracking-wide whitespace-nowrap rounded-md opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-[100] shadow-xl pointer-events-none border border-gray-800 dark:border-gray-200 flex items-center">
-              <div className="absolute top-1/2 -left-1 -translate-y-1/2 w-2 h-2 bg-gray-900 dark:bg-white rotate-45 border-b border-l border-gray-800 dark:border-gray-200"></div>
-              <span className="relative z-10">{label}</span>
-            </div>
-          )}
           <div
             className={cn(
               "flex items-center",
@@ -151,6 +164,7 @@ const NavItem: React.FC<NavItemProps & { subItems?: SubItem[]; isOpen?: boolean;
             <span className="absolute top-2 right-4 w-2 h-2 rounded-full bg-secondary shadow-[0_0_8px_rgba(236,50,146,0.5)]"></span>
           )}
         </div>
+        </SidebarTooltip>
       </Link>
       {hasSubItems && !isCollapsed && isSubOpen && (
         <div className="ml-[32px] pl-3 border-l border-gray-200/70 dark:border-[#222] space-y-px mt-1 mb-2">
@@ -178,14 +192,15 @@ export const Sidebar = ({
   const globalPlatformName = useAppStore(state => state.platformName);
 
   return (
-    <aside
-      className={cn(
-        "flex flex-col h-screen border-r border-gray-200/50 dark:border-[#262626]/50 bg-white/80 dark:bg-[#151515]/80 backdrop-blur-md transition-all duration-300 shrink-0 relative z-20",
-        isCollapsed ? "w-16" : "w-64",
-        className
-      )}
-    >
-      <div className="px-6 h-[55px] flex items-center">
+    <Tooltip.Provider delayDuration={0}>
+      <aside
+        className={cn(
+          "flex flex-col h-screen border-r border-gray-200/50 dark:border-[#262626]/50 bg-white/80 dark:bg-[#151515]/80 backdrop-blur-md transition-all duration-300 shrink-0 relative z-20",
+          isCollapsed ? "w-16" : "w-64",
+          className
+        )}
+      >
+      <div className={cn("h-[55px] flex items-center", isCollapsed ? "px-0 justify-center" : "px-6")}>
         <Link to="/dashboard"
           className={cn(
             "flex items-center gap-2 group w-full",
@@ -206,32 +221,27 @@ export const Sidebar = ({
         </Link>
       </div>
 
-      <div className="flex-1 overflow-y-auto custom-scrollbar pt-6">
+      <div className="flex-1 overflow-y-auto overflow-x-hidden custom-scrollbar pt-6 w-full">
         <Link
           to="/user-settings"
           className={cn(
-            "px-4 mb-8 transition-all block",
-            isCollapsed && "px-2 mb-6",
+            "px-4 mb-4 transition-all block",
+            isCollapsed && "px-2 mb-4",
           )}
         >
+          <SidebarTooltip content={user ? user.name : "System User"} isCollapsed={isCollapsed}>
           <div
             className={cn(
               "flex items-center gap-3 rounded-[11px] cursor-pointer transition-all group/profile relative",
               isCollapsed
-                ? "flex-col justify-center py-2 hover:bg-gray-100 dark:hover:bg-[#1e1e1e] border border-gray-200 dark:border-[#222]"
+                ? "flex-col justify-center py-1.5 hover:bg-gray-100 dark:hover:bg-[#1e1e1e] border border-transparent dark:border-transparent hover:border-gray-200 dark:hover:border-[#222]"
                 : "p-2 hover:bg-gray-100 dark:hover:bg-[#1e1e1e] border border-gray-200 dark:border-[#222]"
             )}
           >
-            {isCollapsed && (
-              <div className="absolute left-full top-1/2 -translate-y-1/2 ml-4 px-2.5 py-1.5 bg-gray-900 dark:bg-white text-white dark:text-gray-900 text-[10px] font-bold tracking-wide whitespace-nowrap rounded-md opacity-0 invisible group-hover/profile:opacity-100 group-hover/profile:visible transition-all duration-200 z-[100] shadow-xl pointer-events-none border border-gray-800 dark:border-gray-200 flex items-center">
-                <div className="absolute top-1/2 -left-1 -translate-y-1/2 w-2 h-2 bg-gray-900 dark:bg-white rotate-45 border-b border-l border-gray-800 dark:border-gray-200"></div>
-                <span className="relative z-10">{user ? user.name : "System User"}</span>
-              </div>
-            )}
             <div
               className={cn(
-                "rounded-lg bg-accent/10 flex items-center justify-center p-0.5 overflow-hidden ring-1 ring-accent/20 group-hover/profile:scale-105 transition-transform",
-                isCollapsed ? "w-10 h-10" : "w-9 h-9 shrink-0"
+                "rounded-lg bg-accent/10 flex items-center justify-center p-0.5 overflow-hidden ring-1 ring-accent/20 group-hover/profile:scale-105 transition-transform shrink-0",
+                isCollapsed ? "w-8 h-8" : "w-9 h-9 shrink-0"
               )}
             >
                 <img
@@ -254,6 +264,7 @@ export const Sidebar = ({
               <ChevronDown size={14} className="text-gray-400 shrink-0 opacity-0 group-hover/profile:opacity-100 transition-opacity" />
             )}
           </div>
+          </SidebarTooltip>
         </Link>
 
         {/* Main Nav */}
@@ -353,7 +364,7 @@ export const Sidebar = ({
         </div>
       </div>
 
-      <div className="p-4 border-t border-gray-200 dark:border-[#2a2a2a] space-y-4">
+      <div className={cn("border-t border-gray-200 dark:border-[#2a2a2a] space-y-4", isCollapsed ? "p-2" : "p-4")}>
         {!isCollapsed && (
           <Link to="/setup" className="flex items-center gap-3 px-4 py-3 bg-gray-100 dark:bg-[#1e1e1e]/50 rounded-xl border border-gray-200 dark:border-[#2a2a2a] cursor-pointer group hover:bg-gray-200 dark:hover:bg-[#1e1e1e] transition-colors block">
             <div className="w-10 h-10 rounded-full border-2 border-accent flex items-center justify-center text-accent font-black text-sm shrink-0 shadow-[0_0_10px_rgba(82,197,243,0.3)]">
@@ -367,6 +378,7 @@ export const Sidebar = ({
             </div>
           </Link>
         )}
+        <SidebarTooltip content="Expand" isCollapsed={isCollapsed}>
         <div
           onClick={toggleSidebar}
           className={cn(
@@ -376,12 +388,6 @@ export const Sidebar = ({
               : "justify-between px-4 py-2",
           )}
         >
-          {isCollapsed && (
-            <div className="absolute left-full top-1/2 -translate-y-1/2 ml-4 px-2.5 py-1.5 bg-gray-900 dark:bg-white text-white dark:text-gray-900 text-[10px] font-bold tracking-wide whitespace-nowrap rounded-md opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-[100] shadow-xl pointer-events-none border border-gray-800 dark:border-gray-200 flex items-center">
-              <div className="absolute top-1/2 -left-1 -translate-y-1/2 w-2 h-2 bg-gray-900 dark:bg-white rotate-45 border-b border-l border-gray-800 dark:border-gray-200"></div>
-              <span className="relative z-10">Expand</span>
-            </div>
-          )}
           <div className="flex items-center gap-3">
             <ChevronLeft
               size={14}
@@ -399,8 +405,10 @@ export const Sidebar = ({
             )}
           </div>
         </div>
+        </SidebarTooltip>
       </div>
     </aside>
+    </Tooltip.Provider>
   );
 };
 
@@ -422,6 +430,7 @@ const NavSection = ({
 
   return (
     <div className="space-y-1">
+      <SidebarTooltip content={title} isCollapsed={isCollapsed}>
       <div
         onClick={() => setIsOpen(!isOpen)}
         className={cn(
@@ -429,12 +438,6 @@ const NavSection = ({
           isCollapsed && "justify-center px-0",
         )}
       >
-        {isCollapsed && (
-          <div className="absolute left-full top-1/2 -translate-y-1/2 ml-4 px-2.5 py-1.5 bg-gray-900 dark:bg-white text-white dark:text-gray-900 text-[10px] font-bold tracking-wide whitespace-nowrap rounded-md opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-[100] shadow-xl pointer-events-none border border-gray-800 dark:border-gray-200 flex items-center">
-            <div className="absolute top-1/2 -left-1 -translate-y-1/2 w-2 h-2 bg-gray-900 dark:bg-white rotate-45 border-b border-l border-gray-800 dark:border-gray-200"></div>
-            <span className="relative z-10">{title}</span>
-          </div>
-        )}
         {!isCollapsed && <span className="text-[9px] font-bold tracking-widest uppercase text-gray-400 dark:text-gray-500">{title}</span>}
         {!isCollapsed && (
           <motion.div
@@ -449,6 +452,7 @@ const NavSection = ({
           <div className="w-4 h-[2px] bg-gray-300 dark:bg-[#333] rounded-full" />
         )}
       </div>
+      </SidebarTooltip>
       <motion.div
         initial={false}
         animate={{ height: isOpen ? "auto" : 0, opacity: isOpen ? 1 : 0 }}
