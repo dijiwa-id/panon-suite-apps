@@ -6,12 +6,12 @@ import { useTrain } from '../context/TrainContext';
 import { Select } from '../components/ui';
 
 export const AIModels = () => {
-  const { models } = useTrain();
+  const { models = [] } = useTrain();
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedStatus, setSelectedStatus] = useState('All');
   const [selectedTag, setSelectedTag] = useState('All');
 
-  const allTags = Array.from(new Set(models.flatMap((m: any) => m.tags)));
+  const allTags = Array.from(new Set((models || []).flatMap((m: any) => m.tags || [])));
 
   const handleExport = (model: any) => {
     toast.promise(new Promise<void>(resolve => {
@@ -45,7 +45,8 @@ export const AIModels = () => {
 
   return (
     <main className="flex-1 overflow-y-auto bg-transparent p-6 lg:p-8 text-gray-800 dark:text-gray-200 transition-colors custom-scrollbar">
-      <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-4 gap-4">
+      <div className="max-w-[1600px] mx-auto min-h-full flex flex-col gap-4">
+        <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-4 gap-4">
         <div>
           <h1 className="text-sm font-bold tracking-tight text-gray-900 dark:text-white mb-1">AI Models Workspace</h1>
           <p className="text-gray-600 dark:text-gray-400 text-xs font-medium">Review, evaluate, and export trained model artifacts.</p>
@@ -159,6 +160,7 @@ export const AIModels = () => {
             </tbody>
           </table>
         </div>
+      </div>
       </div>
     </main>
   );

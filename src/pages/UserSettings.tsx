@@ -42,7 +42,7 @@ export const UserSettings = () => {
 
   return (
     <main className="flex-1 overflow-y-auto bg-transparent p-6 lg:p-8 text-gray-900 dark:text-gray-200 transition-colors custom-scrollbar">
-      <div className="max-w-5xl mx-auto flex flex-col gap-6">
+      <div className="max-w-[1600px] mx-auto min-h-full flex flex-col  mx-auto   gap-6">
         
         {/* Page Header */}
         <div className="flex flex-col md:flex-row md:items-end justify-between gap-4">

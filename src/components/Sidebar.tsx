@@ -24,6 +24,30 @@ import {
   List,
   FileText,
   Network,
+  Activity,
+  History,
+  MonitorPlay,
+  Folder,
+  BrainCircuit,
+  Bot,
+  TerminalSquare,
+  Wand2,
+  AppWindow,
+  Settings2,
+  Server,
+  Blocks,
+  Rocket,
+  Package,
+  Shield,
+  User,
+  Sliders,
+  Radio,
+  ScrollText,
+  PieChart,
+  Cctv,
+  Router,
+  MonitorSmartphone,
+  PenTool,
   Video
 } from "lucide-react";
 import { cn } from "../lib/utils";
@@ -33,30 +57,33 @@ const iconMap: Record<string, React.ReactNode> = {
   Dashboard: <LayoutDashboard size={12} />,
   Notification: <Bell size={12} />,
   "Data Collection": <Database size={12} />,
-  "Data Set": <Layers size={12} />,
-  "Image Annotation": <Edit3 size={12} />,
-  "Model Training": <Cpu size={12} />,
-  "AI Models": <Box size={12} />,
-  "Building Blocks": <Layout size={12} />,
-  "No Code Editor": <Code size={12} />,
-  Applications: <Grid size={12} />,
+  "Data Set": <Folder size={12} />,
+  "Image Annotation": <PenTool size={12} />,
+  "Model Training": <BrainCircuit size={12} />,
+  "AI Models": <Bot size={12} />,
+  "Building Blocks": <Blocks size={12} />,
+  "No Code Editor": <Wand2 size={12} />,
+  Applications: <AppWindow size={12} />,
   "Video Generation": <Video size={12} />,
-  "System Monitoring": <Cpu size={12} />,
-  "Workstation Management": <Box size={12} />,
-  "Camera Management": <Aperture size={12} />,
-  "Channel Management": <Layers size={12} />,
-  "Model Management": <Cpu size={12} />,
-  "Model Deployment": <Cpu size={12} />,
-  "Algorithm Package": <Code size={12} />,
+  "System Monitoring": <Activity size={12} />,
+  "Workstation Management": <MonitorSmartphone size={12} />,
+  "Camera Management": <Cctv size={12} />,
+  "Channel Management": <Router size={12} />,
+  "Model Management": <Server size={12} />,
+  "Model Deployment": <Rocket size={12} />,
+  "Algorithm Package": <Package size={12} />,
   "Network Management": <Network size={12} />,
   "User Management": <Users size={12} />,
-  "Roles": <Layers size={12} />,
-  "Users": <Box size={12} />,
-  "Role Modules": <Layers size={12} />,
-  "Configuration": <Layout size={12} />,
-  "Live Feed Camera": <Camera size={12} />,
-  "Detection Log": <List size={12} />,
-  "Report": <FileText size={12} />,
+  "Roles": <Shield size={12} />,
+  "Users": <User size={12} />,
+  "Role Modules": <Settings2 size={12} />,
+  "Configuration": <Sliders size={12} />,
+  "Live Feed Camera": <Radio size={12} />,
+  "Detection Log": <ScrollText size={12} />,
+  "Report": <PieChart size={12} />,
+  "Channels": <MonitorPlay size={12} />,
+  "Detection History": <History size={12} />,
+  "Overview": <LayoutDashboard size={12} />,
 };
 
 const SidebarTooltip = ({ children, content, isCollapsed }: { children: React.ReactNode, content: string, isCollapsed: boolean }) => {
@@ -104,7 +131,7 @@ const NavItem: React.FC<NavItemProps & { subItems?: SubItem[]; isOpen?: boolean;
   return (
     <div>
       <Link to={hasSubItems ? "#" : path} className="block" onClick={hasSubItems ? onToggle : undefined}>
-        <SidebarTooltip content={label} isCollapsed={isCollapsed}>
+        <SidebarTooltip content={label} isCollapsed={!!isCollapsed}>
         <div
           className={cn(
             "flex items-center py-2 cursor-pointer transition-all duration-300 group relative",
@@ -270,8 +297,8 @@ export const Sidebar = ({
         {/* Main Nav */}
         <div className="space-y-px mb-8">
           <NavItem
-            icon="Dashboard"
-            label="Dashboard"
+            icon="Overview"
+            label="Overview"
             path="/dashboard"
             isCollapsed={isCollapsed}
           />
@@ -314,7 +341,7 @@ export const Sidebar = ({
             isCollapsed={isCollapsed}
             title="Deploy"
             items={[
-              { label: "Dashboard", path: "/deploy/dashboard" },
+              { label: "Overview", path: "/deploy/dashboard" },
               { label: "Live Feed Camera", path: "/deploy/live-feed-camera" },
               { label: "Detection Log", path: "/deploy/detection-log" },
               { label: "Report", path: "/deploy/report" },
@@ -324,8 +351,7 @@ export const Sidebar = ({
             isCollapsed={isCollapsed}
             title="System Admin"
             items={[
-              { label: "Dashboard", path: "/system-admin/dashboard" },
-              { label: "System Monitoring", path: "/system-admin/system-monitoring" },
+              { label: "Overview", path: "/system-admin/dashboard" },
               { label: "Network Management", path: "/system-admin/network-management" },
               { label: "Workstation Management", path: "/system-admin/workstation-management" },
               { label: "Camera Management", path: "/system-admin/camera-management" },
@@ -357,6 +383,24 @@ export const Sidebar = ({
                   { label: "Roles", path: "/system-admin/roles" },
                   { label: "Users", path: "/system-admin/users" },
                   { label: "Role Modules", path: "/system-admin/role-modules" },
+                ],
+              },
+            ]}
+          />
+          <NavSection
+            isCollapsed={isCollapsed}
+            title="Orchestration Platform"
+            items={[
+              { label: "Channels", path: "/orchestration/dashboard" },
+              { label: "Detection History", path: "/orchestration/detection-history" },
+              {
+                label: "System Monitoring",
+                path: "#",
+                subItems: [
+                  { label: "Camera", path: "/orchestration/system-monitoring/camera" },
+                  { label: "Channels", path: "/orchestration/system-monitoring/channels" },
+                  { label: "Workstation", path: "/orchestration/system-monitoring/workstation" },
+                  { label: "System Health", path: "/orchestration/system-monitoring/system-health" },
                 ],
               },
             ]}

@@ -41,6 +41,12 @@ const NoCodeEditor = lazy(() => import('./pages/NoCodeEditor').then(m => ({ defa
 const Applications = lazy(() => import('./pages/Applications').then(m => ({ default: m.Applications })));
 const VideoGeneration = lazy(() => import('./pages/VideoGeneration').then(m => ({ default: m.VideoGeneration })));
 const Notifications = lazy(() => import('./pages/Notifications').then(m => ({ default: m.Notifications })));
+const OrchestrationDashboard = lazy(() => import('./pages/OrchestrationDashboard').then(m => ({ default: m.OrchestrationDashboard })));
+const DetectionEvidence = lazy(() => import('./pages/DetectionEvidence').then(m => ({ default: m.DetectionEvidence })));
+const DetectionHistory = lazy(() => import('./pages/DetectionHistory').then(m => ({ default: m.DetectionHistory })));
+const SystemMonitoringCamera = lazy(() => import('./pages/SystemMonitoringCamera').then(m => ({ default: m.SystemMonitoringCamera })));
+const SystemMonitoringChannels = lazy(() => import('./pages/SystemMonitoringChannels').then(m => ({ default: m.SystemMonitoringChannels })));
+const SystemMonitoringHealth = lazy(() => import('./pages/SystemMonitoringHealth').then(m => ({ default: m.SystemMonitoringHealth })));
 const DeployDashboard = lazy(() => import('./pages/DeployDashboard').then(m => ({ default: m.DeployDashboard })));
 const DeployLiveFeedCamera = lazy(() => import('./pages/DeployLiveFeedCamera').then(m => ({ default: m.DeployLiveFeedCamera })));
 const DeployDetectionLog = lazy(() => import('./pages/DeployDetectionLog').then(m => ({ default: m.DeployDetectionLog })));
@@ -89,9 +95,10 @@ const AppLayout = () => {
     <div className="flex h-screen overflow-hidden font-sans bg-gray-50 dark:bg-[#161616] relative">
       <ThemeSync />
       <RouteSync />
-      {/* Abstract Background Accents */}
-      <div className="absolute top-[-20%] left-[-10%] w-[50%] h-[50%] rounded-full bg-gray-300/30 dark:bg-gray-600/10 blur-[120px] pointer-events-none z-0" />
-      <div className="absolute bottom-[-20%] right-[-10%] w-[50%] h-[50%] rounded-full bg-gray-400/30 dark:bg-gray-700/20 blur-[120px] pointer-events-none z-0" />
+      {/* Premium Abstract Background Accents - Subdued & Elegant */}
+      <div className="absolute top-[-10%] left-[-10%] w-[40%] h-[40%] rounded-full bg-accent/10 dark:bg-accent/[0.05] blur-[140px] pointer-events-none z-0" />
+      <div className="absolute bottom-[-10%] right-[-10%] w-[45%] h-[45%] rounded-full bg-blue-500/10 dark:bg-blue-500/[0.04] blur-[150px] pointer-events-none z-0" />
+      <div className="absolute top-[20%] right-[20%] w-[30%] h-[30%] rounded-full bg-fuchsia-500/5 dark:bg-fuchsia-500/[0.03] blur-[130px] pointer-events-none z-0" />
       
       <Sidebar isCollapsed={!isSidebarOpen} toggleSidebar={toggleSidebar} className="z-10" />
       <div className="flex-1 flex flex-col min-w-0 z-10 bg-transparent">
@@ -120,7 +127,7 @@ export default function App() {
                 <Route path="/notifications" element={<Notifications />} />
                 <Route path="/dashboard" element={<Dashboard />} />
                 <Route path="/system-admin/dashboard" element={<SystemAdminDashboard />} />
-                <Route path="/system-admin/system-monitoring" element={<SystemMonitoring />} />
+                <Route path="/orchestration/system-monitoring/workstation" element={<SystemMonitoring />} />
                 <Route path="/system-admin/network-management" element={<NetworkManagement />} />
                 <Route path="/system-admin/workstation-management" element={<WorkstationManagement />} />
                 <Route path="/system-admin/camera-management" element={<CameraManagement />} />
@@ -147,6 +154,12 @@ export default function App() {
                 <Route path="/system-admin/role-modules" element={<RoleModules />} />
                 <Route path="/user-settings" element={<UserSettings />} />
                 <Route path="/system-admin/configuration" element={<Configuration />} />
+                <Route path="/orchestration/dashboard" element={<OrchestrationDashboard />} />
+                <Route path="/orchestration/system-monitoring/camera" element={<SystemMonitoringCamera />} />
+                <Route path="/orchestration/system-monitoring/channels" element={<SystemMonitoringChannels />} />
+                <Route path="/orchestration/system-monitoring/system-health" element={<SystemMonitoringHealth />} />
+                <Route path="/orchestration/detection-history" element={<DetectionHistory />} />
+                <Route path="/orchestration/detection-evidence" element={<DetectionEvidence />} />
                 <Route path="*" element={<Navigate to="/dashboard" replace />} />
               </Route>
           </Routes>

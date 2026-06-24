@@ -1,5 +1,6 @@
 import { create } from 'zustand';
-import { persist } from 'zustand/middleware';
+import { persist, createJSONStorage } from 'zustand/middleware';
+import { safeStateStorage } from '../lib/safeStorage';
 import { toast } from 'sonner';
 
 export interface Block {
@@ -146,6 +147,7 @@ export const useDevelopStore = create<DevelopState>()(
     }),
     {
       name: 'panon-develop-storage',
+      storage: createJSONStorage(() => safeStateStorage)
     }
   )
 );

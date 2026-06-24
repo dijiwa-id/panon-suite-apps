@@ -1,6 +1,7 @@
 import React, { useState, useRef } from 'react';
 import { MousePointer2, Square, Hexagon, Maximize, ZoomIn, ZoomOut, ChevronLeft, ChevronRight, Save, Settings, Trash2, Plus, X } from 'lucide-react';
 import { cn } from '../lib/utils';
+import { safeLocalStorage } from '../lib/safeStorage';
 import { useTrain } from '../context/TrainContext';
 import { toast } from 'sonner';
 
@@ -27,8 +28,8 @@ interface Annotation {
 }
 
 export const ImageAnnotation = () => {
-  const { datasets, incrementDatasetAnnotations } = useTrain();
-  const datasetTarget = datasets.length > 0 ? datasets[0].id : null; 
+  const { datasets = [], incrementDatasetAnnotations } = useTrain();
+  const datasetTarget = (datasets || []).length > 0 ? datasets[0].id : null; 
   
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const images = [
@@ -64,7 +65,7 @@ export const ImageAnnotation = () => {
 
   const handleSaveProgress = () => {
       // In a real scenario, this would post to a backend
-      localStorage.setItem(`annotations_progress_${currentImage.name}`, JSON.stringify(annotations));
+      safeLocalStorage.setItem(`annotations_progress_${currentImage.name}`, JSON.stringify(annotations));
       toast.success('Progress saved');
   };
 
@@ -90,7 +91,7 @@ export const ImageAnnotation = () => {
   const containerRef = useRef<HTMLDivElement>(null);
 
   React.useEffect(() => {
-    const saved = localStorage.getItem(`annotations_progress_${currentImage.name}`);
+    const saved = safeLocalStorage.getItem(`annotations_progress_${currentImage.name}`);
     if (saved) {
       try {
         setAnnotations(JSON.parse(saved));

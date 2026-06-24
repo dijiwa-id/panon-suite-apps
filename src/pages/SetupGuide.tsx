@@ -584,7 +584,7 @@ export const SetupGuide = () => {
 
   return (
     <main className="flex-1 overflow-y-auto bg-transparent text-gray-900 dark:text-white transition-colors p-6 md:p-8 custom-scrollbar">
-      <div className="max-w-[1600px] h-[calc(100vh-112px)] mx-auto flex flex-col">
+      <div className="max-w-[1600px] mx-auto min-h-full flex flex-col max-w-[1600px] h-[calc(100vh-112px)] mx-auto">
         <div className="mb-8 shrink-0">
           <h1 className="text-[18px] font-black text-gray-900 dark:text-white tracking-tight">Panon Suite Installation Engine</h1>
           <p className="text-xs text-gray-500 mt-1 font-medium">Enterprise-grade deployment wizard</p>

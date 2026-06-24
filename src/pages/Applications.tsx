@@ -9,14 +9,14 @@ import { Select } from '../components/ui';
 
 export const Applications = () => {
   const navigate = useNavigate();
-  const { applications, pipelines, addApplication, toggleApplicationStatus } = useDevelop();
+  const { applications = [], pipelines = [], addApplication, toggleApplicationStatus } = useDevelop();
   const [isNewAppModalOpen, setIsNewAppModalOpen] = useState(false);
   
   const [appName, setAppName] = useState('');
   const [appDesc, setAppDesc] = useState('');
   const [inputStream, setInputStream] = useState('Cam-01 (Main Gate)');
   
-  const [visionPipeline, setVisionPipeline] = useState(pipelines.length > 0 ? pipelines[0].id : '');
+  const [visionPipeline, setVisionPipeline] = useState(pipelines && pipelines.length > 0 ? pipelines[0].id : '');
   const [computeTarget, setComputeTarget] = useState('Edge Node Alpha');
 
   const [errors, setErrors] = useState<{appName?: string}>({});

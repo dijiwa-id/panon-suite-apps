@@ -70,11 +70,11 @@ const NewTrainingModal = ({ isOpen, onClose, datasets, onCreate }: any) => {
 
 export const ModelTraining = () => {
   const { theme } = useTheme();
-  const { trainingJobs, datasets, addTrainingJob } = useTrain();
+  const { trainingJobs = [], datasets = [], addTrainingJob } = useTrain();
   const isDark = theme === 'dark';
   const [isModalOpen, setIsModalOpen] = useState(false);
 
-  const activeJob = trainingJobs.find(job => job.status === 'training') || trainingJobs[0];
+  const activeJob = (trainingJobs || []).find(job => job.status === 'training') || (trainingJobs || [])[0] || { id: 'empty', name: 'None', dataset: '', epoch: '0/100', map: 0, status: 'completed', timeRemaining: '-' };
 
   const CustomTooltip = ({ active, payload, label }: { active?: boolean; payload?: any[]; label?: string }) => {
     if (active && payload && payload.length) {
@@ -91,7 +91,8 @@ export const ModelTraining = () => {
 
   return (
     <main className="flex-1 overflow-y-auto bg-transparent p-6 lg:p-8 text-gray-800 dark:text-gray-200 transition-colors custom-scrollbar">
-      <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-4 gap-4">
+      <div className="max-w-[1600px] mx-auto min-h-full flex flex-col gap-4">
+        <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-4 gap-4">
         <div>
           <h1 className="text-sm font-bold tracking-tight text-gray-900 dark:text-white mb-1">Model Training</h1>
           <p className="text-gray-600 dark:text-gray-400 text-xs font-medium">Configure hyper-parameters and orchestrate training jobs.</p>
@@ -132,7 +133,7 @@ export const ModelTraining = () => {
                 </div>
                 <div className="bg-gray-100 dark:bg-[#151515] rounded-xl border border-gray-200 dark:border-[#222] p-4 text-center">
                     <span className="block text-[10px] text-gray-500 font-black mb-1 uppercase tracking-widest">Loss</span>
-                    <span className="text-xl font-mono text-secondary">{(Math.random() * 0.4 + 0.1).toFixed(3)}</span>
+                    <span className="text-xl font-mono text-secondary">{(1.2 - (activeJob.map || 0.5) * 0.95).toFixed(3)}</span>
                 </div>
             </div>
 
@@ -251,6 +252,7 @@ export const ModelTraining = () => {
         </div>
       </div>
       <NewTrainingModal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} datasets={datasets} onCreate={addTrainingJob} />
+      </div>
     </main>
   );
 };

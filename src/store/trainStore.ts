@@ -1,5 +1,6 @@
 import { create } from 'zustand';
-import { persist } from 'zustand/middleware';
+import { persist, createJSONStorage } from 'zustand/middleware';
+import { safeStateStorage } from '../lib/safeStorage';
 import { toast } from 'sonner';
 
 export interface Dataset {
@@ -151,7 +152,8 @@ export const useTrainStore = create<TrainState>()(
       })
     }),
     {
-      name: 'panon-train-storage'
+      name: 'panon-train-storage',
+      storage: createJSONStorage(() => safeStateStorage)
     }
   )
 );

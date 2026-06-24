@@ -6,6 +6,40 @@
     <title>Panon Suite Apps | BETA</title>
     <script>
       (function() {
+        const originalError = console.error;
+        console.error = function(...args) {
+          const msg = args.join(' ');
+          if (msg.includes('WebSocket') || msg.includes('websocket') || msg.includes('Hydration')) return;
+          originalError.apply(console, args);
+        };
+        const originalLog = console.log;
+        console.log = function(...args) {
+          const msg = args.join(' ');
+          if (msg.includes('[vite] connecting') || msg.includes('[vite] connected')) return;
+          originalLog.apply(console, args);
+        };
+        const originalWarn = console.warn;
+        console.warn = function(...args) {
+          const msg = args.join(' ');
+          if (msg.includes('WebSocket') || msg.includes('websocket') || msg.includes('Hydration')) return;
+          originalWarn.apply(console, args);
+        };
+        
+        window.addEventListener('error', function(e) {
+          if (e.message === 'Script error.' || e.message?.includes('websocket') || e.message?.includes('Hydration')) {
+            e.stopImmediatePropagation();
+            e.preventDefault();
+          }
+        }, true);
+        window.addEventListener('unhandledrejection', function(e) {
+          if (e.reason?.message?.includes('websocket') || e.reason?.includes?.('websocket')) {
+            e.stopImmediatePropagation();
+            e.preventDefault();
+          }
+        }, true);
+      })();
+      
+      (function() {
         try {
           var stateItem = localStorage.getItem('panon-suite-storage');
           var theme = 'dark';

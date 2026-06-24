@@ -91,27 +91,27 @@ export const ChannelManagement = () => {
     };
 
     return (
-        <main className="flex-1 overflow-y-auto bg-transparent p-6 text-gray-800 dark:text-gray-200 transition-colors custom-scrollbar">
-            
-            <div className="flex flex-col lg:flex-row justify-between items-start lg:items-center mb-4 gap-4">
-                <div>
-                    <h1 className="text-sm font-bold tracking-tight text-gray-900 dark:text-white mb-1 flex items-center gap-2">
-                        <Video size={20} className="text-accent" />
-                        {channelName} Configuration
-                    </h1>
-                    <p className="text-gray-600 dark:text-gray-400 text-xs font-medium">Manage pipeline, ROIs, and model settings for this video stream.</p>
-                </div>
-                <div className="flex items-center gap-3 w-full lg:w-auto">
-                    <Button variant="outline" onClick={handleRestart} className="flex-1 lg:flex-none gap-2 h-8">
-                        <RefreshCw size={14} className={cn(isPlaying ? "animate-spin" : "")} /> Restart Stream
-                    </Button>
-                    <Button variant="primary" onClick={handleSave} className="flex-1 lg:flex-none gap-2 h-8">
-                        <Save size={14} /> Save Changes
-                    </Button>
-                </div>
-            </div>
+        <main className="flex-1 overflow-y-auto bg-transparent p-6 lg:p-8 text-gray-800 dark:text-gray-200 transition-colors custom-scrollbar">
+            <div className="max-w-[1600px] mx-auto min-h-full flex flex-col gap-8 lg:gap-10">
+                <header className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+                    <div>
+                        <h1 className="text-sm font-bold tracking-tight text-gray-900 dark:text-white mb-1 flex items-center gap-2">
+                            <Video size={20} className="text-accent" />
+                            {channelName} Configuration
+                        </h1>
+                        <p className="text-gray-600 dark:text-gray-400 text-xs font-medium">Manage pipeline, ROIs, and model settings for this video stream.</p>
+                    </div>
+                    <div className="flex items-center gap-3 w-full lg:w-auto">
+                        <Button variant="outline" onClick={handleRestart} className="flex-1 lg:flex-none gap-2 h-9 font-bold px-6">
+                            <RefreshCw size={14} className={cn(isPlaying ? "animate-spin" : "")} /> Restart Stream
+                        </Button>
+                        <Button variant="primary" onClick={handleSave} className="flex-1 lg:flex-none gap-2 h-9 font-bold px-6">
+                            <Save size={14} /> Save Changes
+                        </Button>
+                    </div>
+                </header>
 
-            <div className="grid grid-cols-1 lg:grid-cols-12 gap-4">
+                <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
                 
                 {/* Left Column - Configuration */}
                 <div className="lg:col-span-4 space-y-5">
@@ -119,11 +119,11 @@ export const ChannelManagement = () => {
                     <Card className="p-0 overflow-hidden">
                         <div className="flex items-center gap-2 p-4 border-b border-gray-200 dark:border-[#222] bg-gray-50/50 dark:bg-[#1a1a1a]">
                             <Settings size={16} className="text-gray-500" />
-                            <h2 className="text-sm font-bold text-gray-900 dark:text-white">Stream Source</h2>
+                            <h2 className="text-sm font-black text-gray-900 dark:text-white">Stream Source</h2>
                         </div>
                         <div className="p-5 space-y-4">
                             <div>
-                                <label className="block text-xs font-semibold text-gray-600 dark:text-gray-400 mb-2">Source Camera</label>
+                                <label className="block text-[10px] uppercase font-black tracking-widest text-gray-500 mb-2">Source Camera</label>
                                 <div className="relative">
                                     <div className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 pointer-events-none">
                                         <ChevronDown size={14} />
@@ -136,7 +136,7 @@ export const ChannelManagement = () => {
                                 </div>
                             </div>
                             <div>
-                                <label className="block text-xs font-semibold text-gray-600 dark:text-gray-400 mb-2">Camera URL</label>
+                                <label className="block text-[10px] uppercase font-black tracking-widest text-gray-500 mb-2">Camera URL</label>
                                 <Input disabled={sourceCamera !== 'Custom RTSP URL'} type="text" value={cameraUrl} onChange={(e) => setCameraUrl(e.target.value)} className="uppercase tracking-widest font-black" />
                             </div>
                             <div className="flex items-center gap-3 pt-2">
@@ -152,11 +152,11 @@ export const ChannelManagement = () => {
                     <Card className="p-0 overflow-hidden">
                         <div className="flex items-center gap-2 p-4 border-b border-gray-200 dark:border-[#222] bg-gray-50/50 dark:bg-[#1a1a1a]">
                             <Activity size={16} className="text-gray-500" />
-                            <h2 className="text-sm font-bold text-gray-900 dark:text-white">Analytics Engine</h2>
+                            <h2 className="text-sm font-black text-gray-900 dark:text-white">Analytics Engine</h2>
                         </div>
                         <div className="p-5 space-y-5">
                             <div>
-                                <label className="block text-xs font-semibold text-gray-600 dark:text-gray-400 mb-2">Algorithm Package</label>
+                                <label className="block text-[10px] uppercase font-black tracking-widest text-gray-500 mb-2">Algorithm Package</label>
                                 <div className="relative">
                                     <div className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 pointer-events-none">
                                         <ChevronDown size={14} />
@@ -170,7 +170,7 @@ export const ChannelManagement = () => {
                             </div>
                             
                             <div className="pt-2 border-t border-gray-200 dark:border-[#222]">
-                                <label className="block text-xs font-semibold text-gray-600 dark:text-gray-400 mb-3">Active Capabilities</label>
+                                <label className="block text-[10px] uppercase font-black tracking-widest text-gray-500 mb-3">Active Capabilities</label>
                                 <div className="space-y-3">
                                     <label className="flex items-center gap-3 cursor-pointer group">
                                         <div className="relative flex items-center justify-center">
@@ -209,7 +209,7 @@ export const ChannelManagement = () => {
                             </div>
                             
                             <div className="pt-2 border-t border-gray-200 dark:border-[#222]">
-                                <label className="block text-xs font-semibold text-gray-600 dark:text-gray-400 mb-2">Confidence Threshold</label>
+                                <label className="block text-[10px] uppercase font-black tracking-widest text-gray-500 mb-2">Confidence Threshold</label>
                                 <div className="flex items-center gap-4">
                                     <input type="range" min="0" max="100" value={confidence} onChange={(e) => setConfidence(parseInt(e.target.value))} className="flex-1 h-1 bg-gray-200 dark:bg-[#2a2a2a] rounded-lg appearance-none cursor-pointer accent-accent" />
                                     <span className="text-xs font-mono font-bold text-accent w-8 text-right">{confidence}%</span>
@@ -226,7 +226,7 @@ export const ChannelManagement = () => {
                         <div className="flex items-center justify-between p-4 border-b border-gray-200 dark:border-[#222] bg-gray-50/50 dark:bg-[#1a1a1a]">
                             <div className="flex items-center gap-2">
                                 <Eye size={16} className="text-gray-500" />
-                                <h2 className="text-sm font-bold text-gray-900 dark:text-white">Live AI Preview</h2>
+                                <h2 className="text-sm font-black text-gray-900 dark:text-white">Live AI Preview</h2>
                             </div>
                             <div className="flex items-center gap-2">
                                 <Button variant="outline" onClick={handleFullscreen} className="p-1.5 h-auto rounded-lg" title="Maximize">
@@ -287,16 +287,16 @@ export const ChannelManagement = () => {
                     <Card className="p-0 overflow-hidden flex-1 flex flex-col">
                         <div className="flex items-center gap-2 p-4 border-b border-gray-200 dark:border-[#222] bg-gray-50/50 dark:bg-[#1a1a1a]">
                             <AlertTriangle size={16} className="text-gray-500" />
-                            <h2 className="text-sm font-bold text-gray-900 dark:text-white">Real-Time Detections</h2>
+                            <h2 className="text-sm font-black text-gray-900 dark:text-white">Real-Time Detections</h2>
                         </div>
                         <div className="p-0 overflow-y-auto max-h-48 min-h-[140px] bg-gray-50 dark:bg-[#161616]">
                             <Table>
                                 <TableHeader>
-                                  <TableRow>
-                                        <TableHead>Timestamp</TableHead>
-                                        <TableHead>Class</TableHead>
-                                        <TableHead>Confidence</TableHead>
-                                        <TableHead>Status</TableHead>
+                                  <TableRow className="border-b border-gray-200 dark:border-[#222]">
+                                        <TableHead className="text-[10px] font-black uppercase tracking-widest text-gray-500">Timestamp</TableHead>
+                                        <TableHead className="text-[10px] font-black uppercase tracking-widest text-gray-500">Class</TableHead>
+                                        <TableHead className="text-[10px] font-black uppercase tracking-widest text-gray-500">Confidence</TableHead>
+                                        <TableHead className="text-[10px] font-black uppercase tracking-widest text-gray-500">Status</TableHead>
                                     </TableRow>
                                 </TableHeader>
                                 <TableBody>
@@ -330,6 +330,7 @@ export const ChannelManagement = () => {
                     </Card>
 
                 </div>
+            </div>
             </div>
         </main>
     )

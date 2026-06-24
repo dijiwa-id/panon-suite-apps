@@ -107,7 +107,8 @@ export const PackageManagement = () => {
 
   return (
     <main className="flex-1 overflow-y-auto bg-transparent p-6 md:p-8 text-gray-800 dark:text-gray-200 transition-colors custom-scrollbar">
-      <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-4 gap-4">
+      <div className="max-w-[1600px] mx-auto min-h-full flex flex-col gap-4">
+        <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-4 gap-4">
         <div>
           <h1 className="text-sm font-bold tracking-tight text-gray-900 dark:text-white mb-1">Algorithm Package &gt; Package Management</h1>
           <p className="text-gray-600 dark:text-gray-400 text-xs font-medium">Manage algorithm packages and configurations.</p>
@@ -155,6 +156,7 @@ export const PackageManagement = () => {
         </div>
       </div>
       <AddPackageModal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} />
+      </div>
     </main>
   );
 };

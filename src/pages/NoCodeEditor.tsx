@@ -84,11 +84,11 @@ const initialEdges: Edge[] = [
 ];
 
 export const NoCodeEditor = () => {
-  const { blocks, pipelines, savePipeline, activePipelineId } = useDevelop();
+  const { blocks = [], pipelines = [], savePipeline, activePipelineId } = useDevelop();
   const { theme } = useTheme();
   
   const activePipeline = useMemo(() => {
-    return pipelines.find(p => p.id === activePipelineId) || pipelines[0];
+    return (pipelines || []).find(p => p.id === activePipelineId) || pipelines[0];
   }, [activePipelineId, pipelines]);
 
   const reactFlowWrapper = useRef<HTMLDivElement>(null);

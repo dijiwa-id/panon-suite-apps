@@ -1,10 +1,11 @@
 import React, { useState, useEffect } from 'react';
-import { Search, Bell, Monitor, LogOut, KeySquare, Sun, Moon, User } from 'lucide-react';
+import { Search, Bell, Monitor, LogOut, KeySquare, Sun, Moon, User, Activity } from 'lucide-react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAppStore } from '../store';
 import { Input } from './ui';
 import { toast } from 'sonner';
 import { CommandPalette } from './CommandPalette';
+import { ActivitySidebar } from './ActivitySidebar';
 
 export const Header = () => {
   const theme = useAppStore(state => state.theme);
@@ -12,6 +13,7 @@ export const Header = () => {
   const logout = useAppStore(state => state.logout);
   
   const [isCommandOpen, setIsCommandOpen] = useState(false);
+  const [isActivityOpen, setIsActivityOpen] = useState(false);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -51,6 +53,9 @@ export const Header = () => {
              <button onClick={() => navigate('/notifications')} className="text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-200 transition-all relative">
                <Bell size={18} />
              </button>
+             <button onClick={() => setIsActivityOpen(true)} className="text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-200 transition-all relative">
+               <Activity size={18} />
+             </button>
              <button onClick={() => navigate('/system-admin/system-monitoring')} className="text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-200 transition-all relative">
                <Monitor size={18} />
                <span className="absolute top-0 right-0 w-2 h-2 bg-accent rounded-full border border-white dark:border-[#18181b]"></span>
@@ -70,6 +75,11 @@ export const Header = () => {
       <CommandPalette 
         isOpen={isCommandOpen} 
         onClose={() => setIsCommandOpen(false)} 
+      />
+
+      <ActivitySidebar 
+        isOpen={isActivityOpen} 
+        onClose={() => setIsActivityOpen(false)} 
       />
     </>
   );

@@ -47,6 +47,26 @@
   .custom-scrollbar::-webkit-scrollbar-thumb {
     @apply bg-black/20 dark:bg-[#1e1e1e] rounded-full hover:bg-black/30 dark:hover:bg-[#2a2a2a] transition-colors;
   }
+
+  table {
+    @apply w-full text-left text-sm whitespace-nowrap;
+  }
+  
+  thead {
+    @apply bg-gray-50 dark:bg-[#161616] border-b border-gray-100 dark:border-[#222];
+  }
+
+  table th {
+    @apply px-5 py-3 text-[10px] font-black uppercase tracking-widest text-gray-500 whitespace-nowrap;
+  }
+
+  tbody {
+    @apply divide-y divide-gray-100 dark:divide-[#252525];
+  }
+
+  tbody tr {
+    @apply hover:bg-gray-50/50 dark:hover:bg-[#252525]/30 transition-colors;
+  }
 }
 
 /* Aesthetic Card & Component Enhancements */

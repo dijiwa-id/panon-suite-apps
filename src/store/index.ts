@@ -1,5 +1,6 @@
 import { create } from 'zustand';
-import { persist } from 'zustand/middleware';
+import { persist, createJSONStorage } from 'zustand/middleware';
+import { safeStateStorage } from '../lib/safeStorage';
 
 interface User {
   id: string;
@@ -72,6 +73,7 @@ export const useAppStore = create<AppState>()(
     }),
     {
       name: 'panon-suite-storage',
+      storage: createJSONStorage(() => safeStateStorage),
       partialize: (state) => ({ 
         theme: state.theme, 
         isAuthenticated: state.isAuthenticated, 

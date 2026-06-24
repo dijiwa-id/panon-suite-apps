@@ -6,7 +6,7 @@ import { Select, Card, Button, Input, Badge } from '../components/ui';
 import { useDevelop } from '../context/DevelopContext';
 
 export const BuildingBlocks = () => {
-  const { blocks, addBlock } = useDevelop();
+  const { blocks = [], addBlock } = useDevelop();
   const [isImportModalOpen, setIsImportModalOpen] = useState(false);
   const [activeNode, setActiveNode] = useState<any>(null);
   const [activeTab, setActiveTab] = useState<'config' | 'docs' | 'metrics'>('config');
@@ -60,7 +60,8 @@ export const BuildingBlocks = () => {
 
   return (
     <main className="flex-1 overflow-y-auto bg-transparent p-6 lg:p-8 text-gray-800 dark:text-gray-200 transition-colors custom-scrollbar">
-      <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-8 gap-4">
+      <div className="max-w-[1600px] mx-auto min-h-full flex flex-col gap-4">
+        <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-8 gap-4">
         <div>
           <h1 className="text-sm font-bold tracking-tight text-gray-900 dark:text-white mb-1">Building Blocks</h1>
           <p className="text-gray-600 dark:text-gray-400 text-xs font-medium">Modular components for the vision AI pipeline</p>
@@ -297,7 +298,7 @@ export const BuildingBlocks = () => {
                          {/* Mock Chart Area */}
                          <div className="absolute inset-x-0 bottom-0 top-10 flex items-end">
                             {Array.from({length: 40}).map((_, i) => (
-                              <div key={i} className="flex-1 bg-[#52C5F3]/20 mx-[1px]" style={{ height: `${20 + Math.random() * 80}%` }}></div>
+                              <div key={i} className="flex-1 bg-[#52C5F3]/20 mx-[1px]" style={{ height: `${20 + ((Math.sin(i * 1.3) + 1) / 2) * 75}%` }}></div>
                             ))}
                          </div>
                          <div className="absolute inset-0 bg-gradient-to-t from-[#161616]/50 to-transparent"></div>
@@ -359,6 +360,7 @@ export const BuildingBlocks = () => {
              </div>
           </div>
         ))}
+      </div>
       </div>
     </main>
   );

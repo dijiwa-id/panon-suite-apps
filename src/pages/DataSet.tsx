@@ -6,7 +6,7 @@ import { Select, Card, Button, Input, Badge, Table, TableHeader, TableRow, Table
 import { useTrain } from '../context/TrainContext';
 
 export const DataSet = () => {
-  const { datasets, addDataset } = useTrain();
+  const { datasets = [], addDataset } = useTrain();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [newDataset, setNewDataset] = useState({ name: '', type: 'Object Detection', description: '' });
   const [searchQuery, setSearchQuery] = useState('');
@@ -50,7 +50,8 @@ export const DataSet = () => {
 
   return (
     <main className="flex-1 overflow-y-auto bg-transparent p-6 lg:p-8 text-gray-800 dark:text-gray-200 transition-colors relative custom-scrollbar">
-      <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-4 gap-4">
+      <div className="max-w-[1600px] mx-auto min-h-full flex flex-col gap-4">
+        <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-4 gap-4">
         <div>
           <h1 className="text-sm font-bold tracking-tight text-gray-900 dark:text-white mb-1">Data Sets</h1>
           <p className="text-gray-600 dark:text-gray-400 text-xs font-medium">Manage and organize data collections for model training.</p>
@@ -246,6 +247,7 @@ export const DataSet = () => {
           </div>
         </div>
       )}
+      </div>
     </main>
   );
 };

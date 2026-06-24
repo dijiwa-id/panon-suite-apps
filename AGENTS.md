@@ -28,7 +28,12 @@ This document establishes the design principles for the Panon Suite application.
 - **Headings:** Bold/Black weights with `tracking-tight`.
 - **UI Labels:** Use small font sizes (`text-sm`, `text-[10px]`) for secondary labels (e.g., table headers, card headers). Ensure Title Case is used for consistency.
 
-## 3. UI Consistency
+## 3. Page Layouts & Structure
+- **Container Sizing:** All main pages should be configured for full-width responsiveness, utilizing a wide constraint rather than narrow focused columns.
+- **Main Wrapper:** The standard outer layout shell should follow `max-w-[1600px] mx-auto min-h-full` to ensure consistency across pages (such as Dashboard, Settings, Configuration, Deployments).
+- **Responsive Padding:** Main scrolling sections should use `p-6 lg:p-8` for sufficient breathing room.
+
+## 4. UI Consistency
 - Maintain professional, clean layouts.
 - Avoid over-crowding; prioritize readability and data clarity.
 - All new components must follow these established color and spacing standards.

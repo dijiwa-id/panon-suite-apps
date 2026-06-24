@@ -99,8 +99,8 @@ export const Configuration = () => {
   );
 
   return (
-    <main className="flex-1 overflow-y-auto bg-transparent p-6 md:p-8 text-gray-800 dark:text-gray-200 custom-scrollbar">
-      <div className="max-w-4xl mx-auto space-y-6">
+    <main className="flex-1 overflow-y-auto bg-transparent p-6 lg:p-8 text-gray-800 dark:text-gray-200 transition-colors custom-scrollbar">
+      <div className="max-w-[1600px] mx-auto space-y-6 min-h-full">
         <div>
           <h1 className="text-sm font-black text-gray-900 dark:text-white tracking-tight mb-1">System Configuration</h1>
           <p className="text-[10px] font-medium text-gray-500 capitalize tracking-widest font-black">Manage global parameters, external integrations, and alerting rules.</p>

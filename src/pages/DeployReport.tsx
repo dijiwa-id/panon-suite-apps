@@ -79,7 +79,7 @@ export const DeployReport = () => {
 
   return (
     <main className="flex-1 overflow-y-auto bg-transparent p-6 lg:p-8 text-gray-800 dark:text-gray-200 transition-colors custom-scrollbar">
-      <div className="max-w-[1600px] mx-auto flex flex-col h-full relative">
+      <div className="max-w-[1600px] mx-auto min-h-full flex flex-col gap-4 relative">
         
         {/* Page Header */}
         <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-4 gap-4">

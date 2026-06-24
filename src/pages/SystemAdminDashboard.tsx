@@ -49,14 +49,15 @@ export const SystemAdminDashboard = () => {
 
   return (
     <main className="flex-1 overflow-y-auto bg-transparent p-6 md:p-8 text-gray-800 dark:text-gray-200 transition-colors custom-scrollbar">
-      <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-4 gap-4">
-        <div>
-          <h1 className="text-sm font-bold tracking-tight text-gray-900 dark:text-white mb-1">Dashboard Overview</h1>
-          <p className="text-gray-600 dark:text-gray-400 text-xs font-medium">Quick stats and general system health.</p>
+      <div className="max-w-[1600px] mx-auto min-h-full flex flex-col gap-4">
+        <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-4 gap-4">
+          <div>
+            <h1 className="text-sm font-bold tracking-tight text-gray-900 dark:text-white mb-1">Dashboard Overview</h1>
+            <p className="text-gray-600 dark:text-gray-400 text-xs font-medium">Quick stats and general system health.</p>
+          </div>
         </div>
-      </div>
-      
-      <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-4">
+        
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-4">
         {[
           { label: 'Active Cameras', value: '1,240', icon: <Camera size={20} className="text-accent" /> },
           { label: 'Total Inferences', value: '45.2M', icon: <Video size={20} className="text-purple-400" /> },
@@ -205,6 +206,7 @@ export const SystemAdminDashboard = () => {
             </tbody>
           </table>
         </div>
+      </div>
       </div>
     </main>
   );

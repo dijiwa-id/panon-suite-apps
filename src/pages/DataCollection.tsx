@@ -321,7 +321,7 @@ const UploadDatasetModal = ({ isOpen, onClose, onUpload }: { isOpen: boolean; on
 };
 
 export const DataCollection = () => {
-  const { datasets, addDataset, incrementDatasetSamples } = useTrain();
+  const { datasets = [], addDataset, incrementDatasetSamples } = useTrain();
   const [isTaskModalOpen, setIsTaskModalOpen] = useState(false);
   const [isUploadModalOpen, setIsUploadModalOpen] = useState(false);
   const [selectedDataset, setSelectedDataset] = useState<Dataset | null>(null);
@@ -336,7 +336,8 @@ export const DataCollection = () => {
 
   return (
     <main className="flex-1 overflow-y-auto bg-transparent text-gray-900 dark:text-gray-200 transition-colors p-6 md:p-8 custom-scrollbar">
-      <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-4 gap-4">
+      <div className="max-w-[1600px] mx-auto min-h-full flex flex-col gap-4">
+        <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-4 gap-4">
         <div>
           <h1 className="text-sm font-bold tracking-tight text-gray-900 dark:text-white mb-1">Train &gt; Data Collection</h1>
           <p className="text-gray-600 dark:text-gray-400 text-xs font-medium">Manage datasets, collection tasks, and annotation progress.</p>
@@ -440,6 +441,7 @@ export const DataCollection = () => {
       <NewTaskModal isOpen={isTaskModalOpen} onClose={() => setIsTaskModalOpen(false)} onCreate={handleCreateTask} />
       <UploadDatasetModal isOpen={isUploadModalOpen} onClose={() => setIsUploadModalOpen(false)} onUpload={handleCreateTask} />
       <DatasetDetailModal isOpen={!!selectedDataset} onClose={() => setSelectedDataset(null)} dataset={selectedDataset} />
+      </div>
     </main>
   );
 };
