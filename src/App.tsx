@@ -7,6 +7,8 @@ import React, { useEffect, Suspense, lazy } from 'react';
 import { BrowserRouter, Routes, Route, Navigate, Outlet, useLocation } from 'react-router-dom';
 import { Sidebar } from './components/Sidebar';
 import { Header } from './components/Header';
+import { Breadcrumbs } from './components/Breadcrumbs';
+import { RouteProgressBar } from './components/RouteProgressBar';
 import { Toaster } from 'sonner';
 
 import { ErrorBoundary } from './components/ErrorBoundary';
@@ -103,6 +105,7 @@ const AppLayout = () => {
       <Sidebar isCollapsed={!isSidebarOpen} toggleSidebar={toggleSidebar} className="z-10" />
       <div className="flex-1 flex flex-col min-w-0 z-10 bg-transparent">
         <Header />
+        <Breadcrumbs />
         <ErrorBoundary>
           <Suspense fallback={<PageFallback />}>
             <Outlet />
@@ -117,6 +120,7 @@ export default function App() {
   return (
     <>
       <BrowserRouter>
+        <RouteProgressBar />
         <Suspense fallback={<div className="h-screen w-screen flex items-center justify-center dark:bg-[#161616]"><div className="animate-spin rounded-full h-8 w-8 border-b-2 border-accent"></div></div>}>
           <Routes>
                 <Route path="/signin" element={<SignIn />} />
