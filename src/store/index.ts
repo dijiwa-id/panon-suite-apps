@@ -80,7 +80,8 @@ export const useAppStore = create<AppState>()(
         user: state.user,
         adminCredentials: state.adminCredentials,
         platformName: state.platformName,
-        platformLogo: state.platformLogo
+        platformLogo: state.platformLogo,
+        isSidebarOpen: state.isSidebarOpen
       }),
     }
   )

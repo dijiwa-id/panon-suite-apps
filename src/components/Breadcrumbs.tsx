@@ -17,7 +17,8 @@ import {
   Bell,
   User,
   Sliders,
-  Package
+  Package,
+  Wind
 } from 'lucide-react';
 import { motion } from 'motion/react';
 import { cn } from '../lib/utils';
@@ -35,6 +36,36 @@ export const Breadcrumbs: React.FC = () => {
   // Don't show on login page
   if (pathname === '/signin' || pathname === '/signup') {
     return null;
+  }
+
+  if (pathname.startsWith('/3d-visualizer')) {
+    const tabs = [
+      { id: 'cctv', label: 'CCTV', icon: <Video size={14} /> },
+      { id: 'air', label: 'Air Quality', icon: <Wind size={14} /> },
+      { id: 'lighting', label: 'Smart Lighting', icon: <Activity size={14} /> },
+      { id: 'robots', label: 'Robots', icon: <Settings2 size={14} /> }
+    ];
+
+    const currentTab = new URLSearchParams(location.search).get('tab') || 'cctv';
+
+    return (
+      <div className="h-10 px-[30px] flex items-center bg-white/60 dark:bg-[#161616]/60 backdrop-blur-sm border-b border-gray-200/40 dark:border-[#2a2a2a]/30 text-xs font-medium text-gray-400 select-none z-40 shrink-0 gap-2">
+        {tabs.map(tab => (
+          <Link
+            key={tab.id}
+            to={`${pathname}?tab=${tab.id}`}
+            className={cn(
+              "px-4 py-1.5 rounded-full flex items-center gap-2 text-xs font-bold tracking-tight transition-colors",
+              currentTab === tab.id
+                ? "bg-[#7c3aed]/10 text-[#7c3aed]"
+                : "text-gray-500 hover:text-gray-900 dark:hover:text-gray-200"
+            )}
+          >
+            {tab.icon} {tab.label}
+          </Link>
+        ))}
+      </div>
+    );
   }
 
   // Icon maps for standard sections

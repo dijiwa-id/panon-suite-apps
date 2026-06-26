@@ -54,6 +54,9 @@ const DeployLiveFeedCamera = lazy(() => import('./pages/DeployLiveFeedCamera').t
 const DeployDetectionLog = lazy(() => import('./pages/DeployDetectionLog').then(m => ({ default: m.DeployDetectionLog })));
 const DeployReport = lazy(() => import('./pages/DeployReport').then(m => ({ default: m.DeployReport })));
 
+const VisualizerLiveView = lazy(() => import('./pages/3DVisualizer/LiveView'));
+const VisualizerPlaceholder = lazy(() => import('./pages/3DVisualizer/PlaceholderPage'));
+
 const RouteSync = () => {
   const location = useLocation();
   const setActivePath = useAppStore(state => state.setActivePath);
@@ -150,6 +153,11 @@ export default function App() {
                 <Route path="/deploy/live-feed-camera" element={<DeployLiveFeedCamera />} />
                 <Route path="/deploy/detection-log" element={<DeployDetectionLog />} />
                 <Route path="/deploy/report" element={<DeployReport />} />
+                <Route path="/3d-visualizer/home" element={<VisualizerPlaceholder />} />
+                <Route path="/3d-visualizer/live-view" element={<VisualizerLiveView />} />
+                <Route path="/3d-visualizer/devices" element={<VisualizerPlaceholder />} />
+                <Route path="/3d-visualizer/routines" element={<VisualizerPlaceholder />} />
+                <Route path="/3d-visualizer/activity" element={<VisualizerPlaceholder />} />
                 <Route path="/system-admin/channel-management/*" element={<ChannelManagement />} />
                 <Route path="/system-admin/algorithm-context" element={<AlgorithmContext />} />
                 <Route path="/system-admin/package-management" element={<PackageManagement />} />

@@ -48,7 +48,11 @@ import {
   Router,
   MonitorSmartphone,
   PenTool,
-  Video
+  Video,
+  Home,
+  Eye,
+  Calendar,
+  Repeat
 } from "lucide-react";
 import { cn } from "../lib/utils";
 import { motion } from "motion/react";
@@ -71,6 +75,11 @@ const iconMap: Record<string, React.ReactNode> = {
   "Channel Management": <Router size={12} />,
   "Model Management": <Server size={12} />,
   "Model Deployment": <Rocket size={12} />,
+  Home: <Home size={12} />,
+  "Live View": <Eye size={12} />,
+  Devices: <Server size={12} />,
+  Routines: <Repeat size={12} />,
+  Activity: <Activity size={12} />,
   "Algorithm Package": <Package size={12} />,
   "Network Management": <Network size={12} />,
   "User Management": <Users size={12} />,
@@ -403,6 +412,17 @@ export const Sidebar = ({
                   { label: "System Health", path: "/orchestration/system-monitoring/system-health" },
                 ],
               },
+            ]}
+          />
+          <NavSection
+            isCollapsed={isCollapsed}
+            title="3D Visualizer"
+            items={[
+              { label: "Home", path: "/3d-visualizer/home" },
+              { label: "Live View", path: "/3d-visualizer/live-view" },
+              { label: "Devices", path: "/3d-visualizer/devices" },
+              { label: "Routines", path: "/3d-visualizer/routines" },
+              { label: "Activity", path: "/3d-visualizer/activity" },
             ]}
           />
         </div>

@@ -4,6 +4,7 @@ import { StatsGrid } from './StatsGrid';
 import { ImageAnnotationTable, AnomalyTable, RequestList, TableCard } from './Tables';
 import { ApplicationTab } from './ApplicationTab';
 import { ImageAnnotationDetail } from './ImageAnnotation';
+import { ActivityLogView } from './ActivityLogView';
 import { Search, Grid, List, MoreVertical, Activity, X, GripVertical, Plus } from 'lucide-react';
 import { cn } from '../lib/utils';
 import { Button, Input, Select, Dropdown } from './ui';
@@ -408,6 +409,9 @@ export const Dashboard = () => {
                 </motion.div>
                 <motion.div variants={itemVariants} className="lg:col-span-3 h-full min-h-[300px]">
                   <RequestList />
+                </motion.div>
+                <motion.div variants={itemVariants} className="lg:col-span-2 h-full min-h-[400px]">
+                  <ActivityLogView />
                 </motion.div>
               </>
             )}
