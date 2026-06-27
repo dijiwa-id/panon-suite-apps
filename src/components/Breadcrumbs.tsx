@@ -18,7 +18,11 @@ import {
   User,
   Sliders,
   Package,
-  Wind
+  Wind,
+  Building,
+  Radio,
+  Factory,
+  Sprout
 } from 'lucide-react';
 import { motion } from 'motion/react';
 import { cn } from '../lib/utils';
@@ -40,30 +44,55 @@ export const Breadcrumbs: React.FC = () => {
 
   if (pathname.startsWith('/3d-visualizer')) {
     const tabs = [
-      { id: 'cctv', label: 'CCTV', icon: <Video size={14} /> },
-      { id: 'air', label: 'Air Quality', icon: <Wind size={14} /> },
-      { id: 'lighting', label: 'Smart Lighting', icon: <Activity size={14} /> },
-      { id: 'robots', label: 'Robots', icon: <Settings2 size={14} /> }
+      { id: 'banking', label: 'Banking & Finance', icon: <Building size={14} />, color: 'text-blue-400' },
+      { id: 'telco', label: 'Telecommunications', icon: <Radio size={14} />, color: 'text-purple-400' },
+      { id: 'manufacturing', label: 'Manufacturing', icon: <Factory size={14} />, color: 'text-orange-400' },
+      { id: 'agro', label: 'Agriculture', icon: <Sprout size={14} />, color: 'text-emerald-400' }
     ];
 
-    const currentTab = new URLSearchParams(location.search).get('tab') || 'cctv';
+    const currentTab = new URLSearchParams(location.search).get('usecase') || 'banking';
 
     return (
-      <div className="h-10 px-[30px] flex items-center bg-white/60 dark:bg-[#161616]/60 backdrop-blur-sm border-b border-gray-200/40 dark:border-[#2a2a2a]/30 text-xs font-medium text-gray-400 select-none z-40 shrink-0 gap-2">
-        {tabs.map(tab => (
-          <Link
-            key={tab.id}
-            to={`${pathname}?tab=${tab.id}`}
-            className={cn(
-              "px-4 py-1.5 rounded-full flex items-center gap-2 text-xs font-bold tracking-tight transition-colors",
-              currentTab === tab.id
-                ? "bg-[#7c3aed]/10 text-[#7c3aed]"
-                : "text-gray-500 hover:text-gray-900 dark:hover:text-gray-200"
-            )}
-          >
-            {tab.icon} {tab.label}
-          </Link>
-        ))}
+      <div className="h-12 px-[30px] flex items-center bg-black/80 backdrop-blur-md border-b border-white/10 text-xs font-medium text-gray-400 select-none z-40 shrink-0 gap-3 relative overflow-hidden">
+        {/* Decorative background glow */}
+        <div className="absolute top-0 left-0 w-full h-full pointer-events-none">
+          <div className="absolute top-0 right-1/4 w-64 h-32 bg-accent/5 rounded-full blur-[50px] opacity-50" />
+        </div>
+        
+        <div className="flex items-center gap-2 mr-4 border-r border-white/10 pr-4">
+           <Layers size={14} className="text-gray-500" />
+           <span className="text-[10px] font-black tracking-widest uppercase text-gray-500">Vertical Context</span>
+        </div>
+
+        {tabs.map(tab => {
+          const isActive = currentTab === tab.id;
+          return (
+            <Link
+              key={tab.id}
+              to={`${pathname}?usecase=${tab.id}`}
+              className={cn(
+                "px-4 py-2 rounded-lg flex items-center gap-2.5 text-[11px] font-bold tracking-wide transition-all relative overflow-hidden group",
+                isActive
+                  ? "bg-white/10 text-white shadow-inner border border-white/10"
+                  : "text-gray-400 hover:text-white hover:bg-white/5 border border-transparent"
+              )}
+            >
+              <div className={cn(
+                "transition-transform duration-300",
+                isActive ? tab.color : "text-gray-500 group-hover:text-gray-300"
+              )}>
+                {tab.icon}
+              </div>
+              {tab.label}
+              {isActive && (
+                <motion.div 
+                  layoutId="activeIndicatorBreadcrumb"
+                  className="absolute bottom-0 left-1/2 -translate-x-1/2 w-4 h-0.5 bg-accent rounded-t-md"
+                />
+              )}
+            </Link>
+          );
+        })}
       </div>
     );
   }

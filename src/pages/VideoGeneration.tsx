@@ -504,7 +504,7 @@ export const VideoGeneration = () => {
             {/* Background Simulated Video feed */}
             <video 
                key={selectedCamera}
-               src={`/api/proxy/stream?url=${encodeURIComponent(CAMERAS.find(c => c.id === selectedCamera)?.url || '')}`} 
+               src={CAMERAS.find(c => c.id === selectedCamera)?.url || ''} 
                className={cn(
                  "absolute inset-0 w-full h-full object-cover transition-opacity duration-1000",
                  isDrawingMode ? "opacity-40 grayscale-[30%]" : "opacity-80"

@@ -2,7 +2,7 @@ import React, { useRef, Suspense } from 'react';
 import { Canvas } from '@react-three/fiber';
 import { OrbitControls, TransformControls, Grid, Html, GizmoHelper, GizmoViewport } from '@react-three/drei';
 import { VisualizerState, SceneObject } from './types';
-import { ObjModel } from './ObjModel';
+import { ModelViewer } from './ModelViewer';
 import * as THREE from 'three';
 
 interface VisualizerCanvasProps {
@@ -11,16 +11,37 @@ interface VisualizerCanvasProps {
   onObjectSelect: (id: string | null) => void;
 }
 
+const StyledMaterial = ({ color, style }: { color: string, style?: 'normal' | 'futuristic' | '3tone' }) => {
+  if (style === 'futuristic') {
+    return (
+      <meshStandardMaterial 
+        color="#0ff" 
+        emissive="#048" 
+        emissiveIntensity={0.8} 
+        wireframe 
+        transparent 
+        opacity={0.8} 
+      />
+    );
+  }
+  if (style === '3tone') {
+    return <meshToonMaterial color={color} />;
+  }
+  return <meshStandardMaterial color={color} roughness={0.5} metalness={0.5} />;
+};
+
 const ObjectNode = ({
   obj,
   isSelected,
   mode,
+  objectStyle,
   onUpdate,
   onSelect,
 }: {
   obj: SceneObject;
   isSelected: boolean;
   mode: 'live' | 'edit';
+  objectStyle?: 'normal' | 'futuristic' | '3tone';
   onUpdate: (updates: Partial<SceneObject>) => void;
   onSelect: (id: string | null) => void;
 }) => {
@@ -65,32 +86,30 @@ const ObjectNode = ({
         scale={obj.scale}
         ref={setTarget}
         onClick={(e) => {
-          if (mode === 'edit') {
-            e.stopPropagation();
-            onSelect(obj.id);
-          }
+          e.stopPropagation();
+          onSelect(obj.id);
         }}
       >
         {/* Render the actual object */}
         {obj.type === 'box' ? (
           <mesh castShadow receiveShadow>
             <boxGeometry args={[1, 1, 1]} />
-            <meshStandardMaterial color={isSelected ? '#7c3aed' : '#a0a0a0'} />
+            <StyledMaterial color={isSelected ? '#7c3aed' : '#a0a0a0'} style={objectStyle} />
           </mesh>
         ) : obj.type === 'pin' ? (
           <group position={[0, 0.5, 0]}>
             <mesh castShadow receiveShadow position={[0, 0.5, 0]}>
               <sphereGeometry args={[0.3, 16, 16]} />
-              <meshStandardMaterial color={isSelected ? '#7c3aed' : '#f59e0b'} />
+              <StyledMaterial color={isSelected ? '#7c3aed' : '#f59e0b'} style={objectStyle} />
             </mesh>
             <mesh castShadow receiveShadow position={[0, 0, 0]}>
               <cylinderGeometry args={[0, 0.1, 1, 8]} />
-              <meshStandardMaterial color={isSelected ? '#7c3aed' : '#f59e0b'} />
+              <StyledMaterial color={isSelected ? '#7c3aed' : '#f59e0b'} style={objectStyle} />
             </mesh>
           </group>
-        ) : obj.objUrl ? (
+        ) : (obj.fileUrl || obj.objUrl) ? (
           <Suspense fallback={<mesh><boxGeometry args={[1,1,1]} /><meshBasicMaterial wireframe color="gray" /></mesh>}>
-            <ObjModel url={obj.objUrl} color={isSelected ? '#7c3aed' : '#ffffff'} />
+            <ModelViewer url={(obj.fileUrl || obj.objUrl)!} type={obj.fileType || 'obj'} color={isSelected ? '#7c3aed' : '#ffffff'} style={objectStyle} />
           </Suspense>
         ) : null}
 
@@ -145,6 +164,7 @@ export default function VisualizerCanvas({ state, onObjectUpdate, onObjectSelect
           obj={obj}
           isSelected={obj.id === state.selectedObjectId}
           mode={state.mode}
+          objectStyle={state.settings.objectStyle}
           onUpdate={(updates) => onObjectUpdate(obj.id, updates)}
           onSelect={onObjectSelect}
         />
